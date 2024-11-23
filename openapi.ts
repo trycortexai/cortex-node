@@ -32,6 +32,8 @@ const generateTypes = async () => {
 
     const ast = await openapiTS(apiContractUrl, {
       exportType: true,
+      arrayLength: true,
+      emptyObjectsUnknown: true,
       transform: schemaObject => {
         if (schemaObject.format === 'binary') {
           return ts.factory.createUnionTypeNode([

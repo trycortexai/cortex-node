@@ -3125,7 +3125,7 @@ export type components = {
     };
     /** @description Step run output */
     RunStepSchema: {
-      output: Record<string, never>;
+      output: Record<string, unknown>;
     };
     /** @description A unique key for the step */
     StepKeySchema: string;
@@ -3155,9 +3155,9 @@ export type components = {
       /** @description The step keys that this step connects to */
       destinations?: components['schemas']['StepKeySchema'][];
       /** @description The position of the step on the canvas */
-      position?: number[];
+      position?: [number, number];
       /** @description The size of the step on the canvas */
-      size?: number[];
+      size?: [number, number];
       conditions: {
         [key: string]: components['schemas']['StepBranchConditionSchema'];
       };
@@ -3338,9 +3338,9 @@ export type components = {
       /** @description The step keys that this step connects to */
       destinations?: components['schemas']['StepKeySchema'][];
       /** @description The position of the step on the canvas */
-      position?: number[];
+      position?: [number, number];
       /** @description The size of the step on the canvas */
-      size?: number[];
+      size?: [number, number];
       provider: components['schemas']['ModelProviderSchema'];
     };
     /** @description A step that executes a code block */
@@ -3364,9 +3364,9 @@ export type components = {
       /** @description The step keys that this step connects to */
       destinations?: components['schemas']['StepKeySchema'][];
       /** @description The position of the step on the canvas */
-      position?: number[];
+      position?: [number, number];
       /** @description The size of the step on the canvas */
-      size?: number[];
+      size?: [number, number];
       /** @description The code to be executed in this step */
       code: string;
     };
@@ -3391,9 +3391,9 @@ export type components = {
       /** @description The step keys that this step connects to */
       destinations?: components['schemas']['StepKeySchema'][];
       /** @description The position of the step on the canvas */
-      position?: number[];
+      position?: [number, number];
       /** @description The size of the step on the canvas */
-      size?: number[];
+      size?: [number, number];
       /** @description The URL for the HTTP request */
       url: string;
       /**
@@ -3429,9 +3429,9 @@ export type components = {
       /** @description The step keys that this step connects to */
       destinations?: components['schemas']['StepKeySchema'][];
       /** @description The position of the step on the canvas */
-      position?: number[];
+      position?: [number, number];
       /** @description The size of the step on the canvas */
-      size?: number[];
+      size?: [number, number];
       /** @description The URL to be scraped */
       url: string;
       /** @description Whether to strip HTML from the page content */
@@ -3466,9 +3466,9 @@ export type components = {
       /** @description The step keys that this step connects to */
       destinations?: components['schemas']['StepKeySchema'][];
       /** @description The position of the step on the canvas */
-      position?: number[];
+      position?: [number, number];
       /** @description The size of the step on the canvas */
-      size?: number[];
+      size?: [number, number];
       input: components['schemas']['WorkflowInputValuesSchema'];
       /** @description The ID of the associated workflow */
       workflow_id?: string;
@@ -3558,9 +3558,9 @@ export type components = {
       /** @description The step keys that this step connects to */
       destinations?: components['schemas']['StepKeySchema'][];
       /** @description The position of the step on the canvas */
-      position?: number[];
+      position?: [number, number];
       /** @description The size of the step on the canvas */
-      size?: number[];
+      size?: [number, number];
       service: components['schemas']['ServiceSchema'];
     };
     StepSchema:
@@ -3727,7 +3727,10 @@ export type components = {
       /** @description The order of the input field relative to other fields in the form */
       order?: number;
       /** @description The options for the select field (min 1) */
-      options: components['schemas']['FieldSelectOptionSchema'][];
+      options: [
+        components['schemas']['FieldSelectOptionSchema'],
+        ...components['schemas']['FieldSelectOptionSchema'][],
+      ];
       /** @description Indicates if multiple selections are allowed */
       multiple?: boolean;
     };
@@ -4381,7 +4384,13 @@ export type components = {
        *       "Clear to Close"
        *     ]
        */
-      pull_on_millestones?: string[];
+      pull_on_millestones?:
+        | []
+        | [string]
+        | [string, string]
+        | [string, string, string]
+        | [string, string, string, string]
+        | [string, string, string, string, string];
       /**
        * @description Folders to pull from Encompass
        * @example [
@@ -4390,7 +4399,13 @@ export type components = {
        *       "Underwriting Folder"
        *     ]
        */
-      pull_on_folders?: string[];
+      pull_on_folders?:
+        | []
+        | [string]
+        | [string, string]
+        | [string, string, string]
+        | [string, string, string, string]
+        | [string, string, string, string, string];
     };
     /** @description Configuration for a Persona trigger */
     TriggerPersonaConfigSchema: {
@@ -4869,7 +4884,7 @@ export type components = {
       rules: components['schemas']['ExtendedRuleSchema'][];
     };
     /** @description Data associated with the trigger entity */
-    TriggerEntityDataSchema: Record<string, never>;
+    TriggerEntityDataSchema: Record<string, unknown>;
     /** @description Detailed information about a trigger entity */
     TriggerEntitySchema: {
       /** @description Unique identifier for the trigger entity */

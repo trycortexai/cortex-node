@@ -12,6 +12,7 @@
     "build": "tsup src/index.ts",
     "dev": "tsup src/index.ts --watch",
     "test": "vitest",
+    "generate": "bun openapi.ts && npm run format",
     "type-check": "tsc --noEmit",
     "lint": "eslint . --ext .ts,.tsx --fix",
     "validate": "npm run build && npm run format && npm run type-check && npm run lint",
