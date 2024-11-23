@@ -104,6 +104,7 @@ const cleanPathUrl = (path: string) => {
   return path
     .split('/')
     .filter(segment => segment && !segment.includes('{'))
+    .map(e => convertToCamelCase(e))
     .join('.');
 };
 

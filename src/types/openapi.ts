@@ -5975,7 +5975,7 @@ export const createAPI = (callAPI: (params: APIMethodParams) => unknown) => ({
             }) as Promise<RecordSchema>;
           },
         },
-        'update-rules': {
+        updateRules: {
           create: (
             collectionId: string,
             recordId: string,
