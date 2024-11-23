@@ -7,9 +7,4 @@ export type APIFetchClientOptions = FetchClientOptions;
 
 export type ClientOptions = APIFetchClientOptions & {
   apiKey: string;
-  appId: string;
 };
-
-export interface APIClient extends ClientOptions {
-  appId: string;
-}

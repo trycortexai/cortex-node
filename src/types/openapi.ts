@@ -5152,5 +5152,902 @@ export type components = {
   headers: never;
   pathItems: never;
 };
+export type QueryWorkflowsSchema =
+  components['schemas']['QueryWorkflowsSchema'];
+export type QueryWorkflowsDiscoverSchema =
+  components['schemas']['QueryWorkflowsDiscoverSchema'];
+export type IncludeRunPropsSchema =
+  components['schemas']['IncludeRunPropsSchema'];
+export type IncludeRunSchema = components['schemas']['IncludeRunSchema'];
+export type QueryRunSchema = components['schemas']['QueryRunSchema'];
+export type QueryWorkflowExpectationsSchema =
+  components['schemas']['QueryWorkflowExpectationsSchema'];
+export type IncludeTestPropsSchema =
+  components['schemas']['IncludeTestPropsSchema'];
+export type IncludeTestSchema = components['schemas']['IncludeTestSchema'];
+export type QueryWorkflowTestsSchema =
+  components['schemas']['QueryWorkflowTestsSchema'];
+export type QueryCollectionsSchema =
+  components['schemas']['QueryCollectionsSchema'];
+export type IncludeRecordPropsSchema =
+  components['schemas']['IncludeRecordPropsSchema'];
+export type IncludeRecordSchema = components['schemas']['IncludeRecordSchema'];
+export type QueryRecordsSchema = components['schemas']['QueryRecordsSchema'];
+export type DocumentContentSchema =
+  components['schemas']['DocumentContentSchema'];
+export type DocumentImageSchema = components['schemas']['DocumentImageSchema'];
+export type DocumentSchema = components['schemas']['DocumentSchema'];
+export type FileSchema = components['schemas']['FileSchema'];
+export type FileDataSchema = components['schemas']['FileDataSchema'];
+export type CreateFileSchema = components['schemas']['CreateFileSchema'];
+export type TestConnectionConnectionResultSchema =
+  components['schemas']['TestConnectionConnectionResultSchema'];
+export type ConnectionEncompassConfigSchema =
+  components['schemas']['ConnectionEncompassConfigSchema'];
+export type ConnectionPersonaConfigSchema =
+  components['schemas']['ConnectionPersonaConfigSchema'];
+export type ConnectionConfigSchema =
+  components['schemas']['ConnectionConfigSchema'];
+export type TestConnectionConnectionSchema =
+  components['schemas']['TestConnectionConnectionSchema'];
+export type ConnectionSchema = components['schemas']['ConnectionSchema'];
+export type CreateConnectionSchema =
+  components['schemas']['CreateConnectionSchema'];
+export type UpdateConnectionSchema =
+  components['schemas']['UpdateConnectionSchema'];
+export type AppVariableSchema = components['schemas']['AppVariableSchema'];
+export type RunStepSchema = components['schemas']['RunStepSchema'];
+export type StepKeySchema = components['schemas']['StepKeySchema'];
+export type StepBranchConditionSchema =
+  components['schemas']['StepBranchConditionSchema'];
+export type StepBranchSchema = components['schemas']['StepBranchSchema'];
+export type ModelTextSystemMessageSchema =
+  components['schemas']['ModelTextSystemMessageSchema'];
+export type ModelTextMessageTextSchema =
+  components['schemas']['ModelTextMessageTextSchema'];
+export type ModelTextAssistantMessageSchema =
+  components['schemas']['ModelTextAssistantMessageSchema'];
+export type ModelTextMessageImageSchema =
+  components['schemas']['ModelTextMessageImageSchema'];
+export type ModelTextUserMessageSchema =
+  components['schemas']['ModelTextUserMessageSchema'];
+export type ModelTextMessageSchema =
+  components['schemas']['ModelTextMessageSchema'];
+export type ModelTextResponseFormatSchema =
+  components['schemas']['ModelTextResponseFormatSchema'];
+export type ModelTextSchema = components['schemas']['ModelTextSchema'];
+export type ModelCloudflareSchema =
+  components['schemas']['ModelCloudflareSchema'];
+export type ModelOpenAiSchema = components['schemas']['ModelOpenAISchema'];
+export type ModelAnthropicSchema =
+  components['schemas']['ModelAnthropicSchema'];
+export type ModelGoogleSchema = components['schemas']['ModelGoogleSchema'];
+export type ModelXSchema = components['schemas']['ModelXSchema'];
+export type ModelProviderSchema = components['schemas']['ModelProviderSchema'];
+export type StepModelSchema = components['schemas']['StepModelSchema'];
+export type StepCodeSchema = components['schemas']['StepCodeSchema'];
+export type StepHttpRequestSchema =
+  components['schemas']['StepHttpRequestSchema'];
+export type StepBrowserSchema = components['schemas']['StepBrowserSchema'];
+export type WorkflowInputValuesSchema =
+  components['schemas']['WorkflowInputValuesSchema'];
+export type StepWorkflowSchema = components['schemas']['StepWorkflowSchema'];
+export type FileServiceSchema = components['schemas']['FileServiceSchema'];
+export type EncompassPushServiceSchema =
+  components['schemas']['EncompassPushServiceSchema'];
+export type ServiceSchema = components['schemas']['ServiceSchema'];
+export type StepServiceSchema = components['schemas']['StepServiceSchema'];
+export type StepSchema = components['schemas']['StepSchema'];
+export type CreateRunStepSchema = components['schemas']['CreateRunStepSchema'];
+export type AppPublicSchema = components['schemas']['AppPublicSchema'];
+export type UserPublicSchema = components['schemas']['UserPublicSchema'];
+export type FieldFileSchema = components['schemas']['FieldFileSchema'];
+export type FieldNumberSchema = components['schemas']['FieldNumberSchema'];
+export type FieldStringSchema = components['schemas']['FieldStringSchema'];
+export type FieldBooleanSchema = components['schemas']['FieldBooleanSchema'];
+export type FieldDateSchema = components['schemas']['FieldDateSchema'];
+export type FieldSelectOptionSchema =
+  components['schemas']['FieldSelectOptionSchema'];
+export type FieldSelectSchema = components['schemas']['FieldSelectSchema'];
+export type FieldObjectSchema = components['schemas']['FieldObjectSchema'];
+export type InputSchema = components['schemas']['InputSchema'];
+export type InputDefinitionSchema =
+  components['schemas']['InputDefinitionSchema'];
+export type InputValuesSchema = components['schemas']['InputValuesSchema'];
+export type TagSchema = components['schemas']['TagSchema'];
+export type WorkflowTestStatsSchema =
+  components['schemas']['WorkflowTestStatsSchema'];
+export type WorkflowSchema = components['schemas']['WorkflowSchema'];
+export type WorkflowVersionSchema =
+  components['schemas']['WorkflowVersionSchema'];
+export type RunResultSchema = components['schemas']['RunResultSchema'];
+export type RuntimeLogs = components['schemas']['RuntimeLogs'];
+export type RunStepOutputSchema = components['schemas']['RunStepOutputSchema'];
+export type RunOutputSchema = components['schemas']['RunOutputSchema'];
+export type WorkflowVersionDraftSchema =
+  components['schemas']['WorkflowVersionDraftSchema'];
+export type CreditsUsageSchema = components['schemas']['CreditsUsageSchema'];
+export type CreditsRunUsageSchema =
+  components['schemas']['CreditsRunUsageSchema'];
+export type RunSchema = components['schemas']['RunSchema'];
+export type CreateRunSchema = components['schemas']['CreateRunSchema'];
+export type ReplayRunSchema = components['schemas']['ReplayRunSchema'];
+export type WorkflowExpectationSchema =
+  components['schemas']['WorkflowExpectationSchema'];
+export type CreateWorkflowExpectationSchema =
+  components['schemas']['CreateWorkflowExpectationSchema'];
+export type UpdateWorkflowExpectationSchema =
+  components['schemas']['UpdateWorkflowExpectationSchema'];
+export type WorkflowTestExpectationItemSchema =
+  components['schemas']['WorkflowTestExpectationItemSchema'];
+export type WorkflowTestSchema = components['schemas']['WorkflowTestSchema'];
+export type CreateWorkflowTestSchema =
+  components['schemas']['CreateWorkflowTestSchema'];
+export type RunWorkflowTestsSchema =
+  components['schemas']['RunWorkflowTestsSchema'];
+export type UpdateWorkflowTestSchema =
+  components['schemas']['UpdateWorkflowTestSchema'];
+export type RunWorkflowTestSchema =
+  components['schemas']['RunWorkflowTestSchema'];
+export type WorkflowTestEventSchema =
+  components['schemas']['WorkflowTestEventSchema'];
+export type RuleSchema = components['schemas']['RuleSchema'];
+export type CollectionConfigMappingSchema =
+  components['schemas']['CollectionConfigMappingSchema'];
+export type MappingFieldDocumentSchema =
+  components['schemas']['MappingFieldDocumentSchema'];
+export type MappingFieldPropertySchema =
+  components['schemas']['MappingFieldPropertySchema'];
+export type TriggerMappingSchema =
+  components['schemas']['TriggerMappingSchema'];
+export type TriggerEncompassConfigSchema =
+  components['schemas']['TriggerEncompassConfigSchema'];
+export type TriggerPersonaConfigSchema =
+  components['schemas']['TriggerPersonaConfigSchema'];
+export type TriggerConfigSchema = components['schemas']['TriggerConfigSchema'];
+export type TriggerSchema = components['schemas']['TriggerSchema'];
+export type CollectionSchema = components['schemas']['CollectionSchema'];
+export type ExtendedRuleSchema = components['schemas']['ExtendedRuleSchema'];
+export type ExtendedCollectionSchema =
+  components['schemas']['ExtendedCollectionSchema'];
+export type CreateCollectionSchema =
+  components['schemas']['CreateCollectionSchema'];
+export type UpdateCollectionSchema =
+  components['schemas']['UpdateCollectionSchema'];
+export type CreditsRecordUsageSchema =
+  components['schemas']['CreditsRecordUsageSchema'];
+export type IncludeRecordRulePropsSchema =
+  components['schemas']['IncludeRecordRulePropsSchema'];
+export type IncludeRecordRuleSchema =
+  components['schemas']['IncludeRecordRuleSchema'];
+export type RecordRuleSchema = components['schemas']['RecordRuleSchema'];
+export type CollectionConfigSchema =
+  components['schemas']['CollectionConfigSchema'];
+export type LimitedTriggerEntitySchema =
+  components['schemas']['LimitedTriggerEntitySchema'];
+export type RecordSchema = components['schemas']['RecordSchema'];
+export type ExtendedCollectionConfigSchema =
+  components['schemas']['ExtendedCollectionConfigSchema'];
+export type TriggerEntityDataSchema =
+  components['schemas']['TriggerEntityDataSchema'];
+export type TriggerEntitySchema = components['schemas']['TriggerEntitySchema'];
+export type ExtendedRecordSchema =
+  components['schemas']['ExtendedRecordSchema'];
+export type UpdateRecordRulesSchema =
+  components['schemas']['UpdateRecordRulesSchema'];
+export type CreateRecordSchema = components['schemas']['CreateRecordSchema'];
+export type UpdateRecordSchema = components['schemas']['UpdateRecordSchema'];
+export type RecordRuleErrorSchema =
+  components['schemas']['RecordRuleErrorSchema'];
+export type RecordStatusSchema = components['schemas']['RecordStatusSchema'];
+export type RunRecordSchema = components['schemas']['RunRecordSchema'];
+export type WebhookSchema = components['schemas']['WebhookSchema'];
+export type CreateWebhookSchema = components['schemas']['CreateWebhookSchema'];
+export type UpdateWebhookSchema = components['schemas']['UpdateWebhookSchema'];
 export type $defs = Record<string, never>;
 export type operations = Record<string, never>;
+
+export type APIMethodParams = {
+  method: string;
+  endpoint: string;
+  params?: Record<string, unknown>;
+  body?: unknown;
+  query?: Record<string, unknown>;
+};
+export type APIMethods = ReturnType<typeof createAPI>;
+export const createAPI = (callAPI: (params: APIMethodParams) => unknown) => ({
+  apps: {
+    files: {
+      list: (
+        query?: paths['/apps/{app_id}/files']['get']['parameters']['query'],
+      ): Promise<FileSchema[]> => {
+        return callAPI({
+          method: 'get',
+          endpoint: '/apps/{app_id}/files',
+          query,
+        }) as Promise<FileSchema[]>;
+      },
+      create: (body: CreateFileSchema): Promise<FileSchema> => {
+        return callAPI({
+          method: 'post',
+          endpoint: '/apps/{app_id}/files',
+          body,
+        }) as Promise<FileSchema>;
+      },
+      get: (fileId: string): Promise<FileSchema> => {
+        return callAPI({
+          method: 'get',
+          endpoint: '/apps/{app_id}/files/{file_id}',
+          params: {file_id: fileId},
+        }) as Promise<FileSchema>;
+      },
+      delete: (fileId: string): Promise<void> => {
+        return callAPI({
+          method: 'delete',
+          endpoint: '/apps/{app_id}/files/{file_id}',
+          params: {file_id: fileId},
+        }) as Promise<void>;
+      },
+      cancel: {
+        create: (fileId: string): Promise<FileSchema> => {
+          return callAPI({
+            method: 'post',
+            endpoint: '/apps/{app_id}/files/{file_id}/cancel',
+            params: {file_id: fileId},
+          }) as Promise<FileSchema>;
+        },
+      },
+    },
+    connections: {
+      test: {
+        create: (
+          body: TestConnectionConnectionSchema,
+        ): Promise<TestConnectionConnectionResultSchema> => {
+          return callAPI({
+            method: 'post',
+            endpoint: '/apps/{app_id}/connections/test',
+            body,
+          }) as Promise<TestConnectionConnectionResultSchema>;
+        },
+      },
+      list: (
+        query?: paths['/apps/{app_id}/connections']['get']['parameters']['query'],
+      ): Promise<ConnectionSchema[]> => {
+        return callAPI({
+          method: 'get',
+          endpoint: '/apps/{app_id}/connections',
+          query,
+        }) as Promise<ConnectionSchema[]>;
+      },
+      create: (body: CreateConnectionSchema): Promise<ConnectionSchema> => {
+        return callAPI({
+          method: 'post',
+          endpoint: '/apps/{app_id}/connections',
+          body,
+        }) as Promise<ConnectionSchema>;
+      },
+      get: (connectionId: string): Promise<ConnectionSchema> => {
+        return callAPI({
+          method: 'get',
+          endpoint: '/apps/{app_id}/connections/{connection_id}',
+          params: {connection_id: connectionId},
+        }) as Promise<ConnectionSchema>;
+      },
+      update: (
+        connectionId: string,
+        body: UpdateConnectionSchema,
+      ): Promise<ConnectionSchema> => {
+        return callAPI({
+          method: 'patch',
+          endpoint: '/apps/{app_id}/connections/{connection_id}',
+          params: {connection_id: connectionId},
+          body,
+        }) as Promise<ConnectionSchema>;
+      },
+      delete: (connectionId: string): Promise<void> => {
+        return callAPI({
+          method: 'delete',
+          endpoint: '/apps/{app_id}/connections/{connection_id}',
+          params: {connection_id: connectionId},
+        }) as Promise<void>;
+      },
+    },
+    variables: {
+      list: (
+        body: AppVariableSchema[],
+        query?: paths['/apps/{app_id}/variables']['patch']['parameters']['query'],
+      ): Promise<AppVariableSchema[]> => {
+        return callAPI({
+          method: 'patch',
+          endpoint: '/apps/{app_id}/variables',
+          query,
+          body,
+        }) as Promise<AppVariableSchema[]>;
+      },
+    },
+    runs: {
+      step: {
+        create: (body: CreateRunStepSchema): Promise<RunStepSchema> => {
+          return callAPI({
+            method: 'post',
+            endpoint: '/apps/{app_id}/runs/step',
+            body,
+          }) as Promise<RunStepSchema>;
+        },
+      },
+    },
+    workflows: {
+      discover: {
+        list: (
+          query?: paths['/apps/{app_id}/workflows/discover']['get']['parameters']['query'],
+        ): Promise<WorkflowSchema[]> => {
+          return callAPI({
+            method: 'get',
+            endpoint: '/apps/{app_id}/workflows/discover',
+            query,
+          }) as Promise<WorkflowSchema[]>;
+        },
+        get: (workflowId: string): Promise<WorkflowSchema> => {
+          return callAPI({
+            method: 'get',
+            endpoint: '/apps/{app_id}/workflows/discover/{workflow_id}',
+            params: {workflow_id: workflowId},
+          }) as Promise<WorkflowSchema>;
+        },
+        versions: {
+          get: (
+            workflowId: string,
+            versionIdOrVersionNumber: string,
+          ): Promise<WorkflowVersionSchema> => {
+            return callAPI({
+              method: 'get',
+              endpoint:
+                '/apps/{app_id}/workflows/discover/{workflow_id}/versions/{version_id_or_version_number}',
+              params: {
+                workflow_id: workflowId,
+                version_id_or_version_number: versionIdOrVersionNumber,
+              },
+            }) as Promise<WorkflowVersionSchema>;
+          },
+        },
+        runs: {
+          create: (
+            workflowId: string,
+            body: CreateRunSchema,
+            query?: paths['/apps/{app_id}/workflows/discover/{workflow_id}/runs']['post']['parameters']['query'],
+          ): Promise<RunSchema> => {
+            return callAPI({
+              method: 'post',
+              endpoint: '/apps/{app_id}/workflows/discover/{workflow_id}/runs',
+              params: {workflow_id: workflowId},
+              query,
+              body,
+            }) as Promise<RunSchema>;
+          },
+          cancel: {
+            create: (
+              workflowId: string,
+              runId: string,
+              query?: paths['/apps/{app_id}/workflows/discover/{workflow_id}/runs/{run_id}/cancel']['post']['parameters']['query'],
+            ): Promise<RunSchema> => {
+              return callAPI({
+                method: 'post',
+                endpoint:
+                  '/apps/{app_id}/workflows/discover/{workflow_id}/runs/{run_id}/cancel',
+                params: {workflow_id: workflowId, run_id: runId},
+                query,
+              }) as Promise<RunSchema>;
+            },
+          },
+        },
+      },
+      list: (
+        query?: paths['/apps/{app_id}/workflows']['get']['parameters']['query'],
+      ): Promise<WorkflowSchema[]> => {
+        return callAPI({
+          method: 'get',
+          endpoint: '/apps/{app_id}/workflows',
+          query,
+        }) as Promise<WorkflowSchema[]>;
+      },
+      get: (workflowId: string): Promise<WorkflowSchema> => {
+        return callAPI({
+          method: 'get',
+          endpoint: '/apps/{app_id}/workflows/{workflow_id}',
+          params: {workflow_id: workflowId},
+        }) as Promise<WorkflowSchema>;
+      },
+      runs: {
+        list: (
+          workflowId: string,
+          query?: paths['/apps/{app_id}/workflows/{workflow_id}/runs']['get']['parameters']['query'],
+        ): Promise<RunSchema[]> => {
+          return callAPI({
+            method: 'get',
+            endpoint: '/apps/{app_id}/workflows/{workflow_id}/runs',
+            params: {workflow_id: workflowId},
+            query,
+          }) as Promise<RunSchema[]>;
+        },
+        create: (
+          workflowId: string,
+          body: CreateRunSchema,
+          query?: paths['/apps/{app_id}/workflows/{workflow_id}/runs']['post']['parameters']['query'],
+        ): Promise<RunSchema> => {
+          return callAPI({
+            method: 'post',
+            endpoint: '/apps/{app_id}/workflows/{workflow_id}/runs',
+            params: {workflow_id: workflowId},
+            query,
+            body,
+          }) as Promise<RunSchema>;
+        },
+        replay: {
+          create: (
+            workflowId: string,
+            runId: string,
+            body: ReplayRunSchema,
+            query?: paths['/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/replay']['post']['parameters']['query'],
+          ): Promise<RunSchema> => {
+            return callAPI({
+              method: 'post',
+              endpoint:
+                '/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/replay',
+              params: {workflow_id: workflowId, run_id: runId},
+              query,
+              body,
+            }) as Promise<RunSchema>;
+          },
+        },
+        get: (
+          workflowId: string,
+          runId: string,
+          query?: paths['/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}']['get']['parameters']['query'],
+        ): Promise<RunSchema> => {
+          return callAPI({
+            method: 'get',
+            endpoint: '/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}',
+            params: {workflow_id: workflowId, run_id: runId},
+            query,
+          }) as Promise<RunSchema>;
+        },
+        cancel: {
+          create: (
+            workflowId: string,
+            runId: string,
+            query?: paths['/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/cancel']['post']['parameters']['query'],
+          ): Promise<RunSchema> => {
+            return callAPI({
+              method: 'post',
+              endpoint:
+                '/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/cancel',
+              params: {workflow_id: workflowId, run_id: runId},
+              query,
+            }) as Promise<RunSchema>;
+          },
+        },
+      },
+      tests: {
+        expectations: {
+          list: (
+            workflowId: string,
+            query?: paths['/apps/{app_id}/workflows/{workflow_id}/tests/expectations']['get']['parameters']['query'],
+          ): Promise<WorkflowExpectationSchema[]> => {
+            return callAPI({
+              method: 'get',
+              endpoint:
+                '/apps/{app_id}/workflows/{workflow_id}/tests/expectations',
+              params: {workflow_id: workflowId},
+              query,
+            }) as Promise<WorkflowExpectationSchema[]>;
+          },
+          create: (
+            workflowId: string,
+            body: CreateWorkflowExpectationSchema,
+          ): Promise<WorkflowExpectationSchema> => {
+            return callAPI({
+              method: 'post',
+              endpoint:
+                '/apps/{app_id}/workflows/{workflow_id}/tests/expectations',
+              params: {workflow_id: workflowId},
+              body,
+            }) as Promise<WorkflowExpectationSchema>;
+          },
+          get: (
+            workflowId: string,
+            expectationId: string,
+          ): Promise<WorkflowExpectationSchema> => {
+            return callAPI({
+              method: 'get',
+              endpoint:
+                '/apps/{app_id}/workflows/{workflow_id}/tests/expectations/{expectation_id}',
+              params: {workflow_id: workflowId, expectation_id: expectationId},
+            }) as Promise<WorkflowExpectationSchema>;
+          },
+          update: (
+            workflowId: string,
+            expectationId: string,
+            body: UpdateWorkflowExpectationSchema,
+          ): Promise<WorkflowExpectationSchema> => {
+            return callAPI({
+              method: 'patch',
+              endpoint:
+                '/apps/{app_id}/workflows/{workflow_id}/tests/expectations/{expectation_id}',
+              params: {workflow_id: workflowId, expectation_id: expectationId},
+              body,
+            }) as Promise<WorkflowExpectationSchema>;
+          },
+          delete: (
+            workflowId: string,
+            expectationId: string,
+          ): Promise<void> => {
+            return callAPI({
+              method: 'delete',
+              endpoint:
+                '/apps/{app_id}/workflows/{workflow_id}/tests/expectations/{expectation_id}',
+              params: {workflow_id: workflowId, expectation_id: expectationId},
+            }) as Promise<void>;
+          },
+        },
+        list: (
+          workflowId: string,
+          query?: paths['/apps/{app_id}/workflows/{workflow_id}/tests']['get']['parameters']['query'],
+        ): Promise<WorkflowTestSchema[]> => {
+          return callAPI({
+            method: 'get',
+            endpoint: '/apps/{app_id}/workflows/{workflow_id}/tests',
+            params: {workflow_id: workflowId},
+            query,
+          }) as Promise<WorkflowTestSchema[]>;
+        },
+        create: (
+          workflowId: string,
+          body: CreateWorkflowTestSchema,
+          query?: paths['/apps/{app_id}/workflows/{workflow_id}/tests']['post']['parameters']['query'],
+        ): Promise<WorkflowTestSchema> => {
+          return callAPI({
+            method: 'post',
+            endpoint: '/apps/{app_id}/workflows/{workflow_id}/tests',
+            params: {workflow_id: workflowId},
+            query,
+            body,
+          }) as Promise<WorkflowTestSchema>;
+        },
+        stats: {
+          get: (workflowId: string): Promise<WorkflowTestStatsSchema> => {
+            return callAPI({
+              method: 'get',
+              endpoint: '/apps/{app_id}/workflows/{workflow_id}/tests/stats',
+              params: {workflow_id: workflowId},
+            }) as Promise<WorkflowTestStatsSchema>;
+          },
+        },
+        get: (
+          workflowId: string,
+          testId: string,
+          query?: paths['/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}']['get']['parameters']['query'],
+        ): Promise<WorkflowTestSchema> => {
+          return callAPI({
+            method: 'get',
+            endpoint: '/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}',
+            params: {workflow_id: workflowId, test_id: testId},
+            query,
+          }) as Promise<WorkflowTestSchema>;
+        },
+        update: (
+          workflowId: string,
+          testId: string,
+          body: UpdateWorkflowTestSchema,
+          query?: paths['/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}']['patch']['parameters']['query'],
+        ): Promise<WorkflowTestSchema> => {
+          return callAPI({
+            method: 'patch',
+            endpoint: '/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}',
+            params: {workflow_id: workflowId, test_id: testId},
+            query,
+            body,
+          }) as Promise<WorkflowTestSchema>;
+        },
+        delete: (workflowId: string, testId: string): Promise<void> => {
+          return callAPI({
+            method: 'delete',
+            endpoint: '/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}',
+            params: {workflow_id: workflowId, test_id: testId},
+          }) as Promise<void>;
+        },
+        runs: {
+          create: (
+            workflowId: string,
+            testId: string,
+            body: RunWorkflowTestSchema,
+            query?: paths['/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}/runs']['post']['parameters']['query'],
+          ): Promise<WorkflowTestSchema> => {
+            return callAPI({
+              method: 'post',
+              endpoint:
+                '/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}/runs',
+              params: {workflow_id: workflowId, test_id: testId},
+              query,
+              body,
+            }) as Promise<WorkflowTestSchema>;
+          },
+        },
+        cancel: {
+          create: (
+            workflowId: string,
+            testId: string,
+            query?: paths['/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}/cancel']['post']['parameters']['query'],
+          ): Promise<WorkflowTestSchema> => {
+            return callAPI({
+              method: 'post',
+              endpoint:
+                '/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}/cancel',
+              params: {workflow_id: workflowId, test_id: testId},
+              query,
+            }) as Promise<WorkflowTestSchema>;
+          },
+        },
+        ws: {
+          get: (
+            workflowId: string,
+            testId: string,
+          ): Promise<WorkflowTestEventSchema> => {
+            return callAPI({
+              method: 'get',
+              endpoint:
+                '/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}/ws',
+              params: {workflow_id: workflowId, test_id: testId},
+            }) as Promise<WorkflowTestEventSchema>;
+          },
+        },
+      },
+      versions: {
+        list: (
+          workflowId: string,
+          query?: paths['/apps/{app_id}/workflows/{workflow_id}/versions']['get']['parameters']['query'],
+        ): Promise<WorkflowVersionSchema[]> => {
+          return callAPI({
+            method: 'get',
+            endpoint: '/apps/{app_id}/workflows/{workflow_id}/versions',
+            params: {workflow_id: workflowId},
+            query,
+          }) as Promise<WorkflowVersionSchema[]>;
+        },
+        get: (
+          workflowId: string,
+          versionIdOrVersionNumber: string,
+        ): Promise<WorkflowVersionSchema> => {
+          return callAPI({
+            method: 'get',
+            endpoint:
+              '/apps/{app_id}/workflows/{workflow_id}/versions/{version_id_or_version_number}',
+            params: {
+              workflow_id: workflowId,
+              version_id_or_version_number: versionIdOrVersionNumber,
+            },
+          }) as Promise<WorkflowVersionSchema>;
+        },
+      },
+    },
+    collections: {
+      list: (
+        query?: paths['/apps/{app_id}/collections']['get']['parameters']['query'],
+      ): Promise<CollectionSchema[]> => {
+        return callAPI({
+          method: 'get',
+          endpoint: '/apps/{app_id}/collections',
+          query,
+        }) as Promise<CollectionSchema[]>;
+      },
+      create: (
+        body: CreateCollectionSchema,
+      ): Promise<ExtendedCollectionSchema> => {
+        return callAPI({
+          method: 'post',
+          endpoint: '/apps/{app_id}/collections',
+          body,
+        }) as Promise<ExtendedCollectionSchema>;
+      },
+      get: (collectionId: string): Promise<ExtendedCollectionSchema> => {
+        return callAPI({
+          method: 'get',
+          endpoint: '/apps/{app_id}/collections/{collection_id}',
+          params: {collection_id: collectionId},
+        }) as Promise<ExtendedCollectionSchema>;
+      },
+      update: (
+        collectionId: string,
+        body: UpdateCollectionSchema,
+      ): Promise<ExtendedCollectionSchema> => {
+        return callAPI({
+          method: 'patch',
+          endpoint: '/apps/{app_id}/collections/{collection_id}',
+          params: {collection_id: collectionId},
+          body,
+        }) as Promise<ExtendedCollectionSchema>;
+      },
+      delete: (collectionId: string): Promise<void> => {
+        return callAPI({
+          method: 'delete',
+          endpoint: '/apps/{app_id}/collections/{collection_id}',
+          params: {collection_id: collectionId},
+        }) as Promise<void>;
+      },
+      records: {
+        list: (
+          collectionId: string,
+          query?: paths['/apps/{app_id}/collections/{collection_id}/records']['get']['parameters']['query'],
+        ): Promise<RecordSchema[]> => {
+          return callAPI({
+            method: 'get',
+            endpoint: '/apps/{app_id}/collections/{collection_id}/records',
+            params: {collection_id: collectionId},
+            query,
+          }) as Promise<RecordSchema[]>;
+        },
+        create: (
+          collectionId: string,
+          body: CreateRecordSchema,
+          query?: paths['/apps/{app_id}/collections/{collection_id}/records']['post']['parameters']['query'],
+        ): Promise<ExtendedRecordSchema> => {
+          return callAPI({
+            method: 'post',
+            endpoint: '/apps/{app_id}/collections/{collection_id}/records',
+            params: {collection_id: collectionId},
+            query,
+            body,
+          }) as Promise<ExtendedRecordSchema>;
+        },
+        get: (
+          collectionId: string,
+          recordId: string,
+          query?: paths['/apps/{app_id}/collections/{collection_id}/records/{record_id}']['get']['parameters']['query'],
+        ): Promise<ExtendedRecordSchema> => {
+          return callAPI({
+            method: 'get',
+            endpoint:
+              '/apps/{app_id}/collections/{collection_id}/records/{record_id}',
+            params: {collection_id: collectionId, record_id: recordId},
+            query,
+          }) as Promise<ExtendedRecordSchema>;
+        },
+        update: (
+          collectionId: string,
+          recordId: string,
+          body: UpdateRecordSchema,
+          query?: paths['/apps/{app_id}/collections/{collection_id}/records/{record_id}']['patch']['parameters']['query'],
+        ): Promise<ExtendedRecordSchema> => {
+          return callAPI({
+            method: 'patch',
+            endpoint:
+              '/apps/{app_id}/collections/{collection_id}/records/{record_id}',
+            params: {collection_id: collectionId, record_id: recordId},
+            query,
+            body,
+          }) as Promise<ExtendedRecordSchema>;
+        },
+        delete: (collectionId: string, recordId: string): Promise<void> => {
+          return callAPI({
+            method: 'delete',
+            endpoint:
+              '/apps/{app_id}/collections/{collection_id}/records/{record_id}',
+            params: {collection_id: collectionId, record_id: recordId},
+          }) as Promise<void>;
+        },
+        status: {
+          get: (
+            collectionId: string,
+            recordId: string,
+          ): Promise<RecordStatusSchema> => {
+            return callAPI({
+              method: 'get',
+              endpoint:
+                '/apps/{app_id}/collections/{collection_id}/records/{record_id}/status',
+              params: {collection_id: collectionId, record_id: recordId},
+            }) as Promise<RecordStatusSchema>;
+          },
+        },
+        run: {
+          create: (
+            collectionId: string,
+            recordId: string,
+            body: RunRecordSchema,
+          ): Promise<RecordSchema> => {
+            return callAPI({
+              method: 'post',
+              endpoint:
+                '/apps/{app_id}/collections/{collection_id}/records/{record_id}/run',
+              params: {collection_id: collectionId, record_id: recordId},
+              body,
+            }) as Promise<RecordSchema>;
+          },
+        },
+        cancel: {
+          create: (
+            collectionId: string,
+            recordId: string,
+          ): Promise<RecordSchema> => {
+            return callAPI({
+              method: 'post',
+              endpoint:
+                '/apps/{app_id}/collections/{collection_id}/records/{record_id}/cancel',
+              params: {collection_id: collectionId, record_id: recordId},
+            }) as Promise<RecordSchema>;
+          },
+        },
+        'update-rules': {
+          create: (
+            collectionId: string,
+            recordId: string,
+          ): Promise<RecordSchema> => {
+            return callAPI({
+              method: 'post',
+              endpoint:
+                '/apps/{app_id}/collections/{collection_id}/records/{record_id}/update-rules',
+              params: {collection_id: collectionId, record_id: recordId},
+            }) as Promise<RecordSchema>;
+          },
+        },
+        reset: {
+          create: (
+            collectionId: string,
+            recordId: string,
+          ): Promise<RecordSchema> => {
+            return callAPI({
+              method: 'post',
+              endpoint:
+                '/apps/{app_id}/collections/{collection_id}/records/{record_id}/reset',
+              params: {collection_id: collectionId, record_id: recordId},
+            }) as Promise<RecordSchema>;
+          },
+        },
+        download: {
+          get: (collectionId: string, recordId: string): Promise<void> => {
+            return callAPI({
+              method: 'get',
+              endpoint:
+                '/apps/{app_id}/collections/{collection_id}/records/{record_id}/download',
+              params: {collection_id: collectionId, record_id: recordId},
+            }) as Promise<void>;
+          },
+        },
+      },
+    },
+    webhooks: {
+      list: (
+        query?: paths['/apps/{app_id}/webhooks']['get']['parameters']['query'],
+      ): Promise<WebhookSchema[]> => {
+        return callAPI({
+          method: 'get',
+          endpoint: '/apps/{app_id}/webhooks',
+          query,
+        }) as Promise<WebhookSchema[]>;
+      },
+      create: (body: CreateWebhookSchema): Promise<WebhookSchema> => {
+        return callAPI({
+          method: 'post',
+          endpoint: '/apps/{app_id}/webhooks',
+          body,
+        }) as Promise<WebhookSchema>;
+      },
+      update: (
+        webhookId: string,
+        body: UpdateWebhookSchema,
+      ): Promise<WebhookSchema> => {
+        return callAPI({
+          method: 'patch',
+          endpoint: '/apps/{app_id}/webhooks/{webhook_id}',
+          params: {webhook_id: webhookId},
+          body,
+        }) as Promise<WebhookSchema>;
+      },
+      delete: (webhookId: string): Promise<void> => {
+        return callAPI({
+          method: 'delete',
+          endpoint: '/apps/{app_id}/webhooks/{webhook_id}',
+          params: {webhook_id: webhookId},
+        }) as Promise<void>;
+      },
+    },
+  },
+});

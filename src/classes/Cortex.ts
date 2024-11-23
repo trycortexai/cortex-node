@@ -1,28 +1,24 @@
-import {APIClient, APIFetchClient, ClientOptions} from '../types/api';
+import {APIFetchClient, ClientOptions} from '../types/api';
+import {APIMethodParams, APIMethods, createAPI} from '../types/openapi';
 import {createAPIFetchClient} from '../utils/api';
+import {getObjectProperty} from '../utils/object';
 
-export class Cortex implements APIClient {
+const APP_LESS_PARAM = 'c';
+
+export class Cortex {
+  private apiMethods: ReturnType<typeof createAPI>;
+  private apiKey: string = '';
+
+  apps: APIMethods['apps'] = null as unknown as APIMethods['apps'];
+
   client: APIFetchClient;
 
-  get: APIFetchClient['GET'];
-  getPaged: APIFetchClient['GETPaged'];
-  post: APIFetchClient['POST'];
-  put: APIFetchClient['PUT'];
-  delete: APIFetchClient['DELETE'];
-
-  appId: string = '';
-  apiKey: string = '';
   baseURL?: string;
 
-  constructor({appId, apiKey, ...options}: ClientOptions) {
-    this.appId = appId;
+  constructor({apiKey, ...options}: ClientOptions) {
     this.apiKey = apiKey;
 
     //
-
-    if (!this.appId) {
-      throw new Error('App ID is required');
-    }
 
     if (!this.apiKey) {
       throw new Error('API Key is required');
@@ -40,15 +36,44 @@ export class Cortex implements APIClient {
 
     //
 
-    this.get = this.client.GET;
-    this.getPaged = this.client.GETPaged;
-    this.post = this.client.POST;
-    this.put = this.client.PUT;
-    this.delete = this.client.DELETE;
+    this.apiMethods = createAPI(this.api);
+
+    return this.createProxy();
   }
 
-  hello() {
-    // eslint-disable-next-line
-    this.client;
+  private createProxy() {
+    return new Proxy(this, {
+      get: (target, prop, receiver) => {
+        return (
+          getObjectProperty(this.apiMethods, prop.toString()) ??
+          Reflect.get(target, prop, receiver)
+        );
+      },
+    });
   }
+
+  private api = async (options: APIMethodParams): Promise<unknown> => {
+    const method = this.client[
+      options.method.toUpperCase() as keyof APIFetchClient
+    ] as (...args: unknown[]) => Promise<unknown>;
+
+    if (!method) {
+      throw new Error(
+        `Method ${options.method} not found for ${options.endpoint}`,
+      );
+    }
+
+    const result = await method(options.endpoint, {
+      params: {
+        path: {
+          app_id: APP_LESS_PARAM,
+          ...options.params,
+        },
+        query: options.query,
+      },
+      body: options.body,
+    });
+
+    return result;
+  };
 }
