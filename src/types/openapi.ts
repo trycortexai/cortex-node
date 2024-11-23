@@ -5388,92 +5388,39 @@ export const createAPI = (callAPI: (params: APIMethodParams) => unknown) => ({
           params: {file_id: fileId},
         }) as Promise<void>;
       },
-      cancel: {
-        create: (fileId: string): Promise<FileSchema> => {
-          return callAPI({
-            method: 'post',
-            endpoint: '/apps/{app_id}/files/{file_id}/cancel',
-            params: {file_id: fileId},
-          }) as Promise<FileSchema>;
-        },
-      },
-    },
-    connections: {
-      test: {
-        create: (
-          body: TestConnectionConnectionSchema,
-        ): Promise<TestConnectionConnectionResultSchema> => {
-          return callAPI({
-            method: 'post',
-            endpoint: '/apps/{app_id}/connections/test',
-            body,
-          }) as Promise<TestConnectionConnectionResultSchema>;
-        },
-      },
-      list: (
-        query?: paths['/apps/{app_id}/connections']['get']['parameters']['query'],
-      ): Promise<ConnectionSchema[]> => {
-        return callAPI({
-          method: 'get',
-          endpoint: '/apps/{app_id}/connections',
-          query,
-        }) as Promise<ConnectionSchema[]>;
-      },
-      create: (body: CreateConnectionSchema): Promise<ConnectionSchema> => {
+      cancel: (fileId: string): Promise<FileSchema> => {
         return callAPI({
           method: 'post',
-          endpoint: '/apps/{app_id}/connections',
-          body,
-        }) as Promise<ConnectionSchema>;
-      },
-      get: (connectionId: string): Promise<ConnectionSchema> => {
-        return callAPI({
-          method: 'get',
-          endpoint: '/apps/{app_id}/connections/{connection_id}',
-          params: {connection_id: connectionId},
-        }) as Promise<ConnectionSchema>;
-      },
-      update: (
-        connectionId: string,
-        body: UpdateConnectionSchema,
-      ): Promise<ConnectionSchema> => {
-        return callAPI({
-          method: 'patch',
-          endpoint: '/apps/{app_id}/connections/{connection_id}',
-          params: {connection_id: connectionId},
-          body,
-        }) as Promise<ConnectionSchema>;
-      },
-      delete: (connectionId: string): Promise<void> => {
-        return callAPI({
-          method: 'delete',
-          endpoint: '/apps/{app_id}/connections/{connection_id}',
-          params: {connection_id: connectionId},
-        }) as Promise<void>;
+          endpoint: '/apps/{app_id}/files/{file_id}/cancel',
+          params: {file_id: fileId},
+        }) as Promise<FileSchema>;
       },
     },
-    variables: {
-      list: (
-        body: AppVariableSchema[],
-        query?: paths['/apps/{app_id}/variables']['patch']['parameters']['query'],
-      ): Promise<AppVariableSchema[]> => {
-        return callAPI({
-          method: 'patch',
-          endpoint: '/apps/{app_id}/variables',
-          query,
-          body,
-        }) as Promise<AppVariableSchema[]>;
-      },
+    connections: (connectionId: string): Promise<void> => {
+      return callAPI({
+        method: 'delete',
+        endpoint: '/apps/{app_id}/connections/{connection_id}',
+        params: {connection_id: connectionId},
+      }) as Promise<void>;
+    },
+    variables: (
+      body: AppVariableSchema[],
+      query?: paths['/apps/{app_id}/variables']['patch']['parameters']['query'],
+    ): Promise<AppVariableSchema[]> => {
+      return callAPI({
+        method: 'patch',
+        endpoint: '/apps/{app_id}/variables',
+        query,
+        body,
+      }) as Promise<AppVariableSchema[]>;
     },
     runs: {
-      step: {
-        create: (body: CreateRunStepSchema): Promise<RunStepSchema> => {
-          return callAPI({
-            method: 'post',
-            endpoint: '/apps/{app_id}/runs/step',
-            body,
-          }) as Promise<RunStepSchema>;
-        },
+      step: (body: CreateRunStepSchema): Promise<RunStepSchema> => {
+        return callAPI({
+          method: 'post',
+          endpoint: '/apps/{app_id}/runs/step',
+          body,
+        }) as Promise<RunStepSchema>;
       },
     },
     workflows: {
@@ -5494,21 +5441,19 @@ export const createAPI = (callAPI: (params: APIMethodParams) => unknown) => ({
             params: {workflow_id: workflowId},
           }) as Promise<WorkflowSchema>;
         },
-        versions: {
-          get: (
-            workflowId: string,
-            versionIdOrVersionNumber: string,
-          ): Promise<WorkflowVersionSchema> => {
-            return callAPI({
-              method: 'get',
-              endpoint:
-                '/apps/{app_id}/workflows/discover/{workflow_id}/versions/{version_id_or_version_number}',
-              params: {
-                workflow_id: workflowId,
-                version_id_or_version_number: versionIdOrVersionNumber,
-              },
-            }) as Promise<WorkflowVersionSchema>;
-          },
+        versions: (
+          workflowId: string,
+          versionIdOrVersionNumber: string,
+        ): Promise<WorkflowVersionSchema> => {
+          return callAPI({
+            method: 'get',
+            endpoint:
+              '/apps/{app_id}/workflows/discover/{workflow_id}/versions/{version_id_or_version_number}',
+            params: {
+              workflow_id: workflowId,
+              version_id_or_version_number: versionIdOrVersionNumber,
+            },
+          }) as Promise<WorkflowVersionSchema>;
         },
         runs: {
           create: (
@@ -5524,20 +5469,18 @@ export const createAPI = (callAPI: (params: APIMethodParams) => unknown) => ({
               body,
             }) as Promise<RunSchema>;
           },
-          cancel: {
-            create: (
-              workflowId: string,
-              runId: string,
-              query?: paths['/apps/{app_id}/workflows/discover/{workflow_id}/runs/{run_id}/cancel']['post']['parameters']['query'],
-            ): Promise<RunSchema> => {
-              return callAPI({
-                method: 'post',
-                endpoint:
-                  '/apps/{app_id}/workflows/discover/{workflow_id}/runs/{run_id}/cancel',
-                params: {workflow_id: workflowId, run_id: runId},
-                query,
-              }) as Promise<RunSchema>;
-            },
+          cancel: (
+            workflowId: string,
+            runId: string,
+            query?: paths['/apps/{app_id}/workflows/discover/{workflow_id}/runs/{run_id}/cancel']['post']['parameters']['query'],
+          ): Promise<RunSchema> => {
+            return callAPI({
+              method: 'post',
+              endpoint:
+                '/apps/{app_id}/workflows/discover/{workflow_id}/runs/{run_id}/cancel',
+              params: {workflow_id: workflowId, run_id: runId},
+              query,
+            }) as Promise<RunSchema>;
           },
         },
       },
@@ -5582,22 +5525,20 @@ export const createAPI = (callAPI: (params: APIMethodParams) => unknown) => ({
             body,
           }) as Promise<RunSchema>;
         },
-        replay: {
-          create: (
-            workflowId: string,
-            runId: string,
-            body: ReplayRunSchema,
-            query?: paths['/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/replay']['post']['parameters']['query'],
-          ): Promise<RunSchema> => {
-            return callAPI({
-              method: 'post',
-              endpoint:
-                '/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/replay',
-              params: {workflow_id: workflowId, run_id: runId},
-              query,
-              body,
-            }) as Promise<RunSchema>;
-          },
+        replay: (
+          workflowId: string,
+          runId: string,
+          body: ReplayRunSchema,
+          query?: paths['/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/replay']['post']['parameters']['query'],
+        ): Promise<RunSchema> => {
+          return callAPI({
+            method: 'post',
+            endpoint:
+              '/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/replay',
+            params: {workflow_id: workflowId, run_id: runId},
+            query,
+            body,
+          }) as Promise<RunSchema>;
         },
         get: (
           workflowId: string,
@@ -5611,83 +5552,31 @@ export const createAPI = (callAPI: (params: APIMethodParams) => unknown) => ({
             query,
           }) as Promise<RunSchema>;
         },
-        cancel: {
-          create: (
-            workflowId: string,
-            runId: string,
-            query?: paths['/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/cancel']['post']['parameters']['query'],
-          ): Promise<RunSchema> => {
-            return callAPI({
-              method: 'post',
-              endpoint:
-                '/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/cancel',
-              params: {workflow_id: workflowId, run_id: runId},
-              query,
-            }) as Promise<RunSchema>;
-          },
+        cancel: (
+          workflowId: string,
+          runId: string,
+          query?: paths['/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/cancel']['post']['parameters']['query'],
+        ): Promise<RunSchema> => {
+          return callAPI({
+            method: 'post',
+            endpoint:
+              '/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/cancel',
+            params: {workflow_id: workflowId, run_id: runId},
+            query,
+          }) as Promise<RunSchema>;
         },
       },
       tests: {
-        expectations: {
-          list: (
-            workflowId: string,
-            query?: paths['/apps/{app_id}/workflows/{workflow_id}/tests/expectations']['get']['parameters']['query'],
-          ): Promise<WorkflowExpectationSchema[]> => {
-            return callAPI({
-              method: 'get',
-              endpoint:
-                '/apps/{app_id}/workflows/{workflow_id}/tests/expectations',
-              params: {workflow_id: workflowId},
-              query,
-            }) as Promise<WorkflowExpectationSchema[]>;
-          },
-          create: (
-            workflowId: string,
-            body: CreateWorkflowExpectationSchema,
-          ): Promise<WorkflowExpectationSchema> => {
-            return callAPI({
-              method: 'post',
-              endpoint:
-                '/apps/{app_id}/workflows/{workflow_id}/tests/expectations',
-              params: {workflow_id: workflowId},
-              body,
-            }) as Promise<WorkflowExpectationSchema>;
-          },
-          get: (
-            workflowId: string,
-            expectationId: string,
-          ): Promise<WorkflowExpectationSchema> => {
-            return callAPI({
-              method: 'get',
-              endpoint:
-                '/apps/{app_id}/workflows/{workflow_id}/tests/expectations/{expectation_id}',
-              params: {workflow_id: workflowId, expectation_id: expectationId},
-            }) as Promise<WorkflowExpectationSchema>;
-          },
-          update: (
-            workflowId: string,
-            expectationId: string,
-            body: UpdateWorkflowExpectationSchema,
-          ): Promise<WorkflowExpectationSchema> => {
-            return callAPI({
-              method: 'patch',
-              endpoint:
-                '/apps/{app_id}/workflows/{workflow_id}/tests/expectations/{expectation_id}',
-              params: {workflow_id: workflowId, expectation_id: expectationId},
-              body,
-            }) as Promise<WorkflowExpectationSchema>;
-          },
-          delete: (
-            workflowId: string,
-            expectationId: string,
-          ): Promise<void> => {
-            return callAPI({
-              method: 'delete',
-              endpoint:
-                '/apps/{app_id}/workflows/{workflow_id}/tests/expectations/{expectation_id}',
-              params: {workflow_id: workflowId, expectation_id: expectationId},
-            }) as Promise<void>;
-          },
+        expectations: (
+          workflowId: string,
+          expectationId: string,
+        ): Promise<void> => {
+          return callAPI({
+            method: 'delete',
+            endpoint:
+              '/apps/{app_id}/workflows/{workflow_id}/tests/expectations/{expectation_id}',
+            params: {workflow_id: workflowId, expectation_id: expectationId},
+          }) as Promise<void>;
         },
         list: (
           workflowId: string,
@@ -5713,14 +5602,12 @@ export const createAPI = (callAPI: (params: APIMethodParams) => unknown) => ({
             body,
           }) as Promise<WorkflowTestSchema>;
         },
-        stats: {
-          get: (workflowId: string): Promise<WorkflowTestStatsSchema> => {
-            return callAPI({
-              method: 'get',
-              endpoint: '/apps/{app_id}/workflows/{workflow_id}/tests/stats',
-              params: {workflow_id: workflowId},
-            }) as Promise<WorkflowTestStatsSchema>;
-          },
+        stats: (workflowId: string): Promise<WorkflowTestStatsSchema> => {
+          return callAPI({
+            method: 'get',
+            endpoint: '/apps/{app_id}/workflows/{workflow_id}/tests/stats',
+            params: {workflow_id: workflowId},
+          }) as Promise<WorkflowTestStatsSchema>;
         },
         get: (
           workflowId: string,
@@ -5755,78 +5642,59 @@ export const createAPI = (callAPI: (params: APIMethodParams) => unknown) => ({
             params: {workflow_id: workflowId, test_id: testId},
           }) as Promise<void>;
         },
-        runs: {
-          create: (
-            workflowId: string,
-            testId: string,
-            body: RunWorkflowTestSchema,
-            query?: paths['/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}/runs']['post']['parameters']['query'],
-          ): Promise<WorkflowTestSchema> => {
-            return callAPI({
-              method: 'post',
-              endpoint:
-                '/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}/runs',
-              params: {workflow_id: workflowId, test_id: testId},
-              query,
-              body,
-            }) as Promise<WorkflowTestSchema>;
-          },
-        },
-        cancel: {
-          create: (
-            workflowId: string,
-            testId: string,
-            query?: paths['/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}/cancel']['post']['parameters']['query'],
-          ): Promise<WorkflowTestSchema> => {
-            return callAPI({
-              method: 'post',
-              endpoint:
-                '/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}/cancel',
-              params: {workflow_id: workflowId, test_id: testId},
-              query,
-            }) as Promise<WorkflowTestSchema>;
-          },
-        },
-        ws: {
-          get: (
-            workflowId: string,
-            testId: string,
-          ): Promise<WorkflowTestEventSchema> => {
-            return callAPI({
-              method: 'get',
-              endpoint:
-                '/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}/ws',
-              params: {workflow_id: workflowId, test_id: testId},
-            }) as Promise<WorkflowTestEventSchema>;
-          },
-        },
-      },
-      versions: {
-        list: (
+        runs: (
           workflowId: string,
-          query?: paths['/apps/{app_id}/workflows/{workflow_id}/versions']['get']['parameters']['query'],
-        ): Promise<WorkflowVersionSchema[]> => {
+          testId: string,
+          body: RunWorkflowTestSchema,
+          query?: paths['/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}/runs']['post']['parameters']['query'],
+        ): Promise<WorkflowTestSchema> => {
           return callAPI({
-            method: 'get',
-            endpoint: '/apps/{app_id}/workflows/{workflow_id}/versions',
-            params: {workflow_id: workflowId},
+            method: 'post',
+            endpoint:
+              '/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}/runs',
+            params: {workflow_id: workflowId, test_id: testId},
             query,
-          }) as Promise<WorkflowVersionSchema[]>;
+            body,
+          }) as Promise<WorkflowTestSchema>;
         },
-        get: (
+        cancel: (
           workflowId: string,
-          versionIdOrVersionNumber: string,
-        ): Promise<WorkflowVersionSchema> => {
+          testId: string,
+          query?: paths['/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}/cancel']['post']['parameters']['query'],
+        ): Promise<WorkflowTestSchema> => {
+          return callAPI({
+            method: 'post',
+            endpoint:
+              '/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}/cancel',
+            params: {workflow_id: workflowId, test_id: testId},
+            query,
+          }) as Promise<WorkflowTestSchema>;
+        },
+        ws: (
+          workflowId: string,
+          testId: string,
+        ): Promise<WorkflowTestEventSchema> => {
           return callAPI({
             method: 'get',
             endpoint:
-              '/apps/{app_id}/workflows/{workflow_id}/versions/{version_id_or_version_number}',
-            params: {
-              workflow_id: workflowId,
-              version_id_or_version_number: versionIdOrVersionNumber,
-            },
-          }) as Promise<WorkflowVersionSchema>;
+              '/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}/ws',
+            params: {workflow_id: workflowId, test_id: testId},
+          }) as Promise<WorkflowTestEventSchema>;
         },
+      },
+      versions: (
+        workflowId: string,
+        versionIdOrVersionNumber: string,
+      ): Promise<WorkflowVersionSchema> => {
+        return callAPI({
+          method: 'get',
+          endpoint:
+            '/apps/{app_id}/workflows/{workflow_id}/versions/{version_id_or_version_number}',
+          params: {
+            workflow_id: workflowId,
+            version_id_or_version_number: versionIdOrVersionNumber,
+          },
+        }) as Promise<WorkflowVersionSchema>;
       },
     },
     collections: {
@@ -5934,120 +5802,79 @@ export const createAPI = (callAPI: (params: APIMethodParams) => unknown) => ({
             params: {collection_id: collectionId, record_id: recordId},
           }) as Promise<void>;
         },
-        status: {
-          get: (
-            collectionId: string,
-            recordId: string,
-          ): Promise<RecordStatusSchema> => {
-            return callAPI({
-              method: 'get',
-              endpoint:
-                '/apps/{app_id}/collections/{collection_id}/records/{record_id}/status',
-              params: {collection_id: collectionId, record_id: recordId},
-            }) as Promise<RecordStatusSchema>;
-          },
+        status: (
+          collectionId: string,
+          recordId: string,
+        ): Promise<RecordStatusSchema> => {
+          return callAPI({
+            method: 'get',
+            endpoint:
+              '/apps/{app_id}/collections/{collection_id}/records/{record_id}/status',
+            params: {collection_id: collectionId, record_id: recordId},
+          }) as Promise<RecordStatusSchema>;
         },
-        run: {
-          create: (
-            collectionId: string,
-            recordId: string,
-            body: RunRecordSchema,
-          ): Promise<RecordSchema> => {
-            return callAPI({
-              method: 'post',
-              endpoint:
-                '/apps/{app_id}/collections/{collection_id}/records/{record_id}/run',
-              params: {collection_id: collectionId, record_id: recordId},
-              body,
-            }) as Promise<RecordSchema>;
-          },
+        run: (
+          collectionId: string,
+          recordId: string,
+          body: RunRecordSchema,
+        ): Promise<RecordSchema> => {
+          return callAPI({
+            method: 'post',
+            endpoint:
+              '/apps/{app_id}/collections/{collection_id}/records/{record_id}/run',
+            params: {collection_id: collectionId, record_id: recordId},
+            body,
+          }) as Promise<RecordSchema>;
         },
-        cancel: {
-          create: (
-            collectionId: string,
-            recordId: string,
-          ): Promise<RecordSchema> => {
-            return callAPI({
-              method: 'post',
-              endpoint:
-                '/apps/{app_id}/collections/{collection_id}/records/{record_id}/cancel',
-              params: {collection_id: collectionId, record_id: recordId},
-            }) as Promise<RecordSchema>;
-          },
+        cancel: (
+          collectionId: string,
+          recordId: string,
+        ): Promise<RecordSchema> => {
+          return callAPI({
+            method: 'post',
+            endpoint:
+              '/apps/{app_id}/collections/{collection_id}/records/{record_id}/cancel',
+            params: {collection_id: collectionId, record_id: recordId},
+          }) as Promise<RecordSchema>;
         },
-        updateRules: {
-          create: (
-            collectionId: string,
-            recordId: string,
-          ): Promise<RecordSchema> => {
-            return callAPI({
-              method: 'post',
-              endpoint:
-                '/apps/{app_id}/collections/{collection_id}/records/{record_id}/update-rules',
-              params: {collection_id: collectionId, record_id: recordId},
-            }) as Promise<RecordSchema>;
-          },
+        updateRules: (
+          collectionId: string,
+          recordId: string,
+        ): Promise<RecordSchema> => {
+          return callAPI({
+            method: 'post',
+            endpoint:
+              '/apps/{app_id}/collections/{collection_id}/records/{record_id}/update-rules',
+            params: {collection_id: collectionId, record_id: recordId},
+          }) as Promise<RecordSchema>;
         },
-        reset: {
-          create: (
-            collectionId: string,
-            recordId: string,
-          ): Promise<RecordSchema> => {
-            return callAPI({
-              method: 'post',
-              endpoint:
-                '/apps/{app_id}/collections/{collection_id}/records/{record_id}/reset',
-              params: {collection_id: collectionId, record_id: recordId},
-            }) as Promise<RecordSchema>;
-          },
+        reset: (
+          collectionId: string,
+          recordId: string,
+        ): Promise<RecordSchema> => {
+          return callAPI({
+            method: 'post',
+            endpoint:
+              '/apps/{app_id}/collections/{collection_id}/records/{record_id}/reset',
+            params: {collection_id: collectionId, record_id: recordId},
+          }) as Promise<RecordSchema>;
         },
-        download: {
-          get: (collectionId: string, recordId: string): Promise<void> => {
-            return callAPI({
-              method: 'get',
-              endpoint:
-                '/apps/{app_id}/collections/{collection_id}/records/{record_id}/download',
-              params: {collection_id: collectionId, record_id: recordId},
-            }) as Promise<void>;
-          },
+        download: (collectionId: string, recordId: string): Promise<void> => {
+          return callAPI({
+            method: 'get',
+            endpoint:
+              '/apps/{app_id}/collections/{collection_id}/records/{record_id}/download',
+            params: {collection_id: collectionId, record_id: recordId},
+          }) as Promise<void>;
         },
       },
     },
-    webhooks: {
-      list: (
-        query?: paths['/apps/{app_id}/webhooks']['get']['parameters']['query'],
-      ): Promise<WebhookSchema[]> => {
-        return callAPI({
-          method: 'get',
-          endpoint: '/apps/{app_id}/webhooks',
-          query,
-        }) as Promise<WebhookSchema[]>;
-      },
-      create: (body: CreateWebhookSchema): Promise<WebhookSchema> => {
-        return callAPI({
-          method: 'post',
-          endpoint: '/apps/{app_id}/webhooks',
-          body,
-        }) as Promise<WebhookSchema>;
-      },
-      update: (
-        webhookId: string,
-        body: UpdateWebhookSchema,
-      ): Promise<WebhookSchema> => {
-        return callAPI({
-          method: 'patch',
-          endpoint: '/apps/{app_id}/webhooks/{webhook_id}',
-          params: {webhook_id: webhookId},
-          body,
-        }) as Promise<WebhookSchema>;
-      },
-      delete: (webhookId: string): Promise<void> => {
-        return callAPI({
-          method: 'delete',
-          endpoint: '/apps/{app_id}/webhooks/{webhook_id}',
-          params: {webhook_id: webhookId},
-        }) as Promise<void>;
-      },
+    webhooks: (webhookId: string): Promise<void> => {
+      return callAPI({
+        method: 'delete',
+        endpoint: '/apps/{app_id}/webhooks/{webhook_id}',
+        params: {webhook_id: webhookId},
+      }) as Promise<void>;
     },
   },
 });

@@ -120,8 +120,17 @@ export const generateAPIMethods = (schema: OpenAPI3): string => {
     Object.entries(methods).forEach(([method, details]) => {
       const apiMethod = buildAPIMethodObject(endpoint, method, details);
 
-      const fullPath = `${cleanPathUrl(endpoint)}.${apiMethod.name}`;
+      const matchingPaths = Object.keys(schema.paths ?? {}).filter(
+        path => path !== endpoint && path.startsWith(endpoint),
+      );
 
+      if (!matchingPaths.length) {
+        const fullPath = `${cleanPathUrl(endpoint)}`;
+        allMethods.set(fullPath, apiMethod);
+        return;
+      }
+
+      const fullPath = `${cleanPathUrl(endpoint)}.${apiMethod.name}`;
       allMethods.set(fullPath, apiMethod);
     });
   });
