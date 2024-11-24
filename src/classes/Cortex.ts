@@ -1,7 +1,9 @@
 import {APIFetchClient, ClientOptions} from '../types/api';
-import {APIMethodParams, APIMethods, createAPI} from '../types/openapi';
-import {createAPIFetchClient} from '../utils/api';
+import {APIMethodRequest, APIMethods, createAPI, paths} from '../types/openapi';
+import {createAPIFetchClient, ErrorResponse, readSSE} from '../utils/api';
 import {getObjectProperty} from '../utils/object';
+import {APIError} from './APIError';
+import {STREAM_PARSERS} from './Stream';
 
 const APP_LESS_PARAM = 'c';
 
@@ -52,27 +54,85 @@ export class Cortex {
     });
   }
 
-  private api = async (options: APIMethodParams): Promise<unknown> => {
-    const method = this.client[
-      options.method.toUpperCase() as keyof APIFetchClient
-    ] as (...args: unknown[]) => Promise<unknown>;
+  private api = async ({
+    endpoint,
+    method,
+    params,
+    body,
+    options,
+  }: APIMethodRequest): Promise<unknown> => {
+    const methodUpperCase = method.toUpperCase() as keyof APIFetchClient;
 
-    if (!method) {
-      throw new Error(
-        `Method ${options.method} not found for ${options.endpoint}`,
-      );
+    const {query, onStream, ...requestInit} = options ?? {};
+
+    const isStream = !!onStream;
+
+    const streamParser = isStream
+      ? STREAM_PARSERS[endpoint as keyof paths]
+      : null;
+
+    if (isStream && !streamParser) {
+      throw new Error(`Stream is yet available for ${endpoint}`);
     }
 
-    const result = await method(options.endpoint, {
+    const requestParams = {
+      ...(isStream ? {parseAs: 'stream'} : {}),
       params: {
         path: {
           app_id: APP_LESS_PARAM,
-          ...options.params,
+          ...params,
         },
-        query: options.query,
+        query,
       },
-      body: options.body,
-    });
+      ...(body
+        ? {
+            body: {
+              ...body,
+              ...(isStream ? {stream: true} : {}),
+            },
+          }
+        : {}),
+      ...requestInit,
+    };
+
+    //
+
+    const clientMethod = (
+      onStream
+        ? this.client.CLIENT[methodUpperCase as 'GET']
+        : this.client[methodUpperCase]
+    ) as (...args: unknown[]) => Promise<unknown>;
+
+    if (!method) {
+      throw new Error(`Method ${method} not found for ${endpoint}`);
+    }
+
+    const result = await clientMethod(endpoint, requestParams);
+
+    if (isStream) {
+      const {response, error} = result as {
+        response: Response;
+        error: unknown;
+      };
+
+      if (error) {
+        throw new APIError(error as ErrorResponse);
+      }
+
+      let resultStream: unknown = null;
+
+      await readSSE(response, (event, data) => {
+        if (!event) {
+          throw new Error(`Event is missing in stream for ${endpoint}`);
+        }
+
+        resultStream = streamParser?.(resultStream, event, data);
+
+        onStream?.(resultStream, event, data);
+      });
+
+      return resultStream;
+    }
 
     return result;
   };

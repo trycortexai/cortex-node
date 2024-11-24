@@ -3123,15 +3123,225 @@ export type components = {
        */
       secret?: boolean;
     };
+    CreditsUsageSchema: {
+      total: number;
+    };
+    /** @description Credits usage of the step run */
+    CreditsRunUsageSchema: components['schemas']['CreditsUsageSchema'] & {
+      steps: {
+        [key: string]: components['schemas']['CreditsUsageSchema'];
+      };
+    };
+    /** @description Result of the workflow step run */
+    RunResultSchema: unknown;
+    StepWorkflowOutputSchema: {
+      /** @description ID of the workflow run that ran this step */
+      run_id: string;
+      /** @description ID of the app that this step belongs to */
+      app_id: string;
+      /** @description ID of the workflow */
+      workflow_id: string;
+      /** @description ID of the app that the workflow belongs to */
+      workflow_app_id: string;
+      /**
+       * @description Status of the step run
+       * @example COMPLETED
+       * @enum {string}
+       */
+      status:
+        | 'PENDING'
+        | 'RUNNING'
+        | 'CANCELLED'
+        | 'COMPLETED'
+        | 'SKIPPED'
+        | 'FAILED';
+      /**
+       * @description Origin of the step run
+       * @example RECORD
+       * @enum {string}
+       */
+      origin: 'WORKFLOW' | 'RECORD' | 'TEST';
+      /** @description Error message if the step run failed */
+      error: string | null;
+      usage?: components['schemas']['CreditsRunUsageSchema'];
+      result?: components['schemas']['RunResultSchema'];
+      /** @description Output of the workflow step run */
+      output?: unknown;
+    };
+    StepWorkflowRecordOutputSchema: {
+      /** @description Name of the record that ran this run */
+      name: string | null;
+      /** @description ID of the record that ran this run */
+      record_id: string;
+      /** @description ID of the collection that the record belongs to */
+      collection_id: string;
+    };
+    StepModelOutputSchema: {
+      /** @description The model that ran this step */
+      model: string;
+      /** @description The message output of the model, can be a string or an object based on the response_format. */
+      message?:
+        | {
+            [key: string]: unknown;
+          }
+        | string
+        | unknown;
+      /** @description The refusal message if the model refused to run */
+      refusal?: string;
+      /** @description The index of the model output when running in a loop */
+      index?: number;
+      /** @description The raw output of the model provider */
+      raw?: {
+        [key: string]: unknown;
+      };
+    };
+    StepCodeOutputSchema: unknown;
+    StepHttpRequestOutputSchema: {
+      /** @description Whether the request was successful */
+      ok: boolean;
+      /** @description The status code of the response */
+      status: number;
+      /** @description The headers of the response */
+      headers: {
+        [key: string]: string;
+      };
+      /** @description The body of the response */
+      body?: unknown;
+      /** @description Error message if the request failed */
+      error?: string;
+    };
+    StepBrowserOutputSchema: {
+      /** @description Whether the request was successful */
+      ok: boolean;
+      /** @description The status code of the response */
+      status: number;
+      /** @description The headers of the response */
+      headers: {
+        [key: string]: string;
+      };
+      /** @description The body of the response */
+      body?: unknown;
+    };
+    StepBranchConditionOutputSchema: {
+      [key: string]: unknown;
+    };
+    /** @description The output of the File service */
+    StepFileServiceOutputSchema: {
+      /** @description Unique identifier for the file */
+      id: string;
+      /** @description File identifier used in the storage system */
+      file_id: string;
+      /**
+       * @description Name of the file
+       * @example document.pdf
+       */
+      file_filename: string;
+      /**
+       * @description Size of the file in bytes
+       * @example 1024
+       */
+      file_size: number;
+      /**
+       * @description MIME type of the file
+       * @example application/pdf
+       */
+      file_mimetype: string;
+      /** @description URL to access the file */
+      file_url: string;
+      /**
+       * @description Format of the file
+       * @example DOCUMENT
+       * @enum {string|null}
+       */
+      file_format: 'DOCUMENT' | null;
+      /**
+       * @description Current status of the file
+       * @example PROCESSED
+       * @enum {string}
+       */
+      file_status?: 'PROCESSING' | 'PROCESSED' | 'FAILED';
+      /** @description Status message providing additional information about the file status */
+      file_status_message?: string;
+      document?: components['schemas']['DocumentSchema'];
+      /** @description Flag indicating whether to extract contents from the document */
+      document_extract_contents: boolean;
+      /** @description Flag indicating whether to extract images from the document */
+      document_extract_images: boolean;
+      /** @description Flag indicating whether to extract pages from the document */
+      document_extract_pages: boolean;
+      /**
+       * @description Array of page numbers to extract from the document
+       * @example [
+       *       1,
+       *       2,
+       *       3
+       *     ]
+       */
+      document_pages?: number[];
+      /** @description Progress of the document extraction process */
+      document_progress?: number;
+      /**
+       * Format: date
+       * @description Timestamp when the file was created
+       */
+      created_at: string | null;
+    };
+    /** @description The output of the Encompass Push service */
+    EncompassPushServiceOutputSchema: {
+      /** @description ID of the pushed document in Encompass */
+      id: string;
+      /** @description Title of the pushed document in Encompass */
+      title: string;
+      /** @description Whether the pushed document is active in Encompass */
+      is_active: boolean;
+      /** @description The entity the document is assigned to in Encompass */
+      assigned_to: {
+        /** @description ID of the entity the document is assigned to */
+        entityId: string;
+        /** @description Name of the entity the document is assigned to */
+        entityName: string;
+        /** @description Type of the entity the document is assigned to */
+        entityType: string;
+      };
+      /** @description Date the document was created in Encompass */
+      created_date: string;
+    };
+    /** @description The output of the Encompass Push service */
+    StepEncompassPushServiceOutputSchema: components['schemas']['EncompassPushServiceOutputSchema'][];
+    StepOutputSchema:
+      | components['schemas']['StepWorkflowOutputSchema']
+      | components['schemas']['StepWorkflowRecordOutputSchema']
+      | components['schemas']['StepModelOutputSchema']
+      | components['schemas']['StepCodeOutputSchema']
+      | components['schemas']['StepHttpRequestOutputSchema']
+      | components['schemas']['StepBrowserOutputSchema']
+      | components['schemas']['StepBranchConditionOutputSchema']
+      | components['schemas']['StepFileServiceOutputSchema']
+      | components['schemas']['StepEncompassPushServiceOutputSchema']
+      | unknown;
     /** @description Step run output */
     RunStepSchema: {
-      output: Record<string, unknown>;
+      output?:
+        | components['schemas']['StepWorkflowOutputSchema']
+        | components['schemas']['StepWorkflowRecordOutputSchema']
+        | components['schemas']['StepModelOutputSchema']
+        | components['schemas']['StepCodeOutputSchema']
+        | components['schemas']['StepHttpRequestOutputSchema']
+        | components['schemas']['StepBrowserOutputSchema']
+        | components['schemas']['StepBranchConditionOutputSchema']
+        | components['schemas']['StepFileServiceOutputSchema']
+        | components['schemas']['StepEncompassPushServiceOutputSchema']
+        | components['schemas']['StepOutputSchema'][]
+        | unknown;
     };
     /** @description A unique key for the step */
     StepKeySchema: string;
     StepBranchConditionSchema: {
+      /** @description The condition to evaluate */
       condition?: string;
+      /** @description The step keys that this branch connects to */
       destinations: components['schemas']['StepKeySchema'][];
+      /** @description The order of the branch condition */
       order: number;
     };
     /** @description A step that allows branching based on one or more conditions */
@@ -3574,6 +3784,7 @@ export type components = {
     /** @description Step run input */
     CreateRunStepSchema: {
       step: components['schemas']['StepSchema'];
+      stream?: boolean;
     };
     /** @description Associated app with the workflow */
     AppPublicSchema: {
@@ -3914,8 +4125,6 @@ export type components = {
       /** @description Steps of the workflow at the time this version was deployed */
       steps: components['schemas']['StepSchema'][];
     };
-    /** @description Result of the run */
-    RunResultSchema: unknown;
     RuntimeLogs: unknown[];
     /** @description Detailed information about the step run */
     RunStepOutputSchema:
@@ -3931,7 +4140,18 @@ export type components = {
            */
           key: string;
           /** @description Output of the step run */
-          output?: unknown;
+          output?:
+            | components['schemas']['StepWorkflowOutputSchema']
+            | components['schemas']['StepWorkflowRecordOutputSchema']
+            | components['schemas']['StepModelOutputSchema']
+            | components['schemas']['StepCodeOutputSchema']
+            | components['schemas']['StepHttpRequestOutputSchema']
+            | components['schemas']['StepBrowserOutputSchema']
+            | components['schemas']['StepBranchConditionOutputSchema']
+            | components['schemas']['StepFileServiceOutputSchema']
+            | components['schemas']['StepEncompassPushServiceOutputSchema']
+            | components['schemas']['StepOutputSchema'][]
+            | unknown;
           output_logs?: components['schemas']['RuntimeLogs'];
           /** @description Timestamp of when the step run started */
           start?: number;
@@ -3948,7 +4168,18 @@ export type components = {
            */
           key: string;
           /** @description Output of the step run */
-          output?: unknown;
+          output?:
+            | components['schemas']['StepWorkflowOutputSchema']
+            | components['schemas']['StepWorkflowRecordOutputSchema']
+            | components['schemas']['StepModelOutputSchema']
+            | components['schemas']['StepCodeOutputSchema']
+            | components['schemas']['StepHttpRequestOutputSchema']
+            | components['schemas']['StepBrowserOutputSchema']
+            | components['schemas']['StepBranchConditionOutputSchema']
+            | components['schemas']['StepFileServiceOutputSchema']
+            | components['schemas']['StepEncompassPushServiceOutputSchema']
+            | components['schemas']['StepOutputSchema'][]
+            | unknown;
           output_logs?: components['schemas']['RuntimeLogs'];
           /** @description Timestamp of when the step run started */
           start?: number;
@@ -3969,7 +4200,18 @@ export type components = {
            */
           key: string;
           /** @description Output of the step run */
-          output?: unknown;
+          output?:
+            | components['schemas']['StepWorkflowOutputSchema']
+            | components['schemas']['StepWorkflowRecordOutputSchema']
+            | components['schemas']['StepModelOutputSchema']
+            | components['schemas']['StepCodeOutputSchema']
+            | components['schemas']['StepHttpRequestOutputSchema']
+            | components['schemas']['StepBrowserOutputSchema']
+            | components['schemas']['StepBranchConditionOutputSchema']
+            | components['schemas']['StepFileServiceOutputSchema']
+            | components['schemas']['StepEncompassPushServiceOutputSchema']
+            | components['schemas']['StepOutputSchema'][]
+            | unknown;
           output_logs?: components['schemas']['RuntimeLogs'];
           /** @description Timestamp of when the step run started */
           start?: number;
@@ -3988,7 +4230,18 @@ export type components = {
            */
           key: string;
           /** @description Output of the step run */
-          output?: unknown;
+          output?:
+            | components['schemas']['StepWorkflowOutputSchema']
+            | components['schemas']['StepWorkflowRecordOutputSchema']
+            | components['schemas']['StepModelOutputSchema']
+            | components['schemas']['StepCodeOutputSchema']
+            | components['schemas']['StepHttpRequestOutputSchema']
+            | components['schemas']['StepBrowserOutputSchema']
+            | components['schemas']['StepBranchConditionOutputSchema']
+            | components['schemas']['StepFileServiceOutputSchema']
+            | components['schemas']['StepEncompassPushServiceOutputSchema']
+            | components['schemas']['StepOutputSchema'][]
+            | unknown;
           output_logs?: components['schemas']['RuntimeLogs'];
           /** @description Timestamp of when the step run started */
           start?: number;
@@ -4007,7 +4260,18 @@ export type components = {
            */
           key: string;
           /** @description Output of the step run */
-          output?: unknown;
+          output?:
+            | components['schemas']['StepWorkflowOutputSchema']
+            | components['schemas']['StepWorkflowRecordOutputSchema']
+            | components['schemas']['StepModelOutputSchema']
+            | components['schemas']['StepCodeOutputSchema']
+            | components['schemas']['StepHttpRequestOutputSchema']
+            | components['schemas']['StepBrowserOutputSchema']
+            | components['schemas']['StepBranchConditionOutputSchema']
+            | components['schemas']['StepFileServiceOutputSchema']
+            | components['schemas']['StepEncompassPushServiceOutputSchema']
+            | components['schemas']['StepOutputSchema'][]
+            | unknown;
           output_logs?: components['schemas']['RuntimeLogs'];
           /** @description Timestamp of when the step run started */
           start?: number;
@@ -4029,19 +4293,10 @@ export type components = {
       /** @description Steps of the workflow at the time this version was deployed */
       steps: components['schemas']['StepSchema'][];
     } | null;
-    CreditsUsageSchema: {
-      total: number;
-    };
-    /** @description Credits usage of the run */
-    CreditsRunUsageSchema: components['schemas']['CreditsUsageSchema'] & {
-      steps: {
-        [key: string]: components['schemas']['CreditsUsageSchema'];
-      };
-    };
     RunSchema: {
       /** @description Unique identifier for the run */
       id: string;
-      result?: components['schemas']['RunResultSchema'];
+      result?: components['schemas']['RunResultSchema'] & unknown;
       input: components['schemas']['InputValuesSchema'] & unknown;
       output: components['schemas']['RunOutputSchema'];
       /**
@@ -4116,7 +4371,7 @@ export type components = {
       record_id?: string;
       /** @description Version number of the workflow */
       version?: number;
-      usage?: components['schemas']['CreditsRunUsageSchema'];
+      usage?: components['schemas']['CreditsRunUsageSchema'] & unknown;
       /**
        * Format: date
        * @description Timestamp of when the run was created
@@ -4670,7 +4925,7 @@ export type components = {
       run: {
         /** @description Unique identifier for the run */
         id: string;
-        result?: components['schemas']['RunResultSchema'];
+        result?: components['schemas']['RunResultSchema'] & unknown;
         input: components['schemas']['InputValuesSchema'] & unknown;
         output: components['schemas']['RunOutputSchema'];
         /**
@@ -4745,7 +5000,7 @@ export type components = {
         record_id?: string;
         /** @description Version number of the workflow */
         version?: number;
-        usage?: components['schemas']['CreditsRunUsageSchema'];
+        usage?: components['schemas']['CreditsRunUsageSchema'] & unknown;
         /**
          * Format: date
          * @description Timestamp of when the run was created
@@ -5196,6 +5451,31 @@ export type CreateConnectionSchema =
 export type UpdateConnectionSchema =
   components['schemas']['UpdateConnectionSchema'];
 export type AppVariableSchema = components['schemas']['AppVariableSchema'];
+export type CreditsUsageSchema = components['schemas']['CreditsUsageSchema'];
+export type CreditsRunUsageSchema =
+  components['schemas']['CreditsRunUsageSchema'];
+export type RunResultSchema = components['schemas']['RunResultSchema'];
+export type StepWorkflowOutputSchema =
+  components['schemas']['StepWorkflowOutputSchema'];
+export type StepWorkflowRecordOutputSchema =
+  components['schemas']['StepWorkflowRecordOutputSchema'];
+export type StepModelOutputSchema =
+  components['schemas']['StepModelOutputSchema'];
+export type StepCodeOutputSchema =
+  components['schemas']['StepCodeOutputSchema'];
+export type StepHttpRequestOutputSchema =
+  components['schemas']['StepHttpRequestOutputSchema'];
+export type StepBrowserOutputSchema =
+  components['schemas']['StepBrowserOutputSchema'];
+export type StepBranchConditionOutputSchema =
+  components['schemas']['StepBranchConditionOutputSchema'];
+export type StepFileServiceOutputSchema =
+  components['schemas']['StepFileServiceOutputSchema'];
+export type EncompassPushServiceOutputSchema =
+  components['schemas']['EncompassPushServiceOutputSchema'];
+export type StepEncompassPushServiceOutputSchema =
+  components['schemas']['StepEncompassPushServiceOutputSchema'];
+export type StepOutputSchema = components['schemas']['StepOutputSchema'];
 export type RunStepSchema = components['schemas']['RunStepSchema'];
 export type StepKeySchema = components['schemas']['StepKeySchema'];
 export type StepBranchConditionSchema =
@@ -5260,15 +5540,11 @@ export type WorkflowTestStatsSchema =
 export type WorkflowSchema = components['schemas']['WorkflowSchema'];
 export type WorkflowVersionSchema =
   components['schemas']['WorkflowVersionSchema'];
-export type RunResultSchema = components['schemas']['RunResultSchema'];
 export type RuntimeLogs = components['schemas']['RuntimeLogs'];
 export type RunStepOutputSchema = components['schemas']['RunStepOutputSchema'];
 export type RunOutputSchema = components['schemas']['RunOutputSchema'];
 export type WorkflowVersionDraftSchema =
   components['schemas']['WorkflowVersionDraftSchema'];
-export type CreditsUsageSchema = components['schemas']['CreditsUsageSchema'];
-export type CreditsRunUsageSchema =
-  components['schemas']['CreditsRunUsageSchema'];
 export type RunSchema = components['schemas']['RunSchema'];
 export type CreateRunSchema = components['schemas']['CreateRunSchema'];
 export type ReplayRunSchema = components['schemas']['ReplayRunSchema'];
@@ -5347,103 +5623,151 @@ export type UpdateWebhookSchema = components['schemas']['UpdateWebhookSchema'];
 export type $defs = Record<string, never>;
 export type operations = Record<string, never>;
 
-export type APIMethodParams = {
+export type APIMethodRequest = {
   method: string;
   endpoint: string;
   params?: Record<string, unknown>;
   body?: unknown;
-  query?: Record<string, unknown>;
+  options?: RequestInit & {
+    query?: Record<string, unknown>;
+    onStream?: (partialResult: any, event: unknown, data: unknown) => void;
+  };
 };
 export type APIMethods = ReturnType<typeof createAPI>;
-export const createAPI = (callAPI: (params: APIMethodParams) => unknown) => ({
+export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
   apps: {
     files: {
       list: (
-        query?: paths['/apps/{app_id}/files']['get']['parameters']['query'],
+        options?: RequestInit & {
+          query?: paths['/apps/{app_id}/files']['get']['parameters']['query'];
+        },
       ): Promise<FileSchema[]> => {
         return callAPI({
           method: 'get',
           endpoint: '/apps/{app_id}/files',
-          query,
+          options,
         }) as Promise<FileSchema[]>;
       },
-      create: (body: CreateFileSchema): Promise<FileSchema> => {
+      create: (
+        body: CreateFileSchema,
+        options?: RequestInit,
+      ): Promise<FileSchema> => {
         return callAPI({
           method: 'post',
           endpoint: '/apps/{app_id}/files',
           body,
+          options,
         }) as Promise<FileSchema>;
       },
-      get: (fileId: string): Promise<FileSchema> => {
+      get: (fileId: string, options?: RequestInit): Promise<FileSchema> => {
         return callAPI({
           method: 'get',
           endpoint: '/apps/{app_id}/files/{file_id}',
           params: {file_id: fileId},
+          options,
         }) as Promise<FileSchema>;
       },
-      delete: (fileId: string): Promise<void> => {
+      delete: (fileId: string, options?: RequestInit): Promise<void> => {
         return callAPI({
           method: 'delete',
           endpoint: '/apps/{app_id}/files/{file_id}',
           params: {file_id: fileId},
+          options,
         }) as Promise<void>;
       },
-      cancel: (fileId: string): Promise<FileSchema> => {
+      cancel: (fileId: string, options?: RequestInit): Promise<FileSchema> => {
         return callAPI({
           method: 'post',
           endpoint: '/apps/{app_id}/files/{file_id}/cancel',
           params: {file_id: fileId},
+          options,
         }) as Promise<FileSchema>;
       },
     },
-    connections: (connectionId: string): Promise<void> => {
+    connections: (
+      connectionId: string,
+      options?: RequestInit,
+    ): Promise<void> => {
       return callAPI({
         method: 'delete',
         endpoint: '/apps/{app_id}/connections/{connection_id}',
         params: {connection_id: connectionId},
+        options,
       }) as Promise<void>;
     },
     variables: (
       body: AppVariableSchema[],
-      query?: paths['/apps/{app_id}/variables']['patch']['parameters']['query'],
+      options?: RequestInit & {
+        query?: paths['/apps/{app_id}/variables']['patch']['parameters']['query'];
+      },
     ): Promise<AppVariableSchema[]> => {
       return callAPI({
         method: 'patch',
         endpoint: '/apps/{app_id}/variables',
-        query,
         body,
+        options,
       }) as Promise<AppVariableSchema[]>;
     },
     runs: {
-      step: (body: CreateRunStepSchema): Promise<RunStepSchema> => {
-        return callAPI({
-          method: 'post',
-          endpoint: '/apps/{app_id}/runs/step',
-          body,
-        }) as Promise<RunStepSchema>;
+      step: {
+        create: (
+          body: Omit<CreateRunStepSchema, 'stream'>,
+          options?: RequestInit,
+        ): Promise<RunStepSchema> => {
+          return callAPI({
+            method: 'post',
+            endpoint: '/apps/{app_id}/runs/step',
+            body,
+            options,
+          }) as Promise<RunStepSchema>;
+        },
+        stream: (
+          body: Omit<CreateRunStepSchema, 'stream'>,
+          options?: RequestInit & {
+            onStream?: (
+              partialResult: RunStepSchema,
+              event: unknown,
+              data: unknown,
+            ) => void;
+          },
+        ): Promise<RunStepSchema> => {
+          return callAPI({
+            method: 'post',
+            endpoint: '/apps/{app_id}/runs/step',
+            body,
+            options,
+          }) as Promise<RunStepSchema>;
+        },
       },
     },
     workflows: {
       discover: {
         list: (
-          query?: paths['/apps/{app_id}/workflows/discover']['get']['parameters']['query'],
+          options?: RequestInit & {
+            query?: paths['/apps/{app_id}/workflows/discover']['get']['parameters']['query'];
+          },
         ): Promise<WorkflowSchema[]> => {
           return callAPI({
             method: 'get',
             endpoint: '/apps/{app_id}/workflows/discover',
-            query,
+            options,
           }) as Promise<WorkflowSchema[]>;
         },
-        get: (workflowId: string): Promise<WorkflowSchema> => {
+        get: (
+          workflowId: string,
+          options?: RequestInit,
+        ): Promise<WorkflowSchema> => {
           return callAPI({
             method: 'get',
             endpoint: '/apps/{app_id}/workflows/discover/{workflow_id}',
             params: {workflow_id: workflowId},
+            options,
           }) as Promise<WorkflowSchema>;
         },
         versions: (
           workflowId: string,
           versionIdOrVersionNumber: string,
+          options?: RequestInit,
         ): Promise<WorkflowVersionSchema> => {
           return callAPI({
             method: 'get',
@@ -5453,116 +5777,201 @@ export const createAPI = (callAPI: (params: APIMethodParams) => unknown) => ({
               workflow_id: workflowId,
               version_id_or_version_number: versionIdOrVersionNumber,
             },
+            options,
           }) as Promise<WorkflowVersionSchema>;
         },
         runs: {
           create: (
             workflowId: string,
-            body: CreateRunSchema,
-            query?: paths['/apps/{app_id}/workflows/discover/{workflow_id}/runs']['post']['parameters']['query'],
+            body: Omit<CreateRunSchema, 'stream'>,
+            options?: RequestInit & {
+              query?: paths['/apps/{app_id}/workflows/discover/{workflow_id}/runs']['post']['parameters']['query'];
+            },
           ): Promise<RunSchema> => {
             return callAPI({
               method: 'post',
               endpoint: '/apps/{app_id}/workflows/discover/{workflow_id}/runs',
               params: {workflow_id: workflowId},
-              query,
               body,
+              options,
+            }) as Promise<RunSchema>;
+          },
+          stream: (
+            workflowId: string,
+            body: Omit<CreateRunSchema, 'stream'>,
+            options?: RequestInit & {
+              query?: paths['/apps/{app_id}/workflows/discover/{workflow_id}/runs']['post']['parameters']['query'];
+              onStream?: (
+                partialResult: RunSchema,
+                event: unknown,
+                data: unknown,
+              ) => void;
+            },
+          ): Promise<RunSchema> => {
+            return callAPI({
+              method: 'post',
+              endpoint: '/apps/{app_id}/workflows/discover/{workflow_id}/runs',
+              params: {workflow_id: workflowId},
+              body,
+              options,
             }) as Promise<RunSchema>;
           },
           cancel: (
             workflowId: string,
             runId: string,
-            query?: paths['/apps/{app_id}/workflows/discover/{workflow_id}/runs/{run_id}/cancel']['post']['parameters']['query'],
+            options?: RequestInit & {
+              query?: paths['/apps/{app_id}/workflows/discover/{workflow_id}/runs/{run_id}/cancel']['post']['parameters']['query'];
+            },
           ): Promise<RunSchema> => {
             return callAPI({
               method: 'post',
               endpoint:
                 '/apps/{app_id}/workflows/discover/{workflow_id}/runs/{run_id}/cancel',
               params: {workflow_id: workflowId, run_id: runId},
-              query,
+              options,
             }) as Promise<RunSchema>;
           },
         },
       },
       list: (
-        query?: paths['/apps/{app_id}/workflows']['get']['parameters']['query'],
+        options?: RequestInit & {
+          query?: paths['/apps/{app_id}/workflows']['get']['parameters']['query'];
+        },
       ): Promise<WorkflowSchema[]> => {
         return callAPI({
           method: 'get',
           endpoint: '/apps/{app_id}/workflows',
-          query,
+          options,
         }) as Promise<WorkflowSchema[]>;
       },
-      get: (workflowId: string): Promise<WorkflowSchema> => {
+      get: (
+        workflowId: string,
+        options?: RequestInit,
+      ): Promise<WorkflowSchema> => {
         return callAPI({
           method: 'get',
           endpoint: '/apps/{app_id}/workflows/{workflow_id}',
           params: {workflow_id: workflowId},
+          options,
         }) as Promise<WorkflowSchema>;
       },
       runs: {
         list: (
           workflowId: string,
-          query?: paths['/apps/{app_id}/workflows/{workflow_id}/runs']['get']['parameters']['query'],
+          options?: RequestInit & {
+            query?: paths['/apps/{app_id}/workflows/{workflow_id}/runs']['get']['parameters']['query'];
+          },
         ): Promise<RunSchema[]> => {
           return callAPI({
             method: 'get',
             endpoint: '/apps/{app_id}/workflows/{workflow_id}/runs',
             params: {workflow_id: workflowId},
-            query,
+            options,
           }) as Promise<RunSchema[]>;
         },
         create: (
           workflowId: string,
-          body: CreateRunSchema,
-          query?: paths['/apps/{app_id}/workflows/{workflow_id}/runs']['post']['parameters']['query'],
+          body: Omit<CreateRunSchema, 'stream'>,
+          options?: RequestInit & {
+            query?: paths['/apps/{app_id}/workflows/{workflow_id}/runs']['post']['parameters']['query'];
+          },
         ): Promise<RunSchema> => {
           return callAPI({
             method: 'post',
             endpoint: '/apps/{app_id}/workflows/{workflow_id}/runs',
             params: {workflow_id: workflowId},
-            query,
             body,
+            options,
           }) as Promise<RunSchema>;
         },
-        replay: (
+        stream: (
           workflowId: string,
-          runId: string,
-          body: ReplayRunSchema,
-          query?: paths['/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/replay']['post']['parameters']['query'],
+          body: Omit<CreateRunSchema, 'stream'>,
+          options?: RequestInit & {
+            query?: paths['/apps/{app_id}/workflows/{workflow_id}/runs']['post']['parameters']['query'];
+            onStream?: (
+              partialResult: RunSchema,
+              event: unknown,
+              data: unknown,
+            ) => void;
+          },
         ): Promise<RunSchema> => {
           return callAPI({
             method: 'post',
-            endpoint:
-              '/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/replay',
-            params: {workflow_id: workflowId, run_id: runId},
-            query,
+            endpoint: '/apps/{app_id}/workflows/{workflow_id}/runs',
+            params: {workflow_id: workflowId},
             body,
+            options,
           }) as Promise<RunSchema>;
+        },
+        replay: {
+          create: (
+            workflowId: string,
+            runId: string,
+            body: Omit<ReplayRunSchema, 'stream'>,
+            options?: RequestInit & {
+              query?: paths['/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/replay']['post']['parameters']['query'];
+            },
+          ): Promise<RunSchema> => {
+            return callAPI({
+              method: 'post',
+              endpoint:
+                '/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/replay',
+              params: {workflow_id: workflowId, run_id: runId},
+              body,
+              options,
+            }) as Promise<RunSchema>;
+          },
+          stream: (
+            workflowId: string,
+            runId: string,
+            body: Omit<ReplayRunSchema, 'stream'>,
+            options?: RequestInit & {
+              query?: paths['/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/replay']['post']['parameters']['query'];
+              onStream?: (
+                partialResult: RunSchema,
+                event: unknown,
+                data: unknown,
+              ) => void;
+            },
+          ): Promise<RunSchema> => {
+            return callAPI({
+              method: 'post',
+              endpoint:
+                '/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/replay',
+              params: {workflow_id: workflowId, run_id: runId},
+              body,
+              options,
+            }) as Promise<RunSchema>;
+          },
         },
         get: (
           workflowId: string,
           runId: string,
-          query?: paths['/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}']['get']['parameters']['query'],
+          options?: RequestInit & {
+            query?: paths['/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}']['get']['parameters']['query'];
+          },
         ): Promise<RunSchema> => {
           return callAPI({
             method: 'get',
             endpoint: '/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}',
             params: {workflow_id: workflowId, run_id: runId},
-            query,
+            options,
           }) as Promise<RunSchema>;
         },
         cancel: (
           workflowId: string,
           runId: string,
-          query?: paths['/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/cancel']['post']['parameters']['query'],
+          options?: RequestInit & {
+            query?: paths['/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/cancel']['post']['parameters']['query'];
+          },
         ): Promise<RunSchema> => {
           return callAPI({
             method: 'post',
             endpoint:
               '/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/cancel',
             params: {workflow_id: workflowId, run_id: runId},
-            query,
+            options,
           }) as Promise<RunSchema>;
         },
       },
@@ -5570,121 +5979,147 @@ export const createAPI = (callAPI: (params: APIMethodParams) => unknown) => ({
         expectations: (
           workflowId: string,
           expectationId: string,
+          options?: RequestInit,
         ): Promise<void> => {
           return callAPI({
             method: 'delete',
             endpoint:
               '/apps/{app_id}/workflows/{workflow_id}/tests/expectations/{expectation_id}',
             params: {workflow_id: workflowId, expectation_id: expectationId},
+            options,
           }) as Promise<void>;
         },
         list: (
           workflowId: string,
-          query?: paths['/apps/{app_id}/workflows/{workflow_id}/tests']['get']['parameters']['query'],
+          options?: RequestInit & {
+            query?: paths['/apps/{app_id}/workflows/{workflow_id}/tests']['get']['parameters']['query'];
+          },
         ): Promise<WorkflowTestSchema[]> => {
           return callAPI({
             method: 'get',
             endpoint: '/apps/{app_id}/workflows/{workflow_id}/tests',
             params: {workflow_id: workflowId},
-            query,
+            options,
           }) as Promise<WorkflowTestSchema[]>;
         },
         create: (
           workflowId: string,
           body: CreateWorkflowTestSchema,
-          query?: paths['/apps/{app_id}/workflows/{workflow_id}/tests']['post']['parameters']['query'],
+          options?: RequestInit & {
+            query?: paths['/apps/{app_id}/workflows/{workflow_id}/tests']['post']['parameters']['query'];
+          },
         ): Promise<WorkflowTestSchema> => {
           return callAPI({
             method: 'post',
             endpoint: '/apps/{app_id}/workflows/{workflow_id}/tests',
             params: {workflow_id: workflowId},
-            query,
             body,
+            options,
           }) as Promise<WorkflowTestSchema>;
         },
-        stats: (workflowId: string): Promise<WorkflowTestStatsSchema> => {
+        stats: (
+          workflowId: string,
+          options?: RequestInit,
+        ): Promise<WorkflowTestStatsSchema> => {
           return callAPI({
             method: 'get',
             endpoint: '/apps/{app_id}/workflows/{workflow_id}/tests/stats',
             params: {workflow_id: workflowId},
+            options,
           }) as Promise<WorkflowTestStatsSchema>;
         },
         get: (
           workflowId: string,
           testId: string,
-          query?: paths['/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}']['get']['parameters']['query'],
+          options?: RequestInit & {
+            query?: paths['/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}']['get']['parameters']['query'];
+          },
         ): Promise<WorkflowTestSchema> => {
           return callAPI({
             method: 'get',
             endpoint: '/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}',
             params: {workflow_id: workflowId, test_id: testId},
-            query,
+            options,
           }) as Promise<WorkflowTestSchema>;
         },
         update: (
           workflowId: string,
           testId: string,
           body: UpdateWorkflowTestSchema,
-          query?: paths['/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}']['patch']['parameters']['query'],
+          options?: RequestInit & {
+            query?: paths['/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}']['patch']['parameters']['query'];
+          },
         ): Promise<WorkflowTestSchema> => {
           return callAPI({
             method: 'patch',
             endpoint: '/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}',
             params: {workflow_id: workflowId, test_id: testId},
-            query,
             body,
+            options,
           }) as Promise<WorkflowTestSchema>;
         },
-        delete: (workflowId: string, testId: string): Promise<void> => {
+        delete: (
+          workflowId: string,
+          testId: string,
+          options?: RequestInit,
+        ): Promise<void> => {
           return callAPI({
             method: 'delete',
             endpoint: '/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}',
             params: {workflow_id: workflowId, test_id: testId},
+            options,
           }) as Promise<void>;
         },
         runs: (
           workflowId: string,
           testId: string,
           body: RunWorkflowTestSchema,
-          query?: paths['/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}/runs']['post']['parameters']['query'],
+          options?: RequestInit & {
+            query?: paths['/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}/runs']['post']['parameters']['query'];
+          },
         ): Promise<WorkflowTestSchema> => {
           return callAPI({
             method: 'post',
             endpoint:
               '/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}/runs',
             params: {workflow_id: workflowId, test_id: testId},
-            query,
             body,
+            options,
           }) as Promise<WorkflowTestSchema>;
         },
         cancel: (
           workflowId: string,
           testId: string,
-          query?: paths['/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}/cancel']['post']['parameters']['query'],
+          options?: RequestInit & {
+            query?: paths['/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}/cancel']['post']['parameters']['query'];
+          },
         ): Promise<WorkflowTestSchema> => {
           return callAPI({
             method: 'post',
             endpoint:
               '/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}/cancel',
             params: {workflow_id: workflowId, test_id: testId},
-            query,
+            options,
           }) as Promise<WorkflowTestSchema>;
         },
         ws: (
           workflowId: string,
           testId: string,
+          options?: RequestInit,
         ): Promise<WorkflowTestEventSchema> => {
           return callAPI({
             method: 'get',
             endpoint:
               '/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}/ws',
             params: {workflow_id: workflowId, test_id: testId},
+            options,
           }) as Promise<WorkflowTestEventSchema>;
         },
       },
       versions: (
         workflowId: string,
         versionIdOrVersionNumber: string,
+        options?: RequestInit,
       ): Promise<WorkflowVersionSchema> => {
         return callAPI({
           method: 'get',
@@ -5694,129 +6129,157 @@ export const createAPI = (callAPI: (params: APIMethodParams) => unknown) => ({
             workflow_id: workflowId,
             version_id_or_version_number: versionIdOrVersionNumber,
           },
+          options,
         }) as Promise<WorkflowVersionSchema>;
       },
     },
     collections: {
       list: (
-        query?: paths['/apps/{app_id}/collections']['get']['parameters']['query'],
+        options?: RequestInit & {
+          query?: paths['/apps/{app_id}/collections']['get']['parameters']['query'];
+        },
       ): Promise<CollectionSchema[]> => {
         return callAPI({
           method: 'get',
           endpoint: '/apps/{app_id}/collections',
-          query,
+          options,
         }) as Promise<CollectionSchema[]>;
       },
       create: (
         body: CreateCollectionSchema,
+        options?: RequestInit,
       ): Promise<ExtendedCollectionSchema> => {
         return callAPI({
           method: 'post',
           endpoint: '/apps/{app_id}/collections',
           body,
+          options,
         }) as Promise<ExtendedCollectionSchema>;
       },
-      get: (collectionId: string): Promise<ExtendedCollectionSchema> => {
+      get: (
+        collectionId: string,
+        options?: RequestInit,
+      ): Promise<ExtendedCollectionSchema> => {
         return callAPI({
           method: 'get',
           endpoint: '/apps/{app_id}/collections/{collection_id}',
           params: {collection_id: collectionId},
+          options,
         }) as Promise<ExtendedCollectionSchema>;
       },
       update: (
         collectionId: string,
         body: UpdateCollectionSchema,
+        options?: RequestInit,
       ): Promise<ExtendedCollectionSchema> => {
         return callAPI({
           method: 'patch',
           endpoint: '/apps/{app_id}/collections/{collection_id}',
           params: {collection_id: collectionId},
           body,
+          options,
         }) as Promise<ExtendedCollectionSchema>;
       },
-      delete: (collectionId: string): Promise<void> => {
+      delete: (collectionId: string, options?: RequestInit): Promise<void> => {
         return callAPI({
           method: 'delete',
           endpoint: '/apps/{app_id}/collections/{collection_id}',
           params: {collection_id: collectionId},
+          options,
         }) as Promise<void>;
       },
       records: {
         list: (
           collectionId: string,
-          query?: paths['/apps/{app_id}/collections/{collection_id}/records']['get']['parameters']['query'],
+          options?: RequestInit & {
+            query?: paths['/apps/{app_id}/collections/{collection_id}/records']['get']['parameters']['query'];
+          },
         ): Promise<RecordSchema[]> => {
           return callAPI({
             method: 'get',
             endpoint: '/apps/{app_id}/collections/{collection_id}/records',
             params: {collection_id: collectionId},
-            query,
+            options,
           }) as Promise<RecordSchema[]>;
         },
         create: (
           collectionId: string,
           body: CreateRecordSchema,
-          query?: paths['/apps/{app_id}/collections/{collection_id}/records']['post']['parameters']['query'],
+          options?: RequestInit & {
+            query?: paths['/apps/{app_id}/collections/{collection_id}/records']['post']['parameters']['query'];
+          },
         ): Promise<ExtendedRecordSchema> => {
           return callAPI({
             method: 'post',
             endpoint: '/apps/{app_id}/collections/{collection_id}/records',
             params: {collection_id: collectionId},
-            query,
             body,
+            options,
           }) as Promise<ExtendedRecordSchema>;
         },
         get: (
           collectionId: string,
           recordId: string,
-          query?: paths['/apps/{app_id}/collections/{collection_id}/records/{record_id}']['get']['parameters']['query'],
+          options?: RequestInit & {
+            query?: paths['/apps/{app_id}/collections/{collection_id}/records/{record_id}']['get']['parameters']['query'];
+          },
         ): Promise<ExtendedRecordSchema> => {
           return callAPI({
             method: 'get',
             endpoint:
               '/apps/{app_id}/collections/{collection_id}/records/{record_id}',
             params: {collection_id: collectionId, record_id: recordId},
-            query,
+            options,
           }) as Promise<ExtendedRecordSchema>;
         },
         update: (
           collectionId: string,
           recordId: string,
           body: UpdateRecordSchema,
-          query?: paths['/apps/{app_id}/collections/{collection_id}/records/{record_id}']['patch']['parameters']['query'],
+          options?: RequestInit & {
+            query?: paths['/apps/{app_id}/collections/{collection_id}/records/{record_id}']['patch']['parameters']['query'];
+          },
         ): Promise<ExtendedRecordSchema> => {
           return callAPI({
             method: 'patch',
             endpoint:
               '/apps/{app_id}/collections/{collection_id}/records/{record_id}',
             params: {collection_id: collectionId, record_id: recordId},
-            query,
             body,
+            options,
           }) as Promise<ExtendedRecordSchema>;
         },
-        delete: (collectionId: string, recordId: string): Promise<void> => {
+        delete: (
+          collectionId: string,
+          recordId: string,
+          options?: RequestInit,
+        ): Promise<void> => {
           return callAPI({
             method: 'delete',
             endpoint:
               '/apps/{app_id}/collections/{collection_id}/records/{record_id}',
             params: {collection_id: collectionId, record_id: recordId},
+            options,
           }) as Promise<void>;
         },
         status: (
           collectionId: string,
           recordId: string,
+          options?: RequestInit,
         ): Promise<RecordStatusSchema> => {
           return callAPI({
             method: 'get',
             endpoint:
               '/apps/{app_id}/collections/{collection_id}/records/{record_id}/status',
             params: {collection_id: collectionId, record_id: recordId},
+            options,
           }) as Promise<RecordStatusSchema>;
         },
         run: (
           collectionId: string,
           recordId: string,
           body: RunRecordSchema,
+          options?: RequestInit,
         ): Promise<RecordSchema> => {
           return callAPI({
             method: 'post',
@@ -5824,56 +6287,69 @@ export const createAPI = (callAPI: (params: APIMethodParams) => unknown) => ({
               '/apps/{app_id}/collections/{collection_id}/records/{record_id}/run',
             params: {collection_id: collectionId, record_id: recordId},
             body,
+            options,
           }) as Promise<RecordSchema>;
         },
         cancel: (
           collectionId: string,
           recordId: string,
+          options?: RequestInit,
         ): Promise<RecordSchema> => {
           return callAPI({
             method: 'post',
             endpoint:
               '/apps/{app_id}/collections/{collection_id}/records/{record_id}/cancel',
             params: {collection_id: collectionId, record_id: recordId},
+            options,
           }) as Promise<RecordSchema>;
         },
         updateRules: (
           collectionId: string,
           recordId: string,
+          options?: RequestInit,
         ): Promise<RecordSchema> => {
           return callAPI({
             method: 'post',
             endpoint:
               '/apps/{app_id}/collections/{collection_id}/records/{record_id}/update-rules',
             params: {collection_id: collectionId, record_id: recordId},
+            options,
           }) as Promise<RecordSchema>;
         },
         reset: (
           collectionId: string,
           recordId: string,
+          options?: RequestInit,
         ): Promise<RecordSchema> => {
           return callAPI({
             method: 'post',
             endpoint:
               '/apps/{app_id}/collections/{collection_id}/records/{record_id}/reset',
             params: {collection_id: collectionId, record_id: recordId},
+            options,
           }) as Promise<RecordSchema>;
         },
-        download: (collectionId: string, recordId: string): Promise<void> => {
+        download: (
+          collectionId: string,
+          recordId: string,
+          options?: RequestInit,
+        ): Promise<void> => {
           return callAPI({
             method: 'get',
             endpoint:
               '/apps/{app_id}/collections/{collection_id}/records/{record_id}/download',
             params: {collection_id: collectionId, record_id: recordId},
+            options,
           }) as Promise<void>;
         },
       },
     },
-    webhooks: (webhookId: string): Promise<void> => {
+    webhooks: (webhookId: string, options?: RequestInit): Promise<void> => {
       return callAPI({
         method: 'delete',
         endpoint: '/apps/{app_id}/webhooks/{webhook_id}',
         params: {webhook_id: webhookId},
+        options,
       }) as Promise<void>;
     },
   },

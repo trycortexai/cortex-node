@@ -1,7 +1,7 @@
 import {serve} from '@hono/node-server';
 import {Hono} from 'hono';
 
-import {testExample} from './cortex.js';
+import {testStep} from './cortex.js';
 
 const app = new Hono();
 
@@ -18,4 +18,4 @@ serve({
   port,
 });
 
-testExample();
+testStep();

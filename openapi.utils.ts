@@ -6,6 +6,7 @@ import openapiTS, {
   ReferenceObject,
   RequestBodyObject,
   ResponsesObject,
+  SchemaObject,
 } from 'openapi-typescript';
 import ts from 'typescript';
 
@@ -80,6 +81,7 @@ type MethodOptions = {
   name: string;
   method: string;
   endpoint: string;
+  stream: boolean;
   parameters: Record<string, string>;
   body?: string;
   query?: string;
@@ -116,22 +118,50 @@ const cleanPathUrl = (path: string) => {
 export const generateAPIMethods = (schema: OpenAPI3): string => {
   const allMethods: Map<string, MethodOptions> = new Map();
 
-  Object.entries(schema.paths ?? {}).forEach(([endpoint, methods]) => {
+  const allPaths = new Map(Object.entries(schema.paths ?? {}));
+
+  allPaths.forEach((methods, endpoint) => {
+    /* if (endpoint !== '/apps/{app_id}/workflows/{workflow_id}/runs') {
+      return;
+    } */
+
     Object.entries(methods).forEach(([method, details]) => {
-      const apiMethod = buildAPIMethodObject(endpoint, method, details);
+      const apiMethod = buildAPIMethodObject(schema, endpoint, method, details);
 
-      const matchingPaths = Object.keys(schema.paths ?? {}).filter(
-        path => path !== endpoint && path.startsWith(endpoint),
-      );
+      const methodsToPush = [apiMethod];
 
-      if (!matchingPaths.length) {
-        const fullPath = `${cleanPathUrl(endpoint)}`;
-        allMethods.set(fullPath, apiMethod);
-        return;
+      //
+
+      if (apiMethod.stream) {
+        apiMethod.stream = false;
+
+        if (apiMethod.body) {
+          apiMethod.body = `Omit<${apiMethod.body}, 'stream'>`;
+        }
+
+        methodsToPush.push({
+          ...apiMethod,
+          name: 'stream',
+          stream: true,
+        });
       }
 
-      const fullPath = `${cleanPathUrl(endpoint)}.${apiMethod.name}`;
-      allMethods.set(fullPath, apiMethod);
+      //
+
+      methodsToPush.forEach(apiMethod => {
+        const matchingPaths = [...allPaths.keys()].filter(
+          path => path !== endpoint && path.startsWith(endpoint),
+        );
+
+        if (methodsToPush.length === 1 && !matchingPaths.length) {
+          const fullPath = `${cleanPathUrl(endpoint)}`;
+          allMethods.set(fullPath, apiMethod);
+          return;
+        }
+
+        const fullPath = `${cleanPathUrl(endpoint)}.${apiMethod.name}`;
+        allMethods.set(fullPath, apiMethod);
+      });
     });
   });
 
@@ -139,11 +169,12 @@ export const generateAPIMethods = (schema: OpenAPI3): string => {
 };
 
 const buildAPIMethodObject = (
+  schema: OpenAPI3,
   endpoint: string,
   method: string,
-  schema: OperationObject,
+  operation: OperationObject,
 ): MethodOptions => {
-  const {parameters, requestBody, responses} = schema;
+  const {parameters, requestBody, responses} = operation;
 
   if (parameters && '$ref' in parameters) {
     throw new Error('Parameters reference not supported');
@@ -166,6 +197,7 @@ const buildAPIMethodObject = (
     name: methodName,
     method,
     endpoint,
+    stream: isStreamingSupported(schema, requestBody),
     body: requestBody ? getBodyType(requestBody) : undefined,
     query: hasAnyQueryParameters
       ? `paths['${endpoint}']['${method}']['parameters']['query']`
@@ -175,6 +207,60 @@ const buildAPIMethodObject = (
   };
 
   return apiMethod;
+};
+
+const isStreamingSupported = (
+  schema: OpenAPI3,
+  requestBody: RequestBodyObject | ReferenceObject | undefined,
+): boolean => {
+  let schemaObject: SchemaObject | null = null;
+
+  if (isReferenceObject(requestBody)) {
+    schemaObject = getSchemaObjectFromRef(schema, requestBody.$ref);
+    return false;
+  }
+
+  if (!schemaObject) {
+    const response = requestBody?.content?.['application/json'];
+
+    if (!response) {
+      return false;
+    }
+
+    if (isReferenceObject(response)) {
+      schemaObject = getSchemaObjectFromRef(schema, response.$ref);
+    }
+
+    if ('schema' in response && isReferenceObject(response.schema)) {
+      schemaObject = getSchemaObjectFromRef(schema, response.schema.$ref);
+    }
+  }
+
+  if (schemaObject?.type !== 'object') {
+    return false;
+  }
+
+  const isStreamingSupported = !!schemaObject?.properties?.stream;
+
+  return isStreamingSupported;
+};
+
+const getSchemaObjectFromRef = (
+  schema: OpenAPI3,
+  ref: string,
+): SchemaObject | null => {
+  if (!schema.components?.schemas) {
+    return null;
+  }
+
+  const schemaName = ref.split('/').pop();
+  const schemaObject = schema.components.schemas[schemaName ?? ''];
+
+  if (schemaObject.type === 'object') {
+    return schemaObject;
+  }
+
+  return null;
 };
 
 const getBodyType = (requestBody: RequestBodyObject | ReferenceObject) => {
@@ -294,6 +380,7 @@ const createMethod = ({
   parameters,
   query,
   body,
+  stream,
   returns,
 }: MethodOptions) => {
   const params = Object.entries(parameters);
@@ -304,9 +391,23 @@ const createMethod = ({
     allParameters.push(['body', body]);
   }
 
+  const options: [string, string][] = [];
+
   if (query) {
-    allParameters.push(['query?', query]);
+    options.push(['query?', query]);
   }
+
+  if (stream) {
+    options.push([
+      'onStream?',
+      `(partialResult: ${returns}, event: unknown, data: unknown) => void`,
+    ]);
+  }
+
+  allParameters.push([
+    'options?',
+    `RequestInit${options.length ? ` & {${options.map(([key, value]) => `${key}: ${value}`).join(',')}}` : ''}`,
+  ]);
 
   const paramsString = params.length
     ? `params: {${params.map(([key]) => `${key}: ${convertToCamelCase(key)}`).join(',')}},\n`
@@ -318,7 +419,7 @@ const createMethod = ({
   return callAPI({
     method: ${encodeParam(method)},
     endpoint: ${encodeParam(endpoint)},
-    ${paramsString}${query ? `query,\n` : ''}${body ? `body,\n` : ''}
+    ${paramsString}${body ? `body,` : ''}options,
   }) as Promise<${returns}>;
 }`;
 
@@ -351,15 +452,18 @@ export const methodsToString = (
     );
   });
 
-  const finalTemplate = `export type APIMethodParams = {
+  const finalTemplate = `export type APIMethodRequest = {
   method: string;
   endpoint: string;
   params?: Record<string, unknown>;
   body?: unknown;
-  query?: Record<string, unknown>;
+  options?: RequestInit & {
+    query?: Record<string, unknown>;
+    onStream?: (partialResult: any, event: unknown, data: unknown) => void;
+  }
 };
 export type APIMethods = ReturnType<typeof createAPI>;
-export const createAPI = (callAPI: (params: APIMethodParams) => unknown) => (${template});`;
+export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => (${template});`;
 
   //console.log('finalTemplate', finalTemplate);
 

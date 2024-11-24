@@ -62,7 +62,9 @@ export const createAPIFetchClient = (options: ClientOptions) => {
 
       // handle files
       const containsFile = Object.values(body).some(
-        item => item instanceof FileList || item instanceof File,
+        item =>
+          (typeof FileList !== 'undefined' && item instanceof FileList) ||
+          item instanceof File,
       );
 
       if (!containsFile) {
@@ -126,7 +128,7 @@ export const createAPIFetchClient = (options: ClientOptions) => {
   ) => {
     const {data, error} = await CLIENT.POST(path, ...init);
 
-    if (error) throw error;
+    if (error) throw new APIError(error as unknown as ErrorResponse);
 
     return data as NonNullable<typeof data>;
   };
@@ -140,7 +142,7 @@ export const createAPIFetchClient = (options: ClientOptions) => {
   ) => {
     const {data, error} = await CLIENT.PUT(path, ...init);
 
-    if (error) throw error;
+    if (error) throw new APIError(error as unknown as ErrorResponse);
 
     return data as NonNullable<typeof data>;
   };
@@ -154,7 +156,7 @@ export const createAPIFetchClient = (options: ClientOptions) => {
   ) => {
     const {data, error} = await CLIENT.DELETE(path, ...init);
 
-    if (error) throw error;
+    if (error) throw new APIError(error as unknown as ErrorResponse);
 
     return data as NonNullable<typeof data>;
   };
@@ -168,7 +170,7 @@ export const createAPIFetchClient = (options: ClientOptions) => {
   ) => {
     const {data, error} = await CLIENT.PATCH(path, ...init);
 
-    if (error) throw error;
+    if (error) throw new APIError(error as unknown as ErrorResponse);
 
     return data as NonNullable<typeof data>;
   };
@@ -182,7 +184,7 @@ export const createAPIFetchClient = (options: ClientOptions) => {
   ) => {
     const {data, error, response} = await CLIENT.GET(path, ...init);
 
-    if (error) throw error;
+    if (error) throw new APIError(error as unknown as ErrorResponse);
 
     return {
       data: data as NonNullable<typeof data>,
@@ -193,6 +195,7 @@ export const createAPIFetchClient = (options: ClientOptions) => {
   };
 
   return {
+    CLIENT,
     GET,
     POST,
     PUT,
@@ -218,7 +221,10 @@ export const readSSE = async (
   });
 
   if (!response.body) {
-    throw new Error('Response body is null');
+    throw new APIError({
+      status: 0,
+      message: 'No stream response body',
+    });
   }
 
   const reader = response.body.getReader();
