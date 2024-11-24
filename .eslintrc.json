@@ -16,7 +16,7 @@
   "ignorePatterns": [
     "node_modules/**/*",
     "build/**/*",
-    "tests/**/*",
+    "examples/**/*",
     "openapi*"
   ],
   "plugins": ["@typescript-eslint"],

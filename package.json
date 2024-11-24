@@ -11,7 +11,7 @@
   "scripts": {
     "build": "tsup src/index.ts",
     "dev": "tsup src/index.ts --watch",
-    "dev:hono": "pnpm -C tests/hono dev",
+    "dev:hono": "pnpm -C examples/hono dev",
     "test": "vitest",
     "generate": "bun openapi.ts && npm run format",
     "tsc": "tsc --noEmit",
@@ -35,8 +35,7 @@
     "prettier": "^3.2.5",
     "release-it": "^17.6.0",
     "tsup": "^8.0.2",
-    "typescript": "^5.4.3",
-    "vitest": "^2.0.5"
+    "typescript": "^5.4.3"
   },
   "keywords": [
     "cortex",

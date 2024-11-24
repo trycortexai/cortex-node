@@ -31,6 +31,3 @@ jobs:
 
       - name: Run validation
         run: pnpm validate
-
-      - name: Run tests
-        run: pnpm test
