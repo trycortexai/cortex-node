@@ -1,6 +1,6 @@
 {
   "name": "@cortex-ai/sdk",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Cortex SDK for Node.js",
   "main": "./build/index.js",
   "module": "./build/index.mjs",
@@ -16,7 +16,7 @@
     "generate": "bun openapi.ts && npm run format",
     "tsc": "tsc --noEmit",
     "lint": "eslint . --ext .ts,.tsx --fix",
-    "validate": "npm run build && npm run format && npm run tsc && npm run lint",
+    "validate": "npm run build && npm run tsc && npm run lint",
     "format": "prettier --write .",
     "release": "release-it",
     "prepare": "husky"
