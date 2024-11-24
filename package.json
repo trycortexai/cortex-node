@@ -1,6 +1,6 @@
 {
   "name": "@cortex-ai/sdk",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Cortex SDK for Node.js",
   "main": "./build/index.js",
   "module": "./build/index.mjs",
@@ -46,6 +46,9 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/trycortexai/cortex-node.git"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "dependencies": {
     "eventsource-parser": "^3.0.0"
