@@ -13,10 +13,10 @@
     "dev": "tsup src/index.ts --watch",
     "dev:hono": "pnpm -C examples/hono dev",
     "test": "vitest",
-    "generate": "bun openapi.ts && npm run format",
+    "generate": "bun openapi.ts && pnpm format",
     "tsc": "tsc --noEmit",
     "lint": "eslint . --ext .ts,.tsx --fix",
-    "validate": "npm run build && npm run tsc && npm run lint",
+    "validate": "pnpm build && pnpm tsc && pnpm lint",
     "format": "prettier --write .",
     "release": "release-it",
     "prepare": "husky"

@@ -50,12 +50,12 @@ importers:
         version: 17.10.0(typescript@5.7.2)
       tsup:
         specifier: ^8.0.2
-        version: 8.3.5(jiti@1.21.6)(postcss@8.4.49)(tsx@4.19.2)(typescript@5.7.2)
+        version: 8.3.5(jiti@1.21.6)(tsx@4.19.2)(typescript@5.7.2)
       typescript:
         specifier: ^5.4.3
         version: 5.7.2
 
-  tests/hono:
+  examples/hono:
     dependencies:
       '@cortex-ai/sdk':
         specifier: workspace:*
@@ -1897,11 +1897,6 @@ packages:
   mz@2.7.0:
     resolution: {integrity: sha512-z81GNO7nnYMEhrGh9LeymoE4+Yr0Wn5McHIZMK5cfQCl+NDX08sCZgUc9/6MHni9IWuFLm1Z3HTCXu2z9fN62Q==}
 
-  nanoid@3.3.7:
-    resolution: {integrity: sha512-eSRppjcPIatRIMC1U6UngP8XFcz8MQWGQdt1MTBQ7NaAmvXDfvNxbvWV3x2y6CdEUciCSsDHDQZbhYaB8QEo2g==}
-    engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
-    hasBin: true
-
   natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
 
@@ -2113,10 +2108,6 @@ packages:
       yaml:
         optional: true
 
-  postcss@8.4.49:
-    resolution: {integrity: sha512-OCVPnIObs4N29kxTjzLfUryOkvZEq+pf8jTF0lg8E7uETuWHA+v7j3c/xJmiqpX450191LlmZfUKkXxkTry7nA==}
-    engines: {node: ^10 || ^12 || >=14}
-
   prelude-ls@1.2.1:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
@@ -2300,10 +2291,6 @@ packages:
   socks@2.8.3:
     resolution: {integrity: sha512-l5x7VUUWbjVFbafGLxPWkYsHIhEvmF85tbIeFZWc8ZPtoMyybuEhL7Jye/ooC4/d48FgOjSJXgsF/AJPYCW8Zw==}
     engines: {node: '>= 10.0.0', npm: '>= 3.0.0'}
-
-  source-map-js@1.2.1:
-    resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
-    engines: {node: '>=0.10.0'}
 
   source-map@0.6.1:
     resolution: {integrity: sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==}
@@ -4386,9 +4373,6 @@ snapshots:
       object-assign: 4.1.1
       thenify-all: 1.6.0
 
-  nanoid@3.3.7:
-    optional: true
-
   natural-compare@1.4.0: {}
 
   neo-async@2.6.2: {}
@@ -4599,20 +4583,12 @@ snapshots:
 
   pluralize@8.0.0: {}
 
-  postcss-load-config@6.0.1(jiti@1.21.6)(postcss@8.4.49)(tsx@4.19.2):
+  postcss-load-config@6.0.1(jiti@1.21.6)(tsx@4.19.2):
     dependencies:
       lilconfig: 3.1.2
     optionalDependencies:
       jiti: 1.21.6
-      postcss: 8.4.49
       tsx: 4.19.2
-
-  postcss@8.4.49:
-    dependencies:
-      nanoid: 3.3.7
-      picocolors: 1.1.1
-      source-map-js: 1.2.1
-    optional: true
 
   prelude-ls@1.2.1: {}
 
@@ -4827,9 +4803,6 @@ snapshots:
       ip-address: 9.0.5
       smart-buffer: 4.2.0
 
-  source-map-js@1.2.1:
-    optional: true
-
   source-map@0.6.1: {}
 
   source-map@0.8.0-beta.0:
@@ -4959,7 +4932,7 @@ snapshots:
 
   tslib@2.8.1: {}
 
-  tsup@8.3.5(jiti@1.21.6)(postcss@8.4.49)(tsx@4.19.2)(typescript@5.7.2):
+  tsup@8.3.5(jiti@1.21.6)(tsx@4.19.2)(typescript@5.7.2):
     dependencies:
       bundle-require: 5.0.0(esbuild@0.24.0)
       cac: 6.7.14
@@ -4969,7 +4942,7 @@ snapshots:
       esbuild: 0.24.0
       joycon: 3.1.1
       picocolors: 1.1.1
-      postcss-load-config: 6.0.1(jiti@1.21.6)(postcss@8.4.49)(tsx@4.19.2)
+      postcss-load-config: 6.0.1(jiti@1.21.6)(tsx@4.19.2)
       resolve-from: 5.0.0
       rollup: 4.27.4
       source-map: 0.8.0-beta.0
@@ -4978,7 +4951,6 @@ snapshots:
       tinyglobby: 0.2.10
       tree-kill: 1.2.2
     optionalDependencies:
-      postcss: 8.4.49
       typescript: 5.7.2
     transitivePeerDependencies:
       - jiti
