@@ -18,7 +18,7 @@
     "lint": "eslint . --ext .ts,.tsx --fix",
     "validate": "pnpm build && pnpm tsc && pnpm lint",
     "format": "prettier --write .",
-    "release": "release-it --ci",
+    "release": "release-it",
     "prepare": "husky"
   },
   "devDependencies": {

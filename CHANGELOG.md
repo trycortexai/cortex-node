@@ -1,5 +1,10 @@
 
 
+## <small>0.4.2 (2024-11-24)</small>
+
+* chore: fresh install packages ([038bd57](https://github.com/trycortexai/cortex-node/commit/038bd57))
+* chore: use release --ci ([54b2b83](https://github.com/trycortexai/cortex-node/commit/54b2b83))
+
 ## <small>0.4.1 (2024-11-24)</small>
 
 * chore: fresh install packages ([038bd57](https://github.com/trycortexai/cortex-node/commit/038bd57))
