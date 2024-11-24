@@ -5659,7 +5659,10 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
           options,
         }) as Promise<FileSchema>;
       },
-      get: (fileId: string, options?: RequestInit): Promise<FileSchema> => {
+      retrieve: (
+        fileId: string,
+        options?: RequestInit,
+      ): Promise<FileSchema> => {
         return callAPI({
           method: 'get',
           endpoint: '/apps/{app_id}/files/{file_id}',
@@ -5753,7 +5756,7 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
             options,
           }) as Promise<WorkflowSchema[]>;
         },
-        get: (
+        retrieve: (
           workflowId: string,
           options?: RequestInit,
         ): Promise<WorkflowSchema> => {
@@ -5844,7 +5847,7 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
           options,
         }) as Promise<WorkflowSchema[]>;
       },
-      get: (
+      retrieve: (
         workflowId: string,
         options?: RequestInit,
       ): Promise<WorkflowSchema> => {
@@ -5945,7 +5948,7 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
             }) as Promise<RunSchema>;
           },
         },
-        get: (
+        retrieve: (
           workflowId: string,
           runId: string,
           options?: RequestInit & {
@@ -6028,7 +6031,7 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
             options,
           }) as Promise<WorkflowTestStatsSchema>;
         },
-        get: (
+        retrieve: (
           workflowId: string,
           testId: string,
           options?: RequestInit & {
@@ -6156,7 +6159,7 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
           options,
         }) as Promise<ExtendedCollectionSchema>;
       },
-      get: (
+      retrieve: (
         collectionId: string,
         options?: RequestInit,
       ): Promise<ExtendedCollectionSchema> => {
@@ -6217,7 +6220,7 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
             options,
           }) as Promise<ExtendedRecordSchema>;
         },
-        get: (
+        retrieve: (
           collectionId: string,
           recordId: string,
           options?: RequestInit & {

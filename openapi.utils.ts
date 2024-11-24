@@ -90,7 +90,7 @@ type MethodOptions = {
 };
 
 const METHOD_TO_NAME = {
-  get: 'get',
+  get: 'retrieve',
   post: 'create',
   patch: 'update',
   put: 'put',
