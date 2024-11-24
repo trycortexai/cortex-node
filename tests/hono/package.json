@@ -5,9 +5,10 @@
     "dev": "tsx watch src/index.ts"
   },
   "dependencies": {
+    "@cortex-ai/sdk": "workspace:*",
     "@hono/node-server": "^1.13.7",
-    "hono": "^4.6.11",
-    "@cortex-ai/sdk": "workspace:*"
+    "dotenv": "^16.4.5",
+    "hono": "^4.6.11"
   },
   "devDependencies": {
     "@types/node": "^20.11.17",
