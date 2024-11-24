@@ -1,5 +1,9 @@
 
 
+## <small>0.4.1 (2024-11-24)</small>
+
+* chore: fresh install packages ([038bd57](https://github.com/trycortexai/cortex-node/commit/038bd57))
+
 ## 0.4.0 (2024-11-24)
 
 * chore: better endpoint names ([75e2323](https://github.com/trycortexai/cortex-node/commit/75e2323))
