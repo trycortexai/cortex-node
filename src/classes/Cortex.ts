@@ -1,15 +1,14 @@
-import {APIFetchClient, ClientOptions} from '../types/api';
+import {APP_LESS_PARAM} from '../constants/api';
+import {STREAM_PARSERS} from '../constants/stream';
+import {APIFetchClient, ClientOptions, ErrorResponse} from '../types/api';
 import {APIMethodRequest, APIMethods, createAPI, paths} from '../types/openapi';
-import {createAPIFetchClient, ErrorResponse, readSSE} from '../utils/api';
+import {createAPIFetchClient, readSSE} from '../utils/api';
 import {getObjectProperty} from '../utils/object';
 import {APIError} from './APIError';
-import {STREAM_PARSERS} from './Stream';
-
-const APP_LESS_PARAM = 'c';
 
 export class Cortex {
-  private apiMethods: ReturnType<typeof createAPI>;
-  private apiKey: string = '';
+  private readonly apiMethods: APIMethods;
+  private readonly apiKey: string;
 
   apps: APIMethods['apps'] = null as unknown as APIMethods['apps'];
 
@@ -20,13 +19,9 @@ export class Cortex {
   constructor({apiKey, ...options}: ClientOptions) {
     this.apiKey = apiKey;
 
-    //
-
     if (!this.apiKey) {
       throw new Error('API Key is required');
     }
-
-    //
 
     this.client = createAPIFetchClient({
       ...options,
@@ -35,8 +30,6 @@ export class Cortex {
         ...options.headers,
       },
     });
-
-    //
 
     this.apiMethods = createAPI(this.api);
 
@@ -94,8 +87,6 @@ export class Cortex {
         : {}),
       ...requestInit,
     };
-
-    //
 
     const clientMethod = (
       onStream

@@ -1,7 +1,7 @@
 {
-  "name": "cortex-node",
+  "name": "@cortex-ai/sdk",
   "version": "0.1.0",
-  "description": "Cortex Node SDK",
+  "description": "Node.js SDK for interacting with the Cortex AI platform",
   "main": "./build/index.js",
   "module": "./build/index.mjs",
   "types": "./build/index.d.ts",
@@ -27,7 +27,9 @@
     "@typescript-eslint/eslint-plugin": "^7.3.1",
     "eslint": "^8.57.0",
     "husky": "^9.1.6",
+    "openapi-fetch": "^0.13.0",
     "openapi-typescript": "^7.4.3",
+    "openapi-typescript-helpers": "^0.0.15",
     "prettier": "^3.2.5",
     "release-it": "^17.6.0",
     "tsup": "^8.0.2",
@@ -45,8 +47,6 @@
     "url": "git+https://github.com/trycortexai/cortex-node.git"
   },
   "dependencies": {
-    "eventsource-parser": "^3.0.0",
-    "openapi-fetch": "^0.13.0",
-    "openapi-typescript-helpers": "^0.0.15"
+    "eventsource-parser": "^3.0.0"
   }
 }

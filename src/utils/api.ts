@@ -1,57 +1,11 @@
 import {createParser} from 'eventsource-parser';
-import createClient, {ClientOptions, MaybeOptionalInit} from 'openapi-fetch';
-import type {
-  HttpMethod,
-  PathsWithMethod,
-  RequiredKeysOf,
-} from 'openapi-typescript-helpers';
+import createClient, {ClientOptions} from 'openapi-fetch';
+import type {PathsWithMethod} from 'openapi-typescript-helpers';
 
 import {APIError} from '../classes/APIError';
+import {API_ENDPOINT} from '../constants/api';
+import {EndpointParams, ErrorResponse, PaginationResult} from '../types/api';
 import type {paths} from '../types/openapi';
-
-export const API_ENDPOINT =
-  process.env.CORTEX_API_URL || 'https://api.withcortex.ai';
-
-export type ApiUrl = PathsWithMethod<paths, 'get'>;
-
-//
-
-type InitParam<Init> =
-  RequiredKeysOf<Init> extends never
-    ? [(Init & {[key: string]: unknown})?]
-    : [Init & {[key: string]: unknown}];
-
-export type EndpointParams<
-  Path extends keyof paths,
-  Method extends HttpMethod,
-> = InitParam<MaybeOptionalInit<paths[Path], Method>>;
-
-//
-
-export type ErrorItem = {
-  validation: string;
-  code: string;
-  message: string;
-  path: string[];
-};
-
-export type ErrorResponse = {
-  status: number;
-  message: string;
-  errors?: ErrorItem[];
-};
-
-export type PagedParams = {
-  page: number;
-  take: number;
-};
-
-export type PaginationResult<D = unknown> = {
-  data: D;
-  page: number;
-  take: number;
-  count: number;
-};
 
 export const createAPIFetchClient = (options: ClientOptions) => {
   const CLIENT = createClient<paths>({

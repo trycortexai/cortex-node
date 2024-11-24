@@ -1,22 +1,22 @@
-import {ErrorResponse} from '../utils/api';
+import {ErrorResponse} from '../types/api';
 
 export class APIError extends Error {
-  private _error: ErrorResponse;
-  status: number;
+  private readonly error: ErrorResponse;
+  public readonly status: number;
 
   constructor(error: ErrorResponse) {
-    super(error.message ?? 'Unknown API error');
+    super(error.message ?? 'Unknown Cortex API error');
 
-    this._error = error ?? {
+    this.error = error ?? {
       status: 0,
       message: this.message,
     };
 
-    this.name = 'APIError';
-    this.status = this._error.status;
+    this.name = 'CortexAPIError';
+    this.status = this.error.status;
   }
 
   toString() {
-    return JSON.stringify(this._error);
+    return JSON.stringify(this.error);
   }
 }

@@ -2,7 +2,7 @@ import {
   Cortex,
   type CastRunStepOutputSchema,
   type StepModelOutputSchema,
-} from '../../../build/index.js';
+} from '@cortex-ai/sdk';
 
 const BASE_URL = 'http://localhost';
 const API_KEY =

@@ -39,8 +39,6 @@ export const STREAM_PARSERS: Partial<
     }
   },
 
-  //
-
   '/apps/{app_id}/runs/step': (
     step: CastRunStepOutputSchema,
     event: 'step' | 'chunk',
