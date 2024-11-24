@@ -1,6 +1,6 @@
 import {ErrorResponse} from '../types/api';
 
-export class APIError extends Error {
+export class CortexAPIError extends Error {
   private readonly error: ErrorResponse;
   public readonly status: number;
 

@@ -2,7 +2,7 @@ import {createParser} from 'eventsource-parser';
 import createClient, {ClientOptions} from 'openapi-fetch';
 import type {PathsWithMethod} from 'openapi-typescript-helpers';
 
-import {APIError} from '../classes/APIError';
+import {CortexAPIError} from '../classes/CortexAPIError';
 import {API_ENDPOINT} from '../constants/api';
 import {EndpointParams, ErrorResponse, PaginationResult} from '../types/api';
 import type {paths} from '../types/openapi';
@@ -68,7 +68,7 @@ export const createAPIFetchClient = (options: ClientOptions) => {
   ) => {
     const {data, error} = await CLIENT.GET(path, ...init);
 
-    if (error) throw new APIError(error as unknown as ErrorResponse);
+    if (error) throw new CortexAPIError(error as unknown as ErrorResponse);
 
     return data as NonNullable<typeof data>;
   };
@@ -82,7 +82,7 @@ export const createAPIFetchClient = (options: ClientOptions) => {
   ) => {
     const {data, error} = await CLIENT.POST(path, ...init);
 
-    if (error) throw new APIError(error as unknown as ErrorResponse);
+    if (error) throw new CortexAPIError(error as unknown as ErrorResponse);
 
     return data as NonNullable<typeof data>;
   };
@@ -96,7 +96,7 @@ export const createAPIFetchClient = (options: ClientOptions) => {
   ) => {
     const {data, error} = await CLIENT.PUT(path, ...init);
 
-    if (error) throw new APIError(error as unknown as ErrorResponse);
+    if (error) throw new CortexAPIError(error as unknown as ErrorResponse);
 
     return data as NonNullable<typeof data>;
   };
@@ -110,7 +110,7 @@ export const createAPIFetchClient = (options: ClientOptions) => {
   ) => {
     const {data, error} = await CLIENT.DELETE(path, ...init);
 
-    if (error) throw new APIError(error as unknown as ErrorResponse);
+    if (error) throw new CortexAPIError(error as unknown as ErrorResponse);
 
     return data as NonNullable<typeof data>;
   };
@@ -124,7 +124,7 @@ export const createAPIFetchClient = (options: ClientOptions) => {
   ) => {
     const {data, error} = await CLIENT.PATCH(path, ...init);
 
-    if (error) throw new APIError(error as unknown as ErrorResponse);
+    if (error) throw new CortexAPIError(error as unknown as ErrorResponse);
 
     return data as NonNullable<typeof data>;
   };
@@ -138,7 +138,7 @@ export const createAPIFetchClient = (options: ClientOptions) => {
   ) => {
     const {data, error, response} = await CLIENT.GET(path, ...init);
 
-    if (error) throw new APIError(error as unknown as ErrorResponse);
+    if (error) throw new CortexAPIError(error as unknown as ErrorResponse);
 
     return {
       data: data as NonNullable<typeof data>,
@@ -175,7 +175,7 @@ export const readSSE = async (
   });
 
   if (!response.body) {
-    throw new APIError({
+    throw new CortexAPIError({
       status: 0,
       message: 'No stream response body',
     });

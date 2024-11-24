@@ -12,7 +12,7 @@ export const handleStepStream = (
         return data;
       }
       case 'chunk': {
-        // Note: Only step `model` supports `chunk` event at the moment
+        // note: only step `model` supports `chunk` event at the moment
 
         const output = (data.output ?? {}) as StepModelOutputSchema;
 
@@ -49,7 +49,7 @@ export const handleStepStream = (
       }
     }
   } catch (e) {
-    console.error('handleStepStream error', e);
+    console.error('HANDLE_STEP_STREAM_ERROR', e);
     return data;
   }
 };

@@ -4,7 +4,7 @@ import {APIFetchClient, ClientOptions, ErrorResponse} from '../types/api';
 import {APIMethodRequest, APIMethods, createAPI, paths} from '../types/openapi';
 import {createAPIFetchClient, readSSE} from '../utils/api';
 import {getObjectProperty} from '../utils/object';
-import {APIError} from './APIError';
+import {CortexAPIError} from './CortexAPIError';
 
 export class Cortex {
   private readonly apiMethods: APIMethods;
@@ -107,7 +107,7 @@ export class Cortex {
       };
 
       if (error) {
-        throw new APIError(error as ErrorResponse);
+        throw new CortexAPIError(error as ErrorResponse);
       }
 
       let resultStream: unknown = null;
