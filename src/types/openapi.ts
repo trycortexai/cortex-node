@@ -700,7 +700,7 @@ export type paths = {
     get?: never;
     put?: never;
     /**
-     * Run a Workflow
+     * Run Discoverable Workflow
      * @description Run a specific workflow by its ID.
      */
     post: {
@@ -750,7 +750,7 @@ export type paths = {
     get?: never;
     put?: never;
     /**
-     * Cancel a Workflow Run
+     * Cancel a Discoverable Workflow Run
      * @description Cancel a workflow run that is currently running.
      */
     post: {
@@ -1125,7 +1125,7 @@ export type paths = {
       cookie?: never;
     };
     /**
-     * Get Workflow Tests Expectations
+     * Get Tests Expectations
      * @description Retrieve a list of workflow test expectations for a specific workflow.
      */
     get: {
@@ -1160,7 +1160,7 @@ export type paths = {
     };
     put?: never;
     /**
-     * Create a Workflow Test Expectation
+     * Create a Test Expectation
      * @description Create a new workflow test expectation for a specific workflow.
      */
     post: {
@@ -1206,8 +1206,8 @@ export type paths = {
       cookie?: never;
     };
     /**
-     * Get Workflow Test
-     * @description Retrieve a specific workflow test by its ID.
+     * Get Test Expectation
+     * @description Retrieve a specific workflow test expectation by its ID.
      */
     get: {
       parameters: {
@@ -1238,7 +1238,7 @@ export type paths = {
     put?: never;
     post?: never;
     /**
-     * Delete Workflow Test Expectation
+     * Delete Test Expectation
      * @description Delete a specific workflow test expectation by its ID.
      */
     delete: {
@@ -1270,7 +1270,7 @@ export type paths = {
     options?: never;
     head?: never;
     /**
-     * Update Workflow Test Expectation
+     * Update Test Expectation
      * @description Update a specific workflow test expectation by its ID.
      */
     patch: {
@@ -1314,7 +1314,7 @@ export type paths = {
       cookie?: never;
     };
     /**
-     * Get Workflow Tests
+     * Get Tests
      * @description Retrieve a list of workflow tests for a specific workflow.
      */
     get: {
@@ -1357,7 +1357,7 @@ export type paths = {
     };
     put?: never;
     /**
-     * Create a Workflow Test
+     * Create a Test
      * @description Create a new workflow test for a specific workflow.
      */
     post: {
@@ -1405,7 +1405,7 @@ export type paths = {
       cookie?: never;
     };
     /**
-     * Get Workflow Tests Stats
+     * Get Tests Stats
      * @description Retrieve statistics of workflow tests.
      */
     get: {
@@ -1449,7 +1449,7 @@ export type paths = {
       cookie?: never;
     };
     /**
-     * Get Workflow Test
+     * Get Test
      * @description Retrieve a specific workflow test by its ID.
      */
     get: {
@@ -1483,7 +1483,7 @@ export type paths = {
     put?: never;
     post?: never;
     /**
-     * Delete a Workflow Test
+     * Delete Test
      * @description Delete a specific workflow test by its ID.
      */
     delete: {
@@ -1515,7 +1515,7 @@ export type paths = {
     options?: never;
     head?: never;
     /**
-     * Update a Workflow Test
+     * Update Test
      * @description Update a specific workflow test by its ID.
      */
     patch: {
@@ -1563,7 +1563,7 @@ export type paths = {
     get?: never;
     put?: never;
     /**
-     * Run Workflow Tests
+     * Run Tests
      * @description Run all workflow tests for a specific workflow.
      */
     post: {
@@ -1611,7 +1611,7 @@ export type paths = {
     get?: never;
     put?: never;
     /**
-     * Cancel Workflow Tests
+     * Cancel Tests
      * @description Cancel all running workflow tests for a specific workflow.
      */
     post: {
@@ -1654,7 +1654,7 @@ export type paths = {
     get?: never;
     put?: never;
     /**
-     * Cancel a Workflow Test
+     * Cancel Test
      * @description Cancel a running workflow test by its ID.
      */
     post: {
@@ -1701,7 +1701,7 @@ export type paths = {
     get?: never;
     put?: never;
     /**
-     * Run a Workflow Test
+     * Run Test
      * @description Run a specific workflow test by its ID.
      */
     post: {
@@ -1737,51 +1737,6 @@ export type paths = {
         };
       };
     };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}/ws': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Get Workflow Test WS
-     * @description Establish a WebSocket connection to receive updates for a specific workflow test by its ID.
-     */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path: {
-          /** @description The ID of the app */
-          app_id: string;
-          /** @description The ID of the workflow */
-          workflow_id: string;
-          /** @description The ID of the test */
-          test_id: string;
-        };
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': components['schemas']['WorkflowTestEventSchema'];
-          };
-        };
-      };
-    };
-    put?: never;
-    post?: never;
     delete?: never;
     options?: never;
     head?: never;
@@ -4517,17 +4472,6 @@ export type components = {
       /** @description Flag to execute only the expectations using the already executed workflow run result, without running the workflow again. */
       execute_expectations_only?: boolean;
     };
-    WorkflowTestEventSchema:
-      | {
-          /** @enum {string} */
-          type: 'test';
-          data: components['schemas']['WorkflowTestSchema'];
-        }
-      | {
-          /** @enum {string} */
-          type: 'stats';
-          data: components['schemas']['WorkflowTestStatsSchema'] & unknown;
-        };
     /** @description Detailed information about a rule */
     RuleSchema: {
       /**
@@ -5565,8 +5509,6 @@ export type UpdateWorkflowTestSchema =
   components['schemas']['UpdateWorkflowTestSchema'];
 export type RunWorkflowTestSchema =
   components['schemas']['RunWorkflowTestSchema'];
-export type WorkflowTestEventSchema =
-  components['schemas']['WorkflowTestEventSchema'];
 export type RuleSchema = components['schemas']['RuleSchema'];
 export type CollectionConfigMappingSchema =
   components['schemas']['CollectionConfigMappingSchema'];
@@ -6104,19 +6046,6 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
             params: {workflow_id: workflowId, test_id: testId},
             options,
           }) as Promise<WorkflowTestSchema>;
-        },
-        ws: (
-          workflowId: string,
-          testId: string,
-          options?: RequestInit,
-        ): Promise<WorkflowTestEventSchema> => {
-          return callAPI({
-            method: 'get',
-            endpoint:
-              '/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}/ws',
-            params: {workflow_id: workflowId, test_id: testId},
-            options,
-          }) as Promise<WorkflowTestEventSchema>;
         },
       },
       versions: (
