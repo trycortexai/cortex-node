@@ -1,6 +1,6 @@
 {
   "name": "@cortex-ai/sdk",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Cortex SDK for Node.js",
   "main": "./build/index.js",
   "module": "./build/index.mjs",

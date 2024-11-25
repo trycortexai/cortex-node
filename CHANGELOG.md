@@ -1,5 +1,10 @@
 
 
+## <small>0.4.2 (2024-11-25)</small>
+
+* chore: dev deps to deps ([6ad2134](https://github.com/trycortexai/cortex-node/commit/6ad2134))
+* chore: separate util from type file ([6d6f5c5](https://github.com/trycortexai/cortex-node/commit/6d6f5c5))
+
 ## <small>0.4.1 (2024-11-24)</small>
 
 * chore: fresh install packages ([038bd57](https://github.com/trycortexai/cortex-node/commit/038bd57))
