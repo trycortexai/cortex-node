@@ -142,9 +142,11 @@ export const createAPIFetchClient = (options: ClientOptions) => {
 
     return {
       data: data as NonNullable<typeof data>,
-      page: +(response.headers.get('pagination-page') ?? 0),
-      take: +(response.headers.get('pagination-take') ?? 0),
-      count: +(response.headers.get('pagination-count') ?? 0),
+      pagination: {
+        page: +(response.headers.get('pagination-page') ?? 0),
+        take: +(response.headers.get('pagination-take') ?? 0),
+        count: +(response.headers.get('pagination-count') ?? 0),
+      },
     } satisfies PaginationResult<NonNullable<typeof data>>;
   };
 

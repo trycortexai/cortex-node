@@ -52,22 +52,24 @@ export class Cortex {
     });
   }
 
-  private api = async ({
-    endpoint,
-    method,
-    params,
-    body,
-    options,
-  }: APIMethodRequest): Promise<unknown> => {
+  private api = async (
+    name: string,
+    {endpoint, method, params, body, options}: APIMethodRequest,
+  ): Promise<unknown> => {
     const methodUpperCase = method.toUpperCase() as keyof APIFetchClient;
 
     const {query, onStream, ...requestInit} = options ?? {};
 
     const isStream = !!onStream;
+    const isPagination = name === 'list';
 
     const streamParser = isStream
       ? STREAM_PARSERS[endpoint as keyof paths]
       : null;
+
+    if (isStream && isPagination) {
+      throw new Error('Pagination is not supported with stream');
+    }
 
     if (isStream && !streamParser) {
       throw new Error(`Stream is yet available for ${endpoint}`);
@@ -94,9 +96,11 @@ export class Cortex {
     };
 
     const clientMethod = (
-      onStream
-        ? this.client.CLIENT[methodUpperCase as 'GET']
-        : this.client[methodUpperCase]
+      isPagination
+        ? this.client.GETPaged
+        : onStream
+          ? this.client.CLIENT[methodUpperCase as 'GET']
+          : this.client[methodUpperCase]
     ) as (...args: unknown[]) => Promise<unknown>;
 
     if (!method) {

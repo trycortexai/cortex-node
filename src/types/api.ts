@@ -50,7 +50,9 @@ export type PagedParams = {
 
 export type PaginationResult<D = unknown> = {
   data: D;
-  page: number;
-  take: number;
-  count: number;
+  pagination: {
+    page: number;
+    take: number;
+    count: number;
+  };
 };
