@@ -1,7 +1,7 @@
 import {Cortex} from './classes/Cortex';
 
-export * from './types/api';
-export * from './types/openapi';
-export * from './types/runs';
+export type * from './types/api';
+export type * from './types/openapi';
+export type * from './types/runs';
 
 export {Cortex};
