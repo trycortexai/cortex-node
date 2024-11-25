@@ -1,7 +1,12 @@
 import {APP_LESS_PARAM} from '../constants/api';
 import {STREAM_PARSERS} from '../constants/stream';
+import {
+  APIMethodRequest,
+  APIMethods,
+  createAPI,
+  paths,
+} from '../generated/openapi';
 import {APIFetchClient, ClientOptions, ErrorResponse} from '../types/api';
-import {APIMethodRequest, APIMethods, createAPI, paths} from '../types/openapi';
 import {createAPIFetchClient, readSSE} from '../utils/api';
 import {getObjectProperty} from '../utils/object';
 import {CortexAPIError} from './CortexAPIError';

@@ -4,8 +4,8 @@ import type {PathsWithMethod} from 'openapi-typescript-helpers';
 
 import {CortexAPIError} from '../classes/CortexAPIError';
 import {API_ENDPOINT} from '../constants/api';
+import type {paths} from '../generated/openapi';
 import {EndpointParams, ErrorResponse, PaginationResult} from '../types/api';
-import type {paths} from '../types/openapi';
 
 export const createAPIFetchClient = (options: ClientOptions) => {
   const CLIENT = createClient<paths>({

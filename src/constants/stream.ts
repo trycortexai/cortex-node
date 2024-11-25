@@ -1,4 +1,4 @@
-import {paths, RunOutputSchema, RunSchema} from '../types/openapi';
+import {paths, RunOutputSchema, RunSchema} from '../generated/openapi';
 import {CastRunStepOutputSchema} from '../types/runs';
 import {handleStepStream} from '../utils/runs';
 

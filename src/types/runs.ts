@@ -1,4 +1,4 @@
-import {RunStepOutputSchema} from './openapi';
+import {RunStepOutputSchema} from '../generated/openapi';
 
 /**
  * Casted run step output schema with generic output type.

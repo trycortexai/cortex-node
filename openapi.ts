@@ -30,7 +30,7 @@ const generate = async () => {
 
     //
 
-    const typesPath = path.resolve('./src/types/openapi.ts');
+    const typesPath = path.resolve('./src/generated/openapi.ts');
     fs.writeFileSync(typesPath, `${openapiTypes}\n\n${apiMethods}`);
 
     console.log(
