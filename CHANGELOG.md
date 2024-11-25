@@ -1,3 +1,14 @@
+
+
+## 0.5.0 (2024-11-25)
+
+* feat: add client readStream ([f3237c6](https://github.com/trycortexai/cortex-node/commit/f3237c6))
+* feat: add pagination support ([e73cc2a](https://github.com/trycortexai/cortex-node/commit/e73cc2a))
+* feat: add streamResponse ([e4752e2](https://github.com/trycortexai/cortex-node/commit/e4752e2))
+* chore: dev deps to deps ([6ad2134](https://github.com/trycortexai/cortex-node/commit/6ad2134))
+* chore: move deps to /generated ([38d51ad](https://github.com/trycortexai/cortex-node/commit/38d51ad))
+* revert: types/openapi.ts ([77ad75a](https://github.com/trycortexai/cortex-node/commit/77ad75a))
+
 ## <small>0.4.1 (2024-11-24)</small>
 
 - chore: fresh install packages ([038bd57](https://github.com/trycortexai/cortex-node/commit/038bd57))
