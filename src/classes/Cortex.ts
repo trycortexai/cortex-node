@@ -1,11 +1,6 @@
 import {APP_LESS_PARAM} from '../constants/api';
 import {STREAM_PARSERS} from '../constants/stream';
-import {
-  APIMethodRequest,
-  APIMethods,
-  createAPI,
-  paths,
-} from '../generated/openapi';
+import {APIMethodRequest, APIMethods, createAPI} from '../generated/openapi';
 import {APIFetchClient, ClientOptions, ErrorResponse} from '../types/api';
 import {createAPIFetchClient, readSSE} from '../utils/api';
 import {getObjectProperty} from '../utils/object';
@@ -65,7 +60,11 @@ export class Cortex {
     const isPagination = name === 'list';
 
     const streamParser = isStream
-      ? STREAM_PARSERS[endpoint as keyof paths]
+      ? (STREAM_PARSERS[endpoint as keyof typeof STREAM_PARSERS] as (
+          stream: unknown,
+          event: string,
+          data: unknown,
+        ) => unknown)
       : null;
 
     if (isStream && isPagination) {

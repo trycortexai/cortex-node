@@ -2,14 +2,12 @@ import {paths, RunOutputSchema, RunSchema} from '../generated/openapi';
 import {CastRunStepOutputSchema} from '../types/runs';
 import {handleStepStream} from '../utils/runs';
 
-export const STREAM_PARSERS: Partial<
-  Record<keyof paths, (current: any, event: any, data: any) => void>
-> = {
+export const STREAM_PARSERS = {
   '/apps/{app_id}/workflows/{workflow_id}/runs': (
     run: RunSchema,
     event: 'run' | 'step' | 'chunk',
     data: unknown,
-  ) => {
+  ): RunSchema => {
     switch (event) {
       case 'run': {
         return data as RunSchema;
@@ -37,19 +35,23 @@ export const STREAM_PARSERS: Partial<
         };
       }
     }
+
+    return run;
   },
 
   '/apps/{app_id}/runs/step': (
     step: CastRunStepOutputSchema,
     event: 'step' | 'chunk',
     data: unknown,
-  ) => {
+  ): CastRunStepOutputSchema => {
     switch (event) {
       case 'step': {
         return data as CastRunStepOutputSchema;
       }
       case 'chunk': {
-        if (!step) return;
+        if (!step) {
+          break;
+        }
 
         step = handleStepStream(
           event,
@@ -60,5 +62,14 @@ export const STREAM_PARSERS: Partial<
         return step;
       }
     }
+
+    return step;
   },
+} satisfies Partial<
+  Record<keyof paths, (current: any, event: any, data: any) => void>
+>;
+
+export const STREAM_PARSERS_TYPES = {
+  step: STREAM_PARSERS['/apps/{app_id}/runs/step'],
+  run: STREAM_PARSERS['/apps/{app_id}/workflows/{workflow_id}/runs'],
 };
