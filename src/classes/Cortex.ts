@@ -98,7 +98,7 @@ export class Cortex {
     const clientMethod = (
       isPagination
         ? this.client.GETPaged
-        : onStream
+        : isStream
           ? this.client.CLIENT[methodUpperCase as 'GET']
           : this.client[methodUpperCase]
     ) as (...args: unknown[]) => Promise<unknown>;
