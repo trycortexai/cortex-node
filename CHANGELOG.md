@@ -1,5 +1,11 @@
 
 
+## 0.6.0 (2024-11-25)
+
+* chore: add license ([01b5f49](https://github.com/trycortexai/cortex-node/commit/01b5f49))
+* chore: remove unused null check ([175476b](https://github.com/trycortexai/cortex-node/commit/175476b))
+* feat: make onStream optional ([6433807](https://github.com/trycortexai/cortex-node/commit/6433807))
+
 ## 0.5.0 (2024-11-25)
 
 * feat: add client readStream ([f3237c6](https://github.com/trycortexai/cortex-node/commit/f3237c6))
