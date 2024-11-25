@@ -56,7 +56,7 @@ export class Cortex {
 
     const {query, onStream, ...requestInit} = options ?? {};
 
-    const isStream = !!onStream;
+    const isStream = name.startsWith('stream');
     const isPagination = name === 'list';
 
     const streamParser = isStream
