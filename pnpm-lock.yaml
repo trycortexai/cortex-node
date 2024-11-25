@@ -11,6 +11,12 @@ importers:
       eventsource-parser:
         specifier: ^3.0.0
         version: 3.0.0
+      openapi-fetch:
+        specifier: ^0.13.0
+        version: 0.13.0
+      openapi-typescript-helpers:
+        specifier: ^0.0.15
+        version: 0.0.15
     devDependencies:
       '@commitlint/cli':
         specifier: ^19.5.0
@@ -33,15 +39,9 @@ importers:
       husky:
         specifier: ^9.1.6
         version: 9.1.7
-      openapi-fetch:
-        specifier: ^0.13.0
-        version: 0.13.0
       openapi-typescript:
         specifier: ^7.4.3
         version: 7.4.3(typescript@5.7.2)
-      openapi-typescript-helpers:
-        specifier: ^0.0.15
-        version: 0.0.15
       prettier:
         specifier: ^3.2.5
         version: 3.3.3

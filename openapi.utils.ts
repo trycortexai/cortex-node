@@ -465,7 +465,5 @@ export const methodsToString = (
 export type APIMethods = ReturnType<typeof createAPI>;
 export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => (${template});`;
 
-  //console.log('finalTemplate', finalTemplate);
-
   return finalTemplate;
 };
