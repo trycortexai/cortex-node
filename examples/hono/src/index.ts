@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import {Hono, type Context} from 'hono';
 import {env} from 'hono/adapter';
 
-import {stepStream, workflowStream} from './stream.js';
+import {stepStreamResponse, worklflowStreamResponse} from './stream.js';
 
 dotenv.config();
 
@@ -12,11 +12,11 @@ const PORT = 8085;
 
 const app = new Hono();
 
-const createCortex = (c: Context) => {
+const createCortex = (ctx: Context) => {
   const {CORTEX_API_KEY, BASE_URL} = env<{
     CORTEX_API_KEY: string;
     BASE_URL: string;
-  }>(c);
+  }>(ctx);
 
   const cortex = new Cortex({
     apiKey: CORTEX_API_KEY,
@@ -30,17 +30,30 @@ app.get('/', c => {
   return c.text('Cortex SDK');
 });
 
-app.get('/stream/step', c => {
-  const cortex = createCortex(c);
-  stepStream(cortex);
-  return c.text('Stream Step');
+app.get('/stream/step', async ctx => {
+  const cortex = createCortex(ctx);
+
+  const response = await stepStreamResponse(cortex);
+
+  if (response instanceof Response) {
+    return response;
+  }
+
+  return ctx.text(response);
 });
 
-app.get('/stream/workflow', c => {
-  const {WORKFLOW_ID} = env<{WORKFLOW_ID: string}>(c);
-  const cortex = createCortex(c);
-  workflowStream(cortex, WORKFLOW_ID);
-  return c.text('Stream Workflow');
+app.get('/stream/workflow', async ctx => {
+  const {WORKFLOW_ID} = env<{WORKFLOW_ID: string}>(ctx);
+
+  const cortex = createCortex(ctx);
+
+  const response = await worklflowStreamResponse(cortex, WORKFLOW_ID);
+
+  if (response instanceof Response) {
+    return response;
+  }
+
+  return ctx.text(response);
 });
 
 console.log(`Server is running on http://localhost:${PORT}`);

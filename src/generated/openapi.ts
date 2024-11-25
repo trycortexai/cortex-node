@@ -5715,6 +5715,23 @@ export const createAPI = (
             options,
           }) as Promise<RunStepSchema>;
         },
+        streamResponse: (
+          body: Omit<CreateRunStepSchema, 'stream'>,
+          options?: RequestInit & {
+            onStream?: (
+              partialResult: RunStepSchema,
+              event: unknown,
+              data: unknown,
+            ) => void;
+          },
+        ): Promise<Response> => {
+          return callAPI('streamResponse', {
+            method: 'post',
+            endpoint: '/apps/{app_id}/runs/step',
+            body,
+            options,
+          }) as Promise<Response>;
+        },
       },
     },
     workflows: {
@@ -5806,6 +5823,26 @@ export const createAPI = (
               body,
               options,
             }) as Promise<RunSchema>;
+          },
+          streamResponse: (
+            workflowId: string,
+            body: Omit<CreateRunSchema, 'stream'>,
+            options?: RequestInit & {
+              query?: paths['/apps/{app_id}/workflows/discover/{workflow_id}/runs']['post']['parameters']['query'];
+              onStream?: (
+                partialResult: RunSchema,
+                event: unknown,
+                data: unknown,
+              ) => void;
+            },
+          ): Promise<Response> => {
+            return callAPI('streamResponse', {
+              method: 'post',
+              endpoint: '/apps/{app_id}/workflows/discover/{workflow_id}/runs',
+              params: {workflow_id: workflowId},
+              body,
+              options,
+            }) as Promise<Response>;
           },
           cancel: (
             workflowId: string,
@@ -5923,6 +5960,26 @@ export const createAPI = (
             options,
           }) as Promise<RunSchema>;
         },
+        streamResponse: (
+          workflowId: string,
+          body: Omit<CreateRunSchema, 'stream'>,
+          options?: RequestInit & {
+            query?: paths['/apps/{app_id}/workflows/{workflow_id}/runs']['post']['parameters']['query'];
+            onStream?: (
+              partialResult: RunSchema,
+              event: unknown,
+              data: unknown,
+            ) => void;
+          },
+        ): Promise<Response> => {
+          return callAPI('streamResponse', {
+            method: 'post',
+            endpoint: '/apps/{app_id}/workflows/{workflow_id}/runs',
+            params: {workflow_id: workflowId},
+            body,
+            options,
+          }) as Promise<Response>;
+        },
         replay: {
           create: (
             workflowId: string,
@@ -5962,6 +6019,28 @@ export const createAPI = (
               body,
               options,
             }) as Promise<RunSchema>;
+          },
+          streamResponse: (
+            workflowId: string,
+            runId: string,
+            body: Omit<ReplayRunSchema, 'stream'>,
+            options?: RequestInit & {
+              query?: paths['/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/replay']['post']['parameters']['query'];
+              onStream?: (
+                partialResult: RunSchema,
+                event: unknown,
+                data: unknown,
+              ) => void;
+            },
+          ): Promise<Response> => {
+            return callAPI('streamResponse', {
+              method: 'post',
+              endpoint:
+                '/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/replay',
+              params: {workflow_id: workflowId, run_id: runId},
+              body,
+              options,
+            }) as Promise<Response>;
           },
         },
         retrieve: (

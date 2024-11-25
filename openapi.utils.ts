@@ -86,6 +86,7 @@ type MethodOptions = {
   body?: string;
   query?: string;
   returns: string;
+  finalReturns?: string;
   description?: string;
 };
 
@@ -142,6 +143,13 @@ export const generateAPIMethods = (schema: OpenAPI3): string => {
         methodsToPush.push({
           ...apiMethod,
           name: 'stream',
+          stream: true,
+        });
+
+        methodsToPush.push({
+          ...apiMethod,
+          name: 'streamResponse',
+          finalReturns: 'Response',
           stream: true,
         });
       }
@@ -379,6 +387,7 @@ const createMethod = ({
   body,
   stream,
   returns,
+  finalReturns,
 }: MethodOptions) => {
   const params = Object.entries(parameters);
 
@@ -412,12 +421,12 @@ const createMethod = ({
 
   const parsedMethod = `(${allParameters
     .map(([key, value]) => `${convertToCamelCase(key)}: ${value}`)
-    .join(', ')}): Promise<${returns}> => {
+    .join(', ')}): Promise<${finalReturns ?? returns}> => {
   return callAPI(${encodeParam(name)}, {
     method: ${encodeParam(method)},
     endpoint: ${encodeParam(endpoint)},
     ${paramsString}${body ? `body,` : ''}options,
-  }) as Promise<${returns}>;
+  }) as Promise<${finalReturns ?? returns}>;
 }`;
 
   return parsedMethod;

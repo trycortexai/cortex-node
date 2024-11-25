@@ -10,6 +10,7 @@ import {APIFetchClient, ClientOptions, ErrorResponse} from '../types/api';
 import {createAPIFetchClient, readSSE} from '../utils/api';
 import {getObjectProperty} from '../utils/object';
 import {CortexAPIError} from './CortexAPIError';
+import {HttpStream} from './HttpStream';
 
 export class Cortex {
   private readonly apiMethods: APIMethods;
@@ -120,16 +121,34 @@ export class Cortex {
       }
 
       let resultStream: unknown = null;
+      const httpStream = name === 'streamResponse' ? new HttpStream() : null;
 
-      await readSSE(response, (event, data) => {
+      const sse = readSSE(response, (event, data) => {
         if (!event) {
           throw new Error(`Event is missing in stream for ${endpoint}`);
         }
+
+        httpStream?.writeSSE({
+          event,
+          data: data as object,
+        });
 
         resultStream = streamParser?.(resultStream, event, data);
 
         onStream?.(resultStream, event, data);
       });
+
+      if (httpStream) {
+        (async () => {
+          await sse;
+
+          httpStream.close();
+        })();
+
+        return httpStream.getResponse();
+      }
+
+      await sse;
 
       return resultStream;
     }
