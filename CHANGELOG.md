@@ -1,5 +1,9 @@
 
 
+## <small>0.6.1 (2024-11-25)</small>
+
+* fix: fix onStream check ([16bd111](https://github.com/trycortexai/cortex-node/commit/16bd111))
+
 ## 0.6.0 (2024-11-25)
 
 * chore: add license ([01b5f49](https://github.com/trycortexai/cortex-node/commit/01b5f49))
