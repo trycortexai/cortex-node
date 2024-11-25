@@ -4,9 +4,9 @@ import {
   type StepModelOutputSchema,
 } from '@cortex-ai/sdk';
 
-export const stepStream = async (cortex: Cortex) => {
+export const stepStreamResponse = async (cortex: Cortex) => {
   try {
-    const result = await cortex.apps.runs.step.stream(
+    const result = await cortex.apps.runs.step.streamResponse(
       {
         step: {
           type: 'model',
@@ -24,27 +24,29 @@ export const stepStream = async (cortex: Cortex) => {
         },
       },
       {
-        onStream: partial => {
+        onStream: (partial, event) => {
           const stepOutput = partial.output as
             | StepModelOutputSchema
             | undefined;
 
-          console.log('Chunk Message:', stepOutput?.message);
+          console.log(event, stepOutput?.message);
         },
       },
     );
 
-    const stepOutput = result.output as StepModelOutputSchema | undefined;
-
-    console.log('\n\nFull Message: ', stepOutput?.message);
+    return result;
   } catch (error) {
     console.log('Error', error);
+    return error?.toString() ?? 'Error';
   }
 };
 
-export const workflowStream = async (cortex: Cortex, workflowId: string) => {
+export const worklflowStreamResponse = async (
+  cortex: Cortex,
+  workflowId: string,
+) => {
   try {
-    const result = await cortex.apps.workflows.runs.stream(
+    const result = await cortex.apps.workflows.runs.streamResponse(
       workflowId,
       {
         input: {
@@ -52,17 +54,18 @@ export const workflowStream = async (cortex: Cortex, workflowId: string) => {
         },
       },
       {
-        onStream: partial => {
+        onStream: (partial, event) => {
           const stepOutput = partial.output
             ?.MODEL as CastRunStepOutputSchema<StepModelOutputSchema>;
 
-          console.log('chunk', stepOutput?.output?.message);
+          console.log(event, stepOutput?.output?.message);
         },
       },
     );
 
-    console.log('\n\nresult: ', JSON.stringify(result, null, 2));
+    return result;
   } catch (error) {
     console.log('Error', error);
+    return error?.toString() ?? 'Error';
   }
 };
