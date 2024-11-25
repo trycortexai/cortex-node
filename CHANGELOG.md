@@ -1,5 +1,9 @@
 
 
+## <small>0.6.2 (2024-11-25)</small>
+
+* fix: set credentials ([9a198d0](https://github.com/trycortexai/cortex-node/commit/9a198d0))
+
 ## <small>0.6.1 (2024-11-25)</small>
 
 * fix: fix onStream check ([16bd111](https://github.com/trycortexai/cortex-node/commit/16bd111))
