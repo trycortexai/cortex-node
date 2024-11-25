@@ -2,6 +2,7 @@
   "name": "@cortex-ai/sdk",
   "version": "0.4.2",
   "description": "Cortex SDK for Node.js",
+  "license": "MIT",
   "main": "./build/index.js",
   "module": "./build/index.mjs",
   "types": "./build/index.d.ts",
