@@ -1,3 +1,5 @@
+// This file is auto-generated. Do not edit.
+
 export type paths = {
   '/apps/{app_id}/files': {
     parameters: {
@@ -5576,25 +5578,41 @@ export type APIMethodRequest = {
   };
 };
 export type APIMethods = ReturnType<typeof createAPI>;
-export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
+export const createAPI = (
+  callAPI: (name: string, request: APIMethodRequest) => unknown,
+) => ({
   apps: {
     files: {
       list: (
         options?: RequestInit & {
           query?: paths['/apps/{app_id}/files']['get']['parameters']['query'];
         },
-      ): Promise<FileSchema[]> => {
-        return callAPI({
+      ): Promise<{
+        data: FileSchema[];
+        pagination: {
+          page: number;
+          take: number;
+          count: number;
+        };
+      }> => {
+        return callAPI('list', {
           method: 'get',
           endpoint: '/apps/{app_id}/files',
           options,
-        }) as Promise<FileSchema[]>;
+        }) as Promise<{
+          data: FileSchema[];
+          pagination: {
+            page: number;
+            take: number;
+            count: number;
+          };
+        }>;
       },
       create: (
         body: CreateFileSchema,
         options?: RequestInit,
       ): Promise<FileSchema> => {
-        return callAPI({
+        return callAPI('create', {
           method: 'post',
           endpoint: '/apps/{app_id}/files',
           body,
@@ -5605,7 +5623,7 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
         fileId: string,
         options?: RequestInit,
       ): Promise<FileSchema> => {
-        return callAPI({
+        return callAPI('retrieve', {
           method: 'get',
           endpoint: '/apps/{app_id}/files/{file_id}',
           params: {file_id: fileId},
@@ -5613,7 +5631,7 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
         }) as Promise<FileSchema>;
       },
       delete: (fileId: string, options?: RequestInit): Promise<void> => {
-        return callAPI({
+        return callAPI('delete', {
           method: 'delete',
           endpoint: '/apps/{app_id}/files/{file_id}',
           params: {file_id: fileId},
@@ -5621,7 +5639,7 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
         }) as Promise<void>;
       },
       cancel: (fileId: string, options?: RequestInit): Promise<FileSchema> => {
-        return callAPI({
+        return callAPI('create', {
           method: 'post',
           endpoint: '/apps/{app_id}/files/{file_id}/cancel',
           params: {file_id: fileId},
@@ -5633,7 +5651,7 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
       connectionId: string,
       options?: RequestInit,
     ): Promise<void> => {
-      return callAPI({
+      return callAPI('delete', {
         method: 'delete',
         endpoint: '/apps/{app_id}/connections/{connection_id}',
         params: {connection_id: connectionId},
@@ -5645,13 +5663,27 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
       options?: RequestInit & {
         query?: paths['/apps/{app_id}/variables']['patch']['parameters']['query'];
       },
-    ): Promise<AppVariableSchema[]> => {
-      return callAPI({
+    ): Promise<{
+      data: AppVariableSchema[];
+      pagination: {
+        page: number;
+        take: number;
+        count: number;
+      };
+    }> => {
+      return callAPI('list', {
         method: 'patch',
         endpoint: '/apps/{app_id}/variables',
         body,
         options,
-      }) as Promise<AppVariableSchema[]>;
+      }) as Promise<{
+        data: AppVariableSchema[];
+        pagination: {
+          page: number;
+          take: number;
+          count: number;
+        };
+      }>;
     },
     runs: {
       step: {
@@ -5659,7 +5691,7 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
           body: Omit<CreateRunStepSchema, 'stream'>,
           options?: RequestInit,
         ): Promise<RunStepSchema> => {
-          return callAPI({
+          return callAPI('create', {
             method: 'post',
             endpoint: '/apps/{app_id}/runs/step',
             body,
@@ -5676,7 +5708,7 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
             ) => void;
           },
         ): Promise<RunStepSchema> => {
-          return callAPI({
+          return callAPI('stream', {
             method: 'post',
             endpoint: '/apps/{app_id}/runs/step',
             body,
@@ -5691,18 +5723,32 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
           options?: RequestInit & {
             query?: paths['/apps/{app_id}/workflows/discover']['get']['parameters']['query'];
           },
-        ): Promise<WorkflowSchema[]> => {
-          return callAPI({
+        ): Promise<{
+          data: WorkflowSchema[];
+          pagination: {
+            page: number;
+            take: number;
+            count: number;
+          };
+        }> => {
+          return callAPI('list', {
             method: 'get',
             endpoint: '/apps/{app_id}/workflows/discover',
             options,
-          }) as Promise<WorkflowSchema[]>;
+          }) as Promise<{
+            data: WorkflowSchema[];
+            pagination: {
+              page: number;
+              take: number;
+              count: number;
+            };
+          }>;
         },
         retrieve: (
           workflowId: string,
           options?: RequestInit,
         ): Promise<WorkflowSchema> => {
-          return callAPI({
+          return callAPI('retrieve', {
             method: 'get',
             endpoint: '/apps/{app_id}/workflows/discover/{workflow_id}',
             params: {workflow_id: workflowId},
@@ -5714,7 +5760,7 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
           versionIdOrVersionNumber: string,
           options?: RequestInit,
         ): Promise<WorkflowVersionSchema> => {
-          return callAPI({
+          return callAPI('retrieve', {
             method: 'get',
             endpoint:
               '/apps/{app_id}/workflows/discover/{workflow_id}/versions/{version_id_or_version_number}',
@@ -5733,7 +5779,7 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
               query?: paths['/apps/{app_id}/workflows/discover/{workflow_id}/runs']['post']['parameters']['query'];
             },
           ): Promise<RunSchema> => {
-            return callAPI({
+            return callAPI('create', {
               method: 'post',
               endpoint: '/apps/{app_id}/workflows/discover/{workflow_id}/runs',
               params: {workflow_id: workflowId},
@@ -5753,7 +5799,7 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
               ) => void;
             },
           ): Promise<RunSchema> => {
-            return callAPI({
+            return callAPI('stream', {
               method: 'post',
               endpoint: '/apps/{app_id}/workflows/discover/{workflow_id}/runs',
               params: {workflow_id: workflowId},
@@ -5768,7 +5814,7 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
               query?: paths['/apps/{app_id}/workflows/discover/{workflow_id}/runs/{run_id}/cancel']['post']['parameters']['query'];
             },
           ): Promise<RunSchema> => {
-            return callAPI({
+            return callAPI('create', {
               method: 'post',
               endpoint:
                 '/apps/{app_id}/workflows/discover/{workflow_id}/runs/{run_id}/cancel',
@@ -5782,18 +5828,32 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
         options?: RequestInit & {
           query?: paths['/apps/{app_id}/workflows']['get']['parameters']['query'];
         },
-      ): Promise<WorkflowSchema[]> => {
-        return callAPI({
+      ): Promise<{
+        data: WorkflowSchema[];
+        pagination: {
+          page: number;
+          take: number;
+          count: number;
+        };
+      }> => {
+        return callAPI('list', {
           method: 'get',
           endpoint: '/apps/{app_id}/workflows',
           options,
-        }) as Promise<WorkflowSchema[]>;
+        }) as Promise<{
+          data: WorkflowSchema[];
+          pagination: {
+            page: number;
+            take: number;
+            count: number;
+          };
+        }>;
       },
       retrieve: (
         workflowId: string,
         options?: RequestInit,
       ): Promise<WorkflowSchema> => {
-        return callAPI({
+        return callAPI('retrieve', {
           method: 'get',
           endpoint: '/apps/{app_id}/workflows/{workflow_id}',
           params: {workflow_id: workflowId},
@@ -5806,13 +5866,27 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
           options?: RequestInit & {
             query?: paths['/apps/{app_id}/workflows/{workflow_id}/runs']['get']['parameters']['query'];
           },
-        ): Promise<RunSchema[]> => {
-          return callAPI({
+        ): Promise<{
+          data: RunSchema[];
+          pagination: {
+            page: number;
+            take: number;
+            count: number;
+          };
+        }> => {
+          return callAPI('list', {
             method: 'get',
             endpoint: '/apps/{app_id}/workflows/{workflow_id}/runs',
             params: {workflow_id: workflowId},
             options,
-          }) as Promise<RunSchema[]>;
+          }) as Promise<{
+            data: RunSchema[];
+            pagination: {
+              page: number;
+              take: number;
+              count: number;
+            };
+          }>;
         },
         create: (
           workflowId: string,
@@ -5821,7 +5895,7 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
             query?: paths['/apps/{app_id}/workflows/{workflow_id}/runs']['post']['parameters']['query'];
           },
         ): Promise<RunSchema> => {
-          return callAPI({
+          return callAPI('create', {
             method: 'post',
             endpoint: '/apps/{app_id}/workflows/{workflow_id}/runs',
             params: {workflow_id: workflowId},
@@ -5841,7 +5915,7 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
             ) => void;
           },
         ): Promise<RunSchema> => {
-          return callAPI({
+          return callAPI('stream', {
             method: 'post',
             endpoint: '/apps/{app_id}/workflows/{workflow_id}/runs',
             params: {workflow_id: workflowId},
@@ -5858,7 +5932,7 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
               query?: paths['/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/replay']['post']['parameters']['query'];
             },
           ): Promise<RunSchema> => {
-            return callAPI({
+            return callAPI('create', {
               method: 'post',
               endpoint:
                 '/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/replay',
@@ -5880,7 +5954,7 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
               ) => void;
             },
           ): Promise<RunSchema> => {
-            return callAPI({
+            return callAPI('stream', {
               method: 'post',
               endpoint:
                 '/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/replay',
@@ -5897,7 +5971,7 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
             query?: paths['/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}']['get']['parameters']['query'];
           },
         ): Promise<RunSchema> => {
-          return callAPI({
+          return callAPI('retrieve', {
             method: 'get',
             endpoint: '/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}',
             params: {workflow_id: workflowId, run_id: runId},
@@ -5911,7 +5985,7 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
             query?: paths['/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/cancel']['post']['parameters']['query'];
           },
         ): Promise<RunSchema> => {
-          return callAPI({
+          return callAPI('create', {
             method: 'post',
             endpoint:
               '/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/cancel',
@@ -5926,7 +6000,7 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
           expectationId: string,
           options?: RequestInit,
         ): Promise<void> => {
-          return callAPI({
+          return callAPI('delete', {
             method: 'delete',
             endpoint:
               '/apps/{app_id}/workflows/{workflow_id}/tests/expectations/{expectation_id}',
@@ -5939,13 +6013,27 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
           options?: RequestInit & {
             query?: paths['/apps/{app_id}/workflows/{workflow_id}/tests']['get']['parameters']['query'];
           },
-        ): Promise<WorkflowTestSchema[]> => {
-          return callAPI({
+        ): Promise<{
+          data: WorkflowTestSchema[];
+          pagination: {
+            page: number;
+            take: number;
+            count: number;
+          };
+        }> => {
+          return callAPI('list', {
             method: 'get',
             endpoint: '/apps/{app_id}/workflows/{workflow_id}/tests',
             params: {workflow_id: workflowId},
             options,
-          }) as Promise<WorkflowTestSchema[]>;
+          }) as Promise<{
+            data: WorkflowTestSchema[];
+            pagination: {
+              page: number;
+              take: number;
+              count: number;
+            };
+          }>;
         },
         create: (
           workflowId: string,
@@ -5954,7 +6042,7 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
             query?: paths['/apps/{app_id}/workflows/{workflow_id}/tests']['post']['parameters']['query'];
           },
         ): Promise<WorkflowTestSchema> => {
-          return callAPI({
+          return callAPI('create', {
             method: 'post',
             endpoint: '/apps/{app_id}/workflows/{workflow_id}/tests',
             params: {workflow_id: workflowId},
@@ -5966,7 +6054,7 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
           workflowId: string,
           options?: RequestInit,
         ): Promise<WorkflowTestStatsSchema> => {
-          return callAPI({
+          return callAPI('retrieve', {
             method: 'get',
             endpoint: '/apps/{app_id}/workflows/{workflow_id}/tests/stats',
             params: {workflow_id: workflowId},
@@ -5980,7 +6068,7 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
             query?: paths['/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}']['get']['parameters']['query'];
           },
         ): Promise<WorkflowTestSchema> => {
-          return callAPI({
+          return callAPI('retrieve', {
             method: 'get',
             endpoint: '/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}',
             params: {workflow_id: workflowId, test_id: testId},
@@ -5995,7 +6083,7 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
             query?: paths['/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}']['patch']['parameters']['query'];
           },
         ): Promise<WorkflowTestSchema> => {
-          return callAPI({
+          return callAPI('update', {
             method: 'patch',
             endpoint: '/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}',
             params: {workflow_id: workflowId, test_id: testId},
@@ -6008,7 +6096,7 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
           testId: string,
           options?: RequestInit,
         ): Promise<void> => {
-          return callAPI({
+          return callAPI('delete', {
             method: 'delete',
             endpoint: '/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}',
             params: {workflow_id: workflowId, test_id: testId},
@@ -6023,7 +6111,7 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
             query?: paths['/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}/runs']['post']['parameters']['query'];
           },
         ): Promise<WorkflowTestSchema> => {
-          return callAPI({
+          return callAPI('create', {
             method: 'post',
             endpoint:
               '/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}/runs',
@@ -6039,7 +6127,7 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
             query?: paths['/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}/cancel']['post']['parameters']['query'];
           },
         ): Promise<WorkflowTestSchema> => {
-          return callAPI({
+          return callAPI('create', {
             method: 'post',
             endpoint:
               '/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}/cancel',
@@ -6053,7 +6141,7 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
         versionIdOrVersionNumber: string,
         options?: RequestInit,
       ): Promise<WorkflowVersionSchema> => {
-        return callAPI({
+        return callAPI('retrieve', {
           method: 'get',
           endpoint:
             '/apps/{app_id}/workflows/{workflow_id}/versions/{version_id_or_version_number}',
@@ -6070,18 +6158,32 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
         options?: RequestInit & {
           query?: paths['/apps/{app_id}/collections']['get']['parameters']['query'];
         },
-      ): Promise<CollectionSchema[]> => {
-        return callAPI({
+      ): Promise<{
+        data: CollectionSchema[];
+        pagination: {
+          page: number;
+          take: number;
+          count: number;
+        };
+      }> => {
+        return callAPI('list', {
           method: 'get',
           endpoint: '/apps/{app_id}/collections',
           options,
-        }) as Promise<CollectionSchema[]>;
+        }) as Promise<{
+          data: CollectionSchema[];
+          pagination: {
+            page: number;
+            take: number;
+            count: number;
+          };
+        }>;
       },
       create: (
         body: CreateCollectionSchema,
         options?: RequestInit,
       ): Promise<ExtendedCollectionSchema> => {
-        return callAPI({
+        return callAPI('create', {
           method: 'post',
           endpoint: '/apps/{app_id}/collections',
           body,
@@ -6092,7 +6194,7 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
         collectionId: string,
         options?: RequestInit,
       ): Promise<ExtendedCollectionSchema> => {
-        return callAPI({
+        return callAPI('retrieve', {
           method: 'get',
           endpoint: '/apps/{app_id}/collections/{collection_id}',
           params: {collection_id: collectionId},
@@ -6104,7 +6206,7 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
         body: UpdateCollectionSchema,
         options?: RequestInit,
       ): Promise<ExtendedCollectionSchema> => {
-        return callAPI({
+        return callAPI('update', {
           method: 'patch',
           endpoint: '/apps/{app_id}/collections/{collection_id}',
           params: {collection_id: collectionId},
@@ -6113,7 +6215,7 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
         }) as Promise<ExtendedCollectionSchema>;
       },
       delete: (collectionId: string, options?: RequestInit): Promise<void> => {
-        return callAPI({
+        return callAPI('delete', {
           method: 'delete',
           endpoint: '/apps/{app_id}/collections/{collection_id}',
           params: {collection_id: collectionId},
@@ -6126,13 +6228,27 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
           options?: RequestInit & {
             query?: paths['/apps/{app_id}/collections/{collection_id}/records']['get']['parameters']['query'];
           },
-        ): Promise<RecordSchema[]> => {
-          return callAPI({
+        ): Promise<{
+          data: RecordSchema[];
+          pagination: {
+            page: number;
+            take: number;
+            count: number;
+          };
+        }> => {
+          return callAPI('list', {
             method: 'get',
             endpoint: '/apps/{app_id}/collections/{collection_id}/records',
             params: {collection_id: collectionId},
             options,
-          }) as Promise<RecordSchema[]>;
+          }) as Promise<{
+            data: RecordSchema[];
+            pagination: {
+              page: number;
+              take: number;
+              count: number;
+            };
+          }>;
         },
         create: (
           collectionId: string,
@@ -6141,7 +6257,7 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
             query?: paths['/apps/{app_id}/collections/{collection_id}/records']['post']['parameters']['query'];
           },
         ): Promise<ExtendedRecordSchema> => {
-          return callAPI({
+          return callAPI('create', {
             method: 'post',
             endpoint: '/apps/{app_id}/collections/{collection_id}/records',
             params: {collection_id: collectionId},
@@ -6156,7 +6272,7 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
             query?: paths['/apps/{app_id}/collections/{collection_id}/records/{record_id}']['get']['parameters']['query'];
           },
         ): Promise<ExtendedRecordSchema> => {
-          return callAPI({
+          return callAPI('retrieve', {
             method: 'get',
             endpoint:
               '/apps/{app_id}/collections/{collection_id}/records/{record_id}',
@@ -6172,7 +6288,7 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
             query?: paths['/apps/{app_id}/collections/{collection_id}/records/{record_id}']['patch']['parameters']['query'];
           },
         ): Promise<ExtendedRecordSchema> => {
-          return callAPI({
+          return callAPI('update', {
             method: 'patch',
             endpoint:
               '/apps/{app_id}/collections/{collection_id}/records/{record_id}',
@@ -6186,7 +6302,7 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
           recordId: string,
           options?: RequestInit,
         ): Promise<void> => {
-          return callAPI({
+          return callAPI('delete', {
             method: 'delete',
             endpoint:
               '/apps/{app_id}/collections/{collection_id}/records/{record_id}',
@@ -6199,7 +6315,7 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
           recordId: string,
           options?: RequestInit,
         ): Promise<RecordStatusSchema> => {
-          return callAPI({
+          return callAPI('retrieve', {
             method: 'get',
             endpoint:
               '/apps/{app_id}/collections/{collection_id}/records/{record_id}/status',
@@ -6213,7 +6329,7 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
           body: RunRecordSchema,
           options?: RequestInit,
         ): Promise<RecordSchema> => {
-          return callAPI({
+          return callAPI('create', {
             method: 'post',
             endpoint:
               '/apps/{app_id}/collections/{collection_id}/records/{record_id}/run',
@@ -6227,7 +6343,7 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
           recordId: string,
           options?: RequestInit,
         ): Promise<RecordSchema> => {
-          return callAPI({
+          return callAPI('create', {
             method: 'post',
             endpoint:
               '/apps/{app_id}/collections/{collection_id}/records/{record_id}/cancel',
@@ -6240,7 +6356,7 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
           recordId: string,
           options?: RequestInit,
         ): Promise<RecordSchema> => {
-          return callAPI({
+          return callAPI('create', {
             method: 'post',
             endpoint:
               '/apps/{app_id}/collections/{collection_id}/records/{record_id}/update-rules',
@@ -6253,7 +6369,7 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
           recordId: string,
           options?: RequestInit,
         ): Promise<RecordSchema> => {
-          return callAPI({
+          return callAPI('create', {
             method: 'post',
             endpoint:
               '/apps/{app_id}/collections/{collection_id}/records/{record_id}/reset',
@@ -6266,7 +6382,7 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
           recordId: string,
           options?: RequestInit,
         ): Promise<void> => {
-          return callAPI({
+          return callAPI('retrieve', {
             method: 'get',
             endpoint:
               '/apps/{app_id}/collections/{collection_id}/records/{record_id}/download',
@@ -6277,7 +6393,7 @@ export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => ({
       },
     },
     webhooks: (webhookId: string, options?: RequestInit): Promise<void> => {
-      return callAPI({
+      return callAPI('delete', {
         method: 'delete',
         endpoint: '/apps/{app_id}/webhooks/{webhook_id}',
         params: {webhook_id: webhookId},

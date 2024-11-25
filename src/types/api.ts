@@ -8,8 +8,8 @@ import {
   RequiredKeysOf,
 } from 'openapi-typescript-helpers';
 
+import {paths} from '../generated/openapi';
 import {createAPIFetchClient} from '../utils/api';
-import {paths} from './openapi';
 
 export type APIFetchClient = ReturnType<typeof createAPIFetchClient>;
 export type APIFetchClientOptions = FetchClientOptions;
@@ -50,7 +50,9 @@ export type PagedParams = {
 
 export type PaginationResult<D = unknown> = {
   data: D;
-  page: number;
-  take: number;
-  count: number;
+  pagination: {
+    page: number;
+    take: number;
+    count: number;
+  };
 };

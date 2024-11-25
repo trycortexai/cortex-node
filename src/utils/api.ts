@@ -4,8 +4,8 @@ import type {PathsWithMethod} from 'openapi-typescript-helpers';
 
 import {CortexAPIError} from '../classes/CortexAPIError';
 import {API_ENDPOINT} from '../constants/api';
+import type {paths} from '../generated/openapi';
 import {EndpointParams, ErrorResponse, PaginationResult} from '../types/api';
-import type {paths} from '../types/openapi';
 
 export const createAPIFetchClient = (options: ClientOptions) => {
   const CLIENT = createClient<paths>({
@@ -142,9 +142,11 @@ export const createAPIFetchClient = (options: ClientOptions) => {
 
     return {
       data: data as NonNullable<typeof data>,
-      page: +(response.headers.get('pagination-page') ?? 0),
-      take: +(response.headers.get('pagination-take') ?? 0),
-      count: +(response.headers.get('pagination-count') ?? 0),
+      pagination: {
+        page: +(response.headers.get('pagination-page') ?? 0),
+        take: +(response.headers.get('pagination-take') ?? 0),
+        count: +(response.headers.get('pagination-count') ?? 0),
+      },
     } satisfies PaginationResult<NonNullable<typeof data>>;
   };
 

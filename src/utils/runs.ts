@@ -1,4 +1,4 @@
-import {StepModelOutputSchema} from '../types/openapi';
+import {StepModelOutputSchema} from '../generated/openapi';
 import {CastRunStepOutputSchema} from '../types/runs';
 
 export const handleStepStream = (

@@ -180,18 +180,24 @@ const buildAPIMethodObject = (
     throw new Error('Parameters reference not supported');
   }
 
-  const methodName = isResponseArray(responses)
+  const isPaginationSupported = (parameters as ParameterObject[])?.some(
+    e => e.name === 'page' && e.in === 'query',
+  );
+
+  const methodName = isPaginationSupported
     ? 'list'
     : (METHOD_TO_NAME[method] ?? method);
 
   const methodParameters = (parameters as ParameterObject[])
-    .filter(e => e.in === 'path')
+    ?.filter(e => e.in === 'path')
     .filter(e => e.name !== 'app_id')
     .map(e => [e.name, 'string']);
 
   const hasAnyQueryParameters = (parameters as ParameterObject[]).some(
     e => e.in === 'query',
   );
+
+  const responseType = getResponseType(responses);
 
   const apiMethod: MethodOptions = {
     name: methodName,
@@ -203,7 +209,16 @@ const buildAPIMethodObject = (
       ? `paths['${endpoint}']['${method}']['parameters']['query']`
       : undefined,
     parameters: Object.fromEntries(methodParameters),
-    returns: getResponseType(responses),
+    returns: isPaginationSupported
+      ? `{
+  data: ${responseType};
+  pagination: {
+    page: number;
+    take: number;
+    count: number;
+  };
+}`
+      : responseType,
   };
 
   return apiMethod;
@@ -295,25 +310,6 @@ const getBodyType = (requestBody: RequestBodyObject | ReferenceObject) => {
   throw new Error(`Unsupported body type: ${JSON.stringify(requestBody)}`);
 };
 
-const isResponseArray = (response: ResponsesObject | undefined) => {
-  const okResponse = response?.['200'];
-
-  if (!okResponse || !('content' in okResponse)) {
-    return false;
-  }
-
-  const content = okResponse.content?.['application/json'];
-
-  return (
-    content &&
-    'schema' in content &&
-    !!content.schema &&
-    'type' in content.schema &&
-    content.schema.type === 'array' &&
-    !!content.schema.items
-  );
-};
-
 const getResponseType = (responses: ResponsesObject | undefined) => {
   const okResponse = responses?.['200'];
   if (!okResponse || !('content' in okResponse)) {
@@ -375,6 +371,7 @@ const convertToCamelCase = (str: string) => {
 };
 
 const createMethod = ({
+  name,
   method,
   endpoint,
   parameters,
@@ -416,7 +413,7 @@ const createMethod = ({
   const parsedMethod = `(${allParameters
     .map(([key, value]) => `${convertToCamelCase(key)}: ${value}`)
     .join(', ')}): Promise<${returns}> => {
-  return callAPI({
+  return callAPI(${encodeParam(name)}, {
     method: ${encodeParam(method)},
     endpoint: ${encodeParam(endpoint)},
     ${paramsString}${body ? `body,` : ''}options,
@@ -463,7 +460,7 @@ export const methodsToString = (
   }
 };
 export type APIMethods = ReturnType<typeof createAPI>;
-export const createAPI = (callAPI: (request: APIMethodRequest) => unknown) => (${template});`;
+export const createAPI = (callAPI: (name: string, request: APIMethodRequest) => unknown) => (${template});`;
 
   return finalTemplate;
 };

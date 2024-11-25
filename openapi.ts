@@ -30,8 +30,12 @@ const generate = async () => {
 
     //
 
-    const typesPath = path.resolve('./src/types/openapi.ts');
-    fs.writeFileSync(typesPath, `${openapiTypes}\n\n${apiMethods}`);
+    const typesPath = path.resolve('./src/generated/openapi.ts');
+    fs.writeFileSync(
+      typesPath,
+      `// This file is auto-generated. Do not edit.\n\n
+      ${openapiTypes}\n\n${apiMethods}`,
+    );
 
     console.log(
       '\x1b[32m%s\x1b[0m',
