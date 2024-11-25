@@ -24,12 +24,15 @@ export class Cortex {
       throw new Error('API Key is required');
     }
 
+    const isCredentialsSupported = 'credentials' in Request.prototype;
+
     this.client = createAPIFetchClient({
       ...options,
       headers: {
         Authorization: `Bearer ${this.apiKey}`,
         ...options.headers,
       },
+      credentials: isCredentialsSupported ? 'omit' : undefined,
     });
 
     this.apiMethods = createAPI(this.api);
