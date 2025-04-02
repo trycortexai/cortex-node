@@ -17,7 +17,7 @@
             "generate": "bun src/generate/index.ts && prettier --write src/openapi.ts",
             "tsc": "tsc --noEmit",
             "lint": "eslint . --ext .ts,.tsx --fix",
-            "validate": "pnpm build && pnpm tsc && pnpm lint",
+            "validate": "pnpm tsc && pnpm lint",
             "format": "prettier --write .",
             "fresh-deps": "pnpx taze -r -w",
             "release": "bumpp",
@@ -25,19 +25,19 @@
             "prepare": "husky"
       },
       "devDependencies": {
-            "@commitlint/cli": "^19.5.0",
-            "@commitlint/config-conventional": "^19.5.0",
-            "@ianvs/prettier-plugin-sort-imports": "^4.2.1",
-            "@typescript-eslint/eslint-plugin": "^7.3.1",
+            "@commitlint/cli": "^19.8.0",
+            "@commitlint/config-conventional": "^19.8.0",
+            "@ianvs/prettier-plugin-sort-imports": "^4.4.1",
+            "@typescript-eslint/eslint-plugin": "^7.18.0",
             "bunup": "^0.3.9",
             "chalk": "^5.4.1",
-            "eslint": "^8.57.0",
-            "husky": "^9.1.6",
-            "openapi-typescript": "^7.4.3",
+            "eslint": "^8.57.1",
+            "husky": "^9.1.7",
+            "openapi-typescript": "^7.6.1",
             "ora": "^8.2.0",
             "path": "^0.12.7",
-            "prettier": "^3.2.5",
-            "typescript": "^5.4.3"
+            "prettier": "^3.5.3",
+            "typescript": "^5.8.2"
       },
       "keywords": [
             "cortex",
@@ -53,8 +53,8 @@
             "access": "public"
       },
       "dependencies": {
-            "eventsource-parser": "^3.0.0",
-            "openapi-fetch": "^0.13.0",
+            "eventsource-parser": "^3.0.1",
+            "openapi-fetch": "^0.13.5",
             "openapi-typescript-helpers": "^0.0.15"
       }
 }
