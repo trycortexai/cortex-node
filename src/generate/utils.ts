@@ -355,8 +355,11 @@ const createMethod = ({
 
   const allParameters = [...params];
 
+  const isBodyRequired =
+    body && !body.includes('?:') && !body.startsWith('Omit<');
+
   if (body) {
-    allParameters.push(['body?', body]);
+    allParameters.push([isBodyRequired ? 'body' : 'body?', body]);
   }
 
   const options: [string, string][] = [];

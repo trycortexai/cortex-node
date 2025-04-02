@@ -60,12 +60,7 @@ app.get('/model-calls', async ctx => {
 
   const cortex = createCortex(ctx);
 
-  const result = await cortex.apps.workflows.runs.create(WORKFLOW_ID, {
-    from_step_key: 'datas',
-    input: {
-      query: 'Will india be in 2026 football world cup?',
-    },
-  });
+  const result = await cortex.apps.workflows.runs.create(WORKFLOW_ID);
 
   console.log('run finished', result);
 

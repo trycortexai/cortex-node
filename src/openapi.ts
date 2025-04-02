@@ -42,7 +42,7 @@ export const createAPI = (
         }>;
       },
       create: (
-        body?: CreateAppFileSchema,
+        body: CreateAppFileSchema,
         options?: RequestInit,
       ): Promise<AppFileSchema> => {
         return callAPI('create', {
@@ -522,7 +522,7 @@ export const createAPI = (
         },
         create: (
           workflowId: string,
-          body?: CreateWorkflowTestSchema,
+          body: CreateWorkflowTestSchema,
           options?: RequestInit & {
             query?: Paths['/apps/{app_id}/workflows/{workflow_id}/tests']['post']['parameters']['query'];
           },
@@ -563,7 +563,7 @@ export const createAPI = (
         update: (
           workflowId: string,
           testId: string,
-          body?: UpdateWorkflowTestSchema,
+          body: UpdateWorkflowTestSchema,
           options?: RequestInit & {
             query?: Paths['/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}']['patch']['parameters']['query'];
           },
@@ -591,7 +591,7 @@ export const createAPI = (
         runs: (
           workflowId: string,
           testId: string,
-          body?: RunWorkflowTestSchema,
+          body: RunWorkflowTestSchema,
           options?: RequestInit & {
             query?: Paths['/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}/runs']['post']['parameters']['query'];
           },
@@ -665,7 +665,7 @@ export const createAPI = (
         }>;
       },
       create: (
-        body?: CreateCollectionSchema,
+        body: CreateCollectionSchema,
         options?: RequestInit,
       ): Promise<ExtendedCollectionSchema> => {
         return callAPI('create', {
@@ -688,7 +688,7 @@ export const createAPI = (
       },
       update: (
         collectionId: string,
-        body?: UpdateCollectionSchema,
+        body: UpdateCollectionSchema,
         options?: RequestInit,
       ): Promise<ExtendedCollectionSchema> => {
         return callAPI('update', {
@@ -737,7 +737,7 @@ export const createAPI = (
         },
         create: (
           collectionId: string,
-          body?: CreateRecordSchema,
+          body: CreateRecordSchema,
           options?: RequestInit & {
             query?: Paths['/apps/{app_id}/collections/{collection_id}/records']['post']['parameters']['query'];
           },
@@ -768,7 +768,7 @@ export const createAPI = (
         update: (
           collectionId: string,
           recordId: string,
-          body?: UpdateRecordSchema,
+          body: UpdateRecordSchema,
           options?: RequestInit & {
             query?: Paths['/apps/{app_id}/collections/{collection_id}/records/{record_id}']['patch']['parameters']['query'];
           },
@@ -811,7 +811,7 @@ export const createAPI = (
         run: (
           collectionId: string,
           recordId: string,
-          body?: RunRecordSchema,
+          body: RunRecordSchema,
           options?: RequestInit,
         ): Promise<RecordSchema> => {
           return callAPI('create', {
