@@ -1,9 +1,7 @@
-import {Cortex} from './classes/Cortex';
+import type {Components} from './openapi';
 
-export * from './utils/client';
-export * from './types/api';
-export * from './types/runs';
+export {Cortex} from './cortex';
 
-export * from './generated/openapi';
+export * from './types';
 
-export {Cortex};
+export type Schema = Components['schemas'];

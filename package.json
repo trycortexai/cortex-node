@@ -1,57 +1,60 @@
 {
-  "name": "@cortex-ai/sdk",
-  "version": "0.6.2",
-  "description": "Cortex SDK for Node.js",
-  "license": "MIT",
-  "main": "./build/index.js",
-  "module": "./build/index.mjs",
-  "types": "./build/index.d.ts",
-  "files": [
-    "build"
-  ],
-  "scripts": {
-    "build": "tsup src/index.ts",
-    "dev": "tsup src/index.ts --watch",
-    "dev:hono": "pnpm -C examples/hono dev",
-    "test": "vitest",
-    "generate": "bun openapi.ts && pnpm format",
-    "tsc": "tsc --noEmit",
-    "lint": "eslint . --ext .ts,.tsx --fix",
-    "validate": "pnpm build && pnpm tsc && pnpm lint",
-    "format": "prettier --write .",
-    "release": "release-it",
-    "prepare": "husky"
-  },
-  "devDependencies": {
-    "@commitlint/cli": "^19.5.0",
-    "@commitlint/config-conventional": "^19.5.0",
-    "@ianvs/prettier-plugin-sort-imports": "^4.2.1",
-    "@release-it/conventional-changelog": "^9.0.3",
-    "@typescript-eslint/eslint-plugin": "^7.3.1",
-    "eslint": "^8.57.0",
-    "husky": "^9.1.6",
-    "openapi-typescript": "^7.4.3",
-    "prettier": "^3.2.5",
-    "release-it": "^17.6.0",
-    "tsup": "^8.0.2",
-    "typescript": "^5.4.3"
-  },
-  "keywords": [
-    "cortex",
-    "ai",
-    "openai",
-    "anthropic"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/trycortexai/cortex-node.git"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "dependencies": {
-    "eventsource-parser": "^3.0.0",
-    "openapi-fetch": "^0.13.0",
-    "openapi-typescript-helpers": "^0.0.15"
-  }
+      "name": "@cortex-ai/sdk",
+      "version": "0.6.2",
+      "description": "Cortex SDK for Node.js",
+      "license": "MIT",
+      "main": "./build/index.js",
+      "module": "./build/index.mjs",
+      "types": "./build/index.d.ts",
+      "files": [
+            "build"
+      ],
+      "scripts": {
+            "build": "bunup",
+            "dev": "bunup --watch",
+            "dev:hono": "pnpm -C examples/hono dev",
+            "test": "vitest",
+            "generate": "bun src/generate/index.ts && prettier --write src/openapi.ts",
+            "tsc": "tsc --noEmit",
+            "lint": "eslint . --ext .ts,.tsx --fix",
+            "validate": "pnpm build && pnpm tsc && pnpm lint",
+            "format": "prettier --write .",
+            "fresh-deps": "pnpx taze -r -w",
+            "release": "bumpp",
+            "publish:ci": "pnpm publish --access public --no-git-checks",
+            "prepare": "husky"
+      },
+      "devDependencies": {
+            "@commitlint/cli": "^19.5.0",
+            "@commitlint/config-conventional": "^19.5.0",
+            "@ianvs/prettier-plugin-sort-imports": "^4.2.1",
+            "@typescript-eslint/eslint-plugin": "^7.3.1",
+            "bunup": "^0.2.3",
+            "chalk": "^5.4.1",
+            "eslint": "^8.57.0",
+            "husky": "^9.1.6",
+            "openapi-typescript": "^7.4.3",
+            "ora": "^8.2.0",
+            "path": "^0.12.7",
+            "prettier": "^3.2.5",
+            "typescript": "^5.4.3"
+      },
+      "keywords": [
+            "cortex",
+            "ai",
+            "openai",
+            "anthropic"
+      ],
+      "repository": {
+            "type": "git",
+            "url": "git+https://github.com/trycortexai/cortex-node.git"
+      },
+      "publishConfig": {
+            "access": "public"
+      },
+      "dependencies": {
+            "eventsource-parser": "^3.0.0",
+            "openapi-fetch": "^0.13.0",
+            "openapi-typescript-helpers": "^0.0.15"
+      }
 }

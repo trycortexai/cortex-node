@@ -1,27 +1,25 @@
-
-
 ## <small>0.6.2 (2024-11-25)</small>
 
-* fix: set credentials ([9a198d0](https://github.com/trycortexai/cortex-node/commit/9a198d0))
+- fix: set credentials ([9a198d0](https://github.com/trycortexai/cortex-node/commit/9a198d0))
 
 ## <small>0.6.1 (2024-11-25)</small>
 
-* fix: fix onStream check ([16bd111](https://github.com/trycortexai/cortex-node/commit/16bd111))
+- fix: fix onStream check ([16bd111](https://github.com/trycortexai/cortex-node/commit/16bd111))
 
 ## 0.6.0 (2024-11-25)
 
-* chore: add license ([01b5f49](https://github.com/trycortexai/cortex-node/commit/01b5f49))
-* chore: remove unused null check ([175476b](https://github.com/trycortexai/cortex-node/commit/175476b))
-* feat: make onStream optional ([6433807](https://github.com/trycortexai/cortex-node/commit/6433807))
+- chore: add license ([01b5f49](https://github.com/trycortexai/cortex-node/commit/01b5f49))
+- chore: remove unused null check ([175476b](https://github.com/trycortexai/cortex-node/commit/175476b))
+- feat: make onStream optional ([6433807](https://github.com/trycortexai/cortex-node/commit/6433807))
 
 ## 0.5.0 (2024-11-25)
 
-* feat: add client readStream ([f3237c6](https://github.com/trycortexai/cortex-node/commit/f3237c6))
-* feat: add pagination support ([e73cc2a](https://github.com/trycortexai/cortex-node/commit/e73cc2a))
-* feat: add streamResponse ([e4752e2](https://github.com/trycortexai/cortex-node/commit/e4752e2))
-* chore: dev deps to deps ([6ad2134](https://github.com/trycortexai/cortex-node/commit/6ad2134))
-* chore: move deps to /generated ([38d51ad](https://github.com/trycortexai/cortex-node/commit/38d51ad))
-* revert: types/openapi.ts ([77ad75a](https://github.com/trycortexai/cortex-node/commit/77ad75a))
+- feat: add client readStream ([f3237c6](https://github.com/trycortexai/cortex-node/commit/f3237c6))
+- feat: add pagination support ([e73cc2a](https://github.com/trycortexai/cortex-node/commit/e73cc2a))
+- feat: add streamResponse ([e4752e2](https://github.com/trycortexai/cortex-node/commit/e4752e2))
+- chore: dev deps to deps ([6ad2134](https://github.com/trycortexai/cortex-node/commit/6ad2134))
+- chore: move deps to /generated ([38d51ad](https://github.com/trycortexai/cortex-node/commit/38d51ad))
+- revert: types/openapi.ts ([77ad75a](https://github.com/trycortexai/cortex-node/commit/77ad75a))
 
 ## <small>0.4.1 (2024-11-24)</small>
 
