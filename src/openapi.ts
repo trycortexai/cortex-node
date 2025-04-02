@@ -42,7 +42,7 @@ export const createAPI = (
         }>;
       },
       create: (
-        body: CreateAppFileSchema,
+        body?: CreateAppFileSchema,
         options?: RequestInit,
       ): Promise<AppFileSchema> => {
         return callAPI('create', {
@@ -94,7 +94,7 @@ export const createAPI = (
     runs: {
       step: {
         create: (
-          body: Omit<CreateRunStepSchema, 'stream'>,
+          body?: Omit<CreateRunStepSchema, 'stream'>,
           options?: RequestInit,
         ): Promise<RunStepSchema> => {
           return callAPI('create', {
@@ -105,7 +105,7 @@ export const createAPI = (
           }) as Promise<RunStepSchema>;
         },
         stream: (
-          body: Omit<CreateRunStepSchema, 'stream'>,
+          body?: Omit<CreateRunStepSchema, 'stream'>,
           options?: RequestInit & {
             onStream?: (
               partialResult: RunStepSchema,
@@ -122,7 +122,7 @@ export const createAPI = (
           }) as Promise<RunStepSchema>;
         },
         streamResponse: (
-          body: Omit<CreateRunStepSchema, 'stream'>,
+          body?: Omit<CreateRunStepSchema, 'stream'>,
           options?: RequestInit & {
             onStream?: (
               partialResult: RunStepSchema,
@@ -197,7 +197,7 @@ export const createAPI = (
         runs: {
           create: (
             workflowId: string,
-            body: Omit<CreateDiscoveryRunSchema, 'stream'>,
+            body?: Omit<CreateDiscoveryRunSchema, 'stream'>,
             options?: RequestInit & {
               query?: Paths['/apps/{app_id}/workflows/discover/{workflow_id}/runs']['post']['parameters']['query'];
             },
@@ -212,7 +212,7 @@ export const createAPI = (
           },
           stream: (
             workflowId: string,
-            body: Omit<CreateDiscoveryRunSchema, 'stream'>,
+            body?: Omit<CreateDiscoveryRunSchema, 'stream'>,
             options?: RequestInit & {
               query?: Paths['/apps/{app_id}/workflows/discover/{workflow_id}/runs']['post']['parameters']['query'];
               onStream?: (
@@ -232,7 +232,7 @@ export const createAPI = (
           },
           streamResponse: (
             workflowId: string,
-            body: Omit<CreateDiscoveryRunSchema, 'stream'>,
+            body?: Omit<CreateDiscoveryRunSchema, 'stream'>,
             options?: RequestInit & {
               query?: Paths['/apps/{app_id}/workflows/discover/{workflow_id}/runs']['post']['parameters']['query'];
               onStream?: (
@@ -261,10 +261,7 @@ export const createAPI = (
               method: 'post',
               endpoint:
                 '/apps/{app_id}/workflows/discover/{workflow_id}/runs/{run_id}/cancel',
-              params: {
-                workflow_id: workflowId,
-                run_id: runId,
-              },
+              params: {workflow_id: workflowId, run_id: runId},
               options,
             }) as Promise<RunSchema>;
           },
@@ -336,7 +333,7 @@ export const createAPI = (
         },
         create: (
           workflowId: string,
-          body: Omit<CreateRunSchema, 'stream'>,
+          body?: Omit<CreateRunSchema, 'stream'>,
           options?: RequestInit & {
             query?: Paths['/apps/{app_id}/workflows/{workflow_id}/runs']['post']['parameters']['query'];
           },
@@ -351,7 +348,7 @@ export const createAPI = (
         },
         stream: (
           workflowId: string,
-          body: Omit<CreateRunSchema, 'stream'>,
+          body?: Omit<CreateRunSchema, 'stream'>,
           options?: RequestInit & {
             query?: Paths['/apps/{app_id}/workflows/{workflow_id}/runs']['post']['parameters']['query'];
             onStream?: (
@@ -371,7 +368,7 @@ export const createAPI = (
         },
         streamResponse: (
           workflowId: string,
-          body: Omit<CreateRunSchema, 'stream'>,
+          body?: Omit<CreateRunSchema, 'stream'>,
           options?: RequestInit & {
             query?: Paths['/apps/{app_id}/workflows/{workflow_id}/runs']['post']['parameters']['query'];
             onStream?: (
@@ -393,7 +390,7 @@ export const createAPI = (
           create: (
             workflowId: string,
             runId: string,
-            body: Omit<ReplayRunSchema, 'stream'>,
+            body?: Omit<ReplayRunSchema, 'stream'>,
             options?: RequestInit & {
               query?: Paths['/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/replay']['post']['parameters']['query'];
             },
@@ -402,10 +399,7 @@ export const createAPI = (
               method: 'post',
               endpoint:
                 '/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/replay',
-              params: {
-                workflow_id: workflowId,
-                run_id: runId,
-              },
+              params: {workflow_id: workflowId, run_id: runId},
               body,
               options,
             }) as Promise<RunSchema>;
@@ -413,7 +407,7 @@ export const createAPI = (
           stream: (
             workflowId: string,
             runId: string,
-            body: Omit<ReplayRunSchema, 'stream'>,
+            body?: Omit<ReplayRunSchema, 'stream'>,
             options?: RequestInit & {
               query?: Paths['/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/replay']['post']['parameters']['query'];
               onStream?: (
@@ -427,10 +421,7 @@ export const createAPI = (
               method: 'post',
               endpoint:
                 '/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/replay',
-              params: {
-                workflow_id: workflowId,
-                run_id: runId,
-              },
+              params: {workflow_id: workflowId, run_id: runId},
               body,
               options,
             }) as Promise<RunSchema>;
@@ -438,7 +429,7 @@ export const createAPI = (
           streamResponse: (
             workflowId: string,
             runId: string,
-            body: Omit<ReplayRunSchema, 'stream'>,
+            body?: Omit<ReplayRunSchema, 'stream'>,
             options?: RequestInit & {
               query?: Paths['/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/replay']['post']['parameters']['query'];
               onStream?: (
@@ -452,10 +443,7 @@ export const createAPI = (
               method: 'post',
               endpoint:
                 '/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/replay',
-              params: {
-                workflow_id: workflowId,
-                run_id: runId,
-              },
+              params: {workflow_id: workflowId, run_id: runId},
               body,
               options,
             }) as Promise<Response>;
@@ -471,10 +459,7 @@ export const createAPI = (
           return callAPI('retrieve', {
             method: 'get',
             endpoint: '/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}',
-            params: {
-              workflow_id: workflowId,
-              run_id: runId,
-            },
+            params: {workflow_id: workflowId, run_id: runId},
             options,
           }) as Promise<RunSchema>;
         },
@@ -489,10 +474,7 @@ export const createAPI = (
             method: 'post',
             endpoint:
               '/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/cancel',
-            params: {
-              workflow_id: workflowId,
-              run_id: runId,
-            },
+            params: {workflow_id: workflowId, run_id: runId},
             options,
           }) as Promise<RunSchema>;
         },
@@ -507,10 +489,7 @@ export const createAPI = (
             method: 'delete',
             endpoint:
               '/apps/{app_id}/workflows/{workflow_id}/tests/expectations/{expectation_id}',
-            params: {
-              workflow_id: workflowId,
-              expectation_id: expectationId,
-            },
+            params: {workflow_id: workflowId, expectation_id: expectationId},
             options,
           }) as Promise<void>;
         },
@@ -543,7 +522,7 @@ export const createAPI = (
         },
         create: (
           workflowId: string,
-          body: CreateWorkflowTestSchema,
+          body?: CreateWorkflowTestSchema,
           options?: RequestInit & {
             query?: Paths['/apps/{app_id}/workflows/{workflow_id}/tests']['post']['parameters']['query'];
           },
@@ -577,17 +556,14 @@ export const createAPI = (
           return callAPI('retrieve', {
             method: 'get',
             endpoint: '/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}',
-            params: {
-              workflow_id: workflowId,
-              test_id: testId,
-            },
+            params: {workflow_id: workflowId, test_id: testId},
             options,
           }) as Promise<WorkflowTestSchema>;
         },
         update: (
           workflowId: string,
           testId: string,
-          body: UpdateWorkflowTestSchema,
+          body?: UpdateWorkflowTestSchema,
           options?: RequestInit & {
             query?: Paths['/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}']['patch']['parameters']['query'];
           },
@@ -595,10 +571,7 @@ export const createAPI = (
           return callAPI('update', {
             method: 'patch',
             endpoint: '/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}',
-            params: {
-              workflow_id: workflowId,
-              test_id: testId,
-            },
+            params: {workflow_id: workflowId, test_id: testId},
             body,
             options,
           }) as Promise<WorkflowTestSchema>;
@@ -611,17 +584,14 @@ export const createAPI = (
           return callAPI('delete', {
             method: 'delete',
             endpoint: '/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}',
-            params: {
-              workflow_id: workflowId,
-              test_id: testId,
-            },
+            params: {workflow_id: workflowId, test_id: testId},
             options,
           }) as Promise<void>;
         },
         runs: (
           workflowId: string,
           testId: string,
-          body: RunWorkflowTestSchema,
+          body?: RunWorkflowTestSchema,
           options?: RequestInit & {
             query?: Paths['/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}/runs']['post']['parameters']['query'];
           },
@@ -630,10 +600,7 @@ export const createAPI = (
             method: 'post',
             endpoint:
               '/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}/runs',
-            params: {
-              workflow_id: workflowId,
-              test_id: testId,
-            },
+            params: {workflow_id: workflowId, test_id: testId},
             body,
             options,
           }) as Promise<WorkflowTestSchema>;
@@ -649,10 +616,7 @@ export const createAPI = (
             method: 'post',
             endpoint:
               '/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}/cancel',
-            params: {
-              workflow_id: workflowId,
-              test_id: testId,
-            },
+            params: {workflow_id: workflowId, test_id: testId},
             options,
           }) as Promise<WorkflowTestSchema>;
         },
@@ -701,7 +665,7 @@ export const createAPI = (
         }>;
       },
       create: (
-        body: CreateCollectionSchema,
+        body?: CreateCollectionSchema,
         options?: RequestInit,
       ): Promise<ExtendedCollectionSchema> => {
         return callAPI('create', {
@@ -724,7 +688,7 @@ export const createAPI = (
       },
       update: (
         collectionId: string,
-        body: UpdateCollectionSchema,
+        body?: UpdateCollectionSchema,
         options?: RequestInit,
       ): Promise<ExtendedCollectionSchema> => {
         return callAPI('update', {
@@ -773,7 +737,7 @@ export const createAPI = (
         },
         create: (
           collectionId: string,
-          body: CreateRecordSchema,
+          body?: CreateRecordSchema,
           options?: RequestInit & {
             query?: Paths['/apps/{app_id}/collections/{collection_id}/records']['post']['parameters']['query'];
           },
@@ -797,17 +761,14 @@ export const createAPI = (
             method: 'get',
             endpoint:
               '/apps/{app_id}/collections/{collection_id}/records/{record_id}',
-            params: {
-              collection_id: collectionId,
-              record_id: recordId,
-            },
+            params: {collection_id: collectionId, record_id: recordId},
             options,
           }) as Promise<ExtendedRecordSchema>;
         },
         update: (
           collectionId: string,
           recordId: string,
-          body: UpdateRecordSchema,
+          body?: UpdateRecordSchema,
           options?: RequestInit & {
             query?: Paths['/apps/{app_id}/collections/{collection_id}/records/{record_id}']['patch']['parameters']['query'];
           },
@@ -816,10 +777,7 @@ export const createAPI = (
             method: 'patch',
             endpoint:
               '/apps/{app_id}/collections/{collection_id}/records/{record_id}',
-            params: {
-              collection_id: collectionId,
-              record_id: recordId,
-            },
+            params: {collection_id: collectionId, record_id: recordId},
             body,
             options,
           }) as Promise<ExtendedRecordSchema>;
@@ -833,10 +791,7 @@ export const createAPI = (
             method: 'delete',
             endpoint:
               '/apps/{app_id}/collections/{collection_id}/records/{record_id}',
-            params: {
-              collection_id: collectionId,
-              record_id: recordId,
-            },
+            params: {collection_id: collectionId, record_id: recordId},
             options,
           }) as Promise<void>;
         },
@@ -849,27 +804,21 @@ export const createAPI = (
             method: 'get',
             endpoint:
               '/apps/{app_id}/collections/{collection_id}/records/{record_id}/status',
-            params: {
-              collection_id: collectionId,
-              record_id: recordId,
-            },
+            params: {collection_id: collectionId, record_id: recordId},
             options,
           }) as Promise<RecordStatusSchema>;
         },
         run: (
           collectionId: string,
           recordId: string,
-          body: RunRecordSchema,
+          body?: RunRecordSchema,
           options?: RequestInit,
         ): Promise<RecordSchema> => {
           return callAPI('create', {
             method: 'post',
             endpoint:
               '/apps/{app_id}/collections/{collection_id}/records/{record_id}/run',
-            params: {
-              collection_id: collectionId,
-              record_id: recordId,
-            },
+            params: {collection_id: collectionId, record_id: recordId},
             body,
             options,
           }) as Promise<RecordSchema>;
@@ -883,10 +832,7 @@ export const createAPI = (
             method: 'post',
             endpoint:
               '/apps/{app_id}/collections/{collection_id}/records/{record_id}/cancel',
-            params: {
-              collection_id: collectionId,
-              record_id: recordId,
-            },
+            params: {collection_id: collectionId, record_id: recordId},
             options,
           }) as Promise<RecordSchema>;
         },
@@ -899,10 +845,7 @@ export const createAPI = (
             method: 'post',
             endpoint:
               '/apps/{app_id}/collections/{collection_id}/records/{record_id}/update-rules',
-            params: {
-              collection_id: collectionId,
-              record_id: recordId,
-            },
+            params: {collection_id: collectionId, record_id: recordId},
             options,
           }) as Promise<RecordSchema>;
         },
@@ -915,10 +858,7 @@ export const createAPI = (
             method: 'post',
             endpoint:
               '/apps/{app_id}/collections/{collection_id}/records/{record_id}/reset',
-            params: {
-              collection_id: collectionId,
-              record_id: recordId,
-            },
+            params: {collection_id: collectionId, record_id: recordId},
             options,
           }) as Promise<RecordSchema>;
         },
@@ -931,10 +871,7 @@ export const createAPI = (
             method: 'get',
             endpoint:
               '/apps/{app_id}/collections/{collection_id}/records/{record_id}/download',
-            params: {
-              collection_id: collectionId,
-              record_id: recordId,
-            },
+            params: {collection_id: collectionId, record_id: recordId},
             options,
           }) as Promise<void>;
         },

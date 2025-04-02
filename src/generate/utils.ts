@@ -176,7 +176,7 @@ const buildAPIMethodObject = (
     stream: isStreamingSupported(schema, requestBody),
     body: requestBody ? getBodyType(requestBody) : undefined,
     query: hasAnyQueryParameters
-      ? `paths['${endpoint}']['${method}']['parameters']['query']`
+      ? `Paths['${endpoint}']['${method}']['parameters']['query']`
       : undefined,
     parameters: Object.fromEntries(methodParameters),
     returns: isPaginationSupported
@@ -356,7 +356,7 @@ const createMethod = ({
   const allParameters = [...params];
 
   if (body) {
-    allParameters.push(['body', body]);
+    allParameters.push(['body?', body]);
   }
 
   const options: [string, string][] = [];
