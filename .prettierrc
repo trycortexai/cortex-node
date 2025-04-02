@@ -1,26 +1,26 @@
 {
-      "tabWidth": 6,
-      "useTabs": false,
-      "bracketSpacing": false,
-      "bracketSameLine": true,
-      "singleQuote": true,
-      "trailingComma": "all",
-      "arrowParens": "avoid",
+  "tabWidth": 2,
+  "useTabs": false,
+  "bracketSpacing": false,
+  "bracketSameLine": true,
+  "singleQuote": true,
+  "trailingComma": "all",
+  "arrowParens": "avoid",
 
-      "importOrder": [
-            "<THIRD_PARTY_MODULES>",
-            "",
-            "^@types/(.*)$",
-            "^types/(.*)$",
-            "",
-            "^constants/(.*)$",
-            "",
-            "^utils/(.*)$",
-            "",
-            "^src/(.*)$",
-            "",
-            "^[./]"
-      ],
+  "importOrder": [
+    "<THIRD_PARTY_MODULES>",
+    "",
+    "^@types/(.*)$",
+    "^types/(.*)$",
+    "",
+    "^constants/(.*)$",
+    "",
+    "^utils/(.*)$",
+    "",
+    "^src/(.*)$",
+    "",
+    "^[./]"
+  ],
 
-      "plugins": ["@ianvs/prettier-plugin-sort-imports"]
+  "plugins": ["@ianvs/prettier-plugin-sort-imports"]
 }

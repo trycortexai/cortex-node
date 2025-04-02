@@ -1,11 +1,11 @@
 import {
-      ClientOptions as FetchClientOptions,
-      MaybeOptionalInit,
+  ClientOptions as FetchClientOptions,
+  MaybeOptionalInit,
 } from 'openapi-fetch';
 import {
-      HttpMethod,
-      PathsWithMethod,
-      RequiredKeysOf,
+  HttpMethod,
+  PathsWithMethod,
+  RequiredKeysOf,
 } from 'openapi-typescript-helpers';
 
 import {createAPIFetchClient} from './fetch';
@@ -15,46 +15,46 @@ export type APIFetchClient = ReturnType<typeof createAPIFetchClient>;
 export type APIFetchClientOptions = FetchClientOptions;
 
 export type ClientOptions = APIFetchClientOptions & {
-      apiKey: string;
+  apiKey: string;
 };
 
 export type ApiUrl = PathsWithMethod<Paths, 'get'>;
 
 type InitParam<Init> =
-      RequiredKeysOf<Init> extends never
-            ? [(Init & {[key: string]: unknown})?]
-            : [Init & {[key: string]: unknown}];
+  RequiredKeysOf<Init> extends never
+    ? [(Init & {[key: string]: unknown})?]
+    : [Init & {[key: string]: unknown}];
 
 export type EndpointParams<
-      Path extends keyof Paths,
-      Method extends HttpMethod,
+  Path extends keyof Paths,
+  Method extends HttpMethod,
 > = InitParam<MaybeOptionalInit<Paths[Path], Method>>;
 
 export type ErrorItem = {
-      validation: string;
-      code: string;
-      message: string;
-      path: string[];
+  validation: string;
+  code: string;
+  message: string;
+  path: string[];
 };
 
 export type ErrorResponse = {
-      status: number;
-      message: string;
-      errors?: ErrorItem[];
+  status: number;
+  message: string;
+  errors?: ErrorItem[];
 };
 
 export type PagedParams = {
-      page: number;
-      take: number;
+  page: number;
+  take: number;
 };
 
 export type PaginationResult<D = unknown> = {
-      data: D;
-      pagination: {
-            page: number;
-            take: number;
-            count: number;
-      };
+  data: D;
+  pagination: {
+    page: number;
+    take: number;
+    count: number;
+  };
 };
 
 /**
@@ -63,8 +63,8 @@ export type PaginationResult<D = unknown> = {
  * @example `CastRunStepOutputSchema<StepModelOutputSchema>`
  */
 export type CastRunStepOutputSchema<T = unknown> = Omit<
-      RunStepOutputSchema,
-      'output'
+  RunStepOutputSchema,
+  'output'
 > & {
-      output: T;
+  output: T;
 };

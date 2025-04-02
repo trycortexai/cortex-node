@@ -12,6 +12,6 @@ npm install @cortex-ai/sdk
 import {Cortex} from '@cortex-ai/sdk';
 
 const cortex = new Cortex({
-      apiKey: 'YOUR_API_KEY',
+  apiKey: 'YOUR_API_KEY',
 });
 ```

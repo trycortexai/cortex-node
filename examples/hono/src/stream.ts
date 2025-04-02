@@ -1,73 +1,72 @@
 import {
-      Cortex,
-      type CastRunStepOutputSchema,
-      type Schema,
+  Cortex,
+  type CastRunStepOutputSchema,
+  type Schema,
 } from '@cortex-ai/sdk';
 
 export const stepStreamResponse = async (cortex: Cortex) => {
-      try {
-            const result = await cortex.apps.runs.step.streamResponse(
-                  {
-                        step: {
-                              type: 'model',
-                              key: 'MODEL',
-                              provider: {
-                                    provider: 'openai',
-                                    model: 'gpt-4o-mini',
-                                    messages: [
-                                          {
-                                                role: 'user',
-                                                content: 'Say hello!',
-                                          },
-                                    ],
-                              },
-                        },
-                  },
-                  {
-                        onStream: (partial, event) => {
-                              const stepOutput = partial.output as
-                                    | Schema['StepModelOutputSchema']
-                                    | undefined;
+  try {
+    const result = await cortex.apps.runs.step.streamResponse(
+      {
+        step: {
+          type: 'model',
+          key: 'MODEL',
+          provider: {
+            provider: 'openai',
+            model: 'gpt-4o-mini',
+            messages: [
+              {
+                role: 'user',
+                content: 'Say hello!',
+              },
+            ],
+          },
+        },
+      },
+      {
+        onStream: (partial, event) => {
+          const stepOutput = partial.output as
+            | Schema['StepModelOutputSchema']
+            | undefined;
 
-                              console.log(event, stepOutput?.message);
-                        },
-                  },
-            );
+          console.log(event, stepOutput?.message);
+        },
+      },
+    );
 
-            return result;
-      } catch (error) {
-            console.log('Error', error);
-            return error?.toString() ?? 'Error';
-      }
+    return result;
+  } catch (error) {
+    console.log('Error', error);
+    return error?.toString() ?? 'Error';
+  }
 };
 
 export const worklflowStreamResponse = async (
-      cortex: Cortex,
-      workflowId: string,
+  cortex: Cortex,
+  workflowId: string,
 ) => {
-      try {
-            const result = await cortex.apps.workflows.runs.streamResponse(
-                  workflowId,
-                  {
-                        input: {
-                              message: 'Hello, World!',
-                        },
-                  },
-                  {
-                        onStream: (partial, event) => {
-                              const stepOutput = partial.output
-                                    ?.MODEL as CastRunStepOutputSchema<
-                                    Schema['StepModelOutputSchema']
-                              >;
+  try {
+    const result = await cortex.apps.workflows.runs.streamResponse(
+      workflowId,
+      {
+        input: {
+          message: 'Hello, World!',
+        },
+      },
+      {
+        onStream: (partial, event) => {
+          const stepOutput = partial.output?.MODEL as CastRunStepOutputSchema<
+            Schema['StepModelOutputSchema']
+          >;
 
-                              console.log(event, stepOutput?.output?.message);
-                        },
-                  },
-            );
+          console.log(event, stepOutput?.output?.message);
+        },
+      },
+    );
 
-            return result;
-      } catch (error) {
-            console.log('Error', error);
-            return error?.toString() ?? 'Error';
-      }
+    return result;
+  } catch (error) {
+    console.log('Error', error);
+    return error?.toString() ?? 'Error';
+  }
 };
