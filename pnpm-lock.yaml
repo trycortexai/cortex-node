@@ -37,8 +37,8 @@ importers:
         specifier: ^10.1.0
         version: 10.1.0
       bunup:
-        specifier: ^0.3.9
-        version: 0.3.9(typescript@5.8.2)
+        specifier: ^0.3.14
+        version: 0.3.14(typescript@5.8.2)
       chalk:
         specifier: ^5.4.1
         version: 5.4.1
@@ -415,9 +415,6 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
-
-  '@napi-rs/wasm-runtime@0.2.7':
-    resolution: {integrity: sha512-5yximcFK5FNompXfJFoWanu5l8v1hNGqNHh9du1xETp9HWk/B/PzvchX55WYOPaIeNglG8++68AAiauBAtbnzw==}
 
   '@napi-rs/wasm-runtime@0.2.8':
     resolution: {integrity: sha512-OBlgKdX7gin7OIq4fadsjpg+cp2ZphvAIKucHsNfTdJiqdOmOEwQd/bHi0VwNrcw5xpBJyUw6cK/QilCqy1BSg==}
@@ -812,8 +809,8 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
-  bunup@0.3.9:
-    resolution: {integrity: sha512-DRIux/JWEDgmpGtDuQkQNbe//Yf1dn3x7bwMmxEX5+p3T3Nns93ZJSdTVQ1zBFg5xdeP2yRMfQNWDuE+rRk/sA==}
+  bunup@0.3.14:
+    resolution: {integrity: sha512-JaVMphSCABIukzSuBOn2K9JO9oKzs4K/SNeiOCs7emYLiazcQgHb1HHLf/8qRR3ZcQK7OoiQGB84AJ/UNql1Vw==}
     hasBin: true
     peerDependencies:
       typescript: '>=4.5.0'
@@ -2060,13 +2057,6 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
-  '@napi-rs/wasm-runtime@0.2.7':
-    dependencies:
-      '@emnapi/core': 1.4.0
-      '@emnapi/runtime': 1.4.0
-      '@tybys/wasm-util': 0.9.0
-    optional: true
-
   '@napi-rs/wasm-runtime@0.2.8':
     dependencies:
       '@emnapi/core': 1.4.0
@@ -2144,7 +2134,7 @@ snapshots:
 
   '@oxc-transform/binding-wasm32-wasi@0.58.1':
     dependencies:
-      '@napi-rs/wasm-runtime': 0.2.7
+      '@napi-rs/wasm-runtime': 0.2.8
     optional: true
 
   '@oxc-transform/binding-win32-arm64-msvc@0.58.1':
@@ -2422,7 +2412,7 @@ snapshots:
     transitivePeerDependencies:
       - magicast
 
-  bunup@0.3.9(typescript@5.8.2):
+  bunup@0.3.14(typescript@5.8.2):
     dependencies:
       chokidar: 4.0.3
       load-tsconfig: 0.2.5

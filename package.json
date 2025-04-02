@@ -18,7 +18,7 @@
     "tsc": "tsc --noEmit",
     "lint": "eslint . --ext .ts,.tsx --fix",
     "format": "prettier --write .",
-    "fresh-deps": "pnpx taze -r -w",
+    "fresh-deps": "pnpx taze -w",
     "release": "bumpp",
     "publish:ci": "pnpm publish --access public --no-git-checks",
     "prepare": "husky"
@@ -30,7 +30,7 @@
     "@types/debug": "^4.1.12",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "bumpp": "^10.1.0",
-    "bunup": "^0.3.9",
+    "bunup": "^0.3.14",
     "chalk": "^5.4.1",
     "debug": "^4.4.0",
     "eslint": "^8.57.1",
