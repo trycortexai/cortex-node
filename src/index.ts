@@ -1,6 +1,6 @@
 import type {Components} from './openapi';
 
-export {Cortex} from './cortex';
+export {Cortex} from './core/cortex';
 
 export * from './types';
 

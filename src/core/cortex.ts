@@ -1,10 +1,10 @@
-import {APP_LESS_PARAM, STREAM_PARSERS} from './constants';
-import {CortexError} from './errors';
-import {createAPIFetchClient, readSSE} from './fetch';
-import {APIMethodRequest, APIMethods, createAPI} from './openapi';
-import {HttpStream} from './stream';
-import {APIFetchClient, ClientOptions} from './types';
-import {getObjectProperty} from './utils';
+import {APP_LESS_PARAM, STREAM_PARSERS} from '../constants';
+import {CortexError} from '../errors';
+import {createAPIFetchClient, readSSE} from '../fetch';
+import {APIMethodRequest, APIMethods, createAPI} from '../openapi';
+import {HttpStream} from '../stream';
+import {APIFetchClient, ClientOptions} from '../types';
+import {getObjectProperty} from '../utils';
 
 /**
  * Cortex API client
