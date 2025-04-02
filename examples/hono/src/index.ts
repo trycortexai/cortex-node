@@ -19,6 +19,7 @@ const createCortex = (ctx: Context) => {
 
   const cortex = new Cortex({
     apiKey: CORTEX_API_KEY,
+    baseUrl: 'https://api.dev.withcortex.ai',
   });
 
   return cortex;
@@ -52,6 +53,23 @@ app.get('/stream/workflow', async ctx => {
   }
 
   return ctx.text(response);
+});
+
+app.get('/model-calls', async ctx => {
+  const {WORKFLOW_ID} = env<{WORKFLOW_ID: string}>(ctx);
+
+  const cortex = createCortex(ctx);
+
+  const result = await cortex.apps.workflows.runs.create(WORKFLOW_ID, {
+    from_step_key: 'datas',
+    input: {
+      query: 'Will india be in 2026 football world cup?',
+    },
+  });
+
+  console.log('run finished', result);
+
+  return ctx.json(result);
 });
 
 console.log(`Server is running on http://localhost:${PORT}`);
