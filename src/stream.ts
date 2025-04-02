@@ -1,8 +1,13 @@
+import Debug from 'debug';
+
 import {STREAM_PARSERS_TYPES} from './constants';
 import {CortexStreamError} from './errors';
 import {readSSE} from './fetch';
+import {logger} from './logger';
 import {RunStepOutputSchema, StepModelOutputSchema} from './openapi';
 import {CastRunStepOutputSchema} from './types';
+
+const debug = Debug('cortex:stream');
 
 export interface SSEMessage {
   data: string | object;
@@ -44,7 +49,7 @@ export class HttpStream {
       await this._writer.write(input);
     } catch (e) {
       if (e) {
-        console.warn('Error writing to stream', e?.toString());
+        logger.warn('Error writing to stream', e?.toString());
       }
     }
     return this;
@@ -59,7 +64,7 @@ export class HttpStream {
     try {
       await this._writer.close();
     } catch (e) {
-      console.warn('Error closing stream', e?.toString());
+      logger.warn('Error closing stream', e?.toString());
     }
   }
 
@@ -136,7 +141,7 @@ export const handleStepStream = (
       }
     }
   } catch (e) {
-    console.error('handleStepStream error', e);
+    logger.error('handleStepStream error', e);
     return currentOutput;
   }
 };
@@ -152,7 +157,7 @@ const processStepChunk = (
   }
 
   if (!currentOutput) {
-    console.debug('handleStepStream: currentOutput is not defined', {
+    debug('handleStepStream: currentOutput is not defined', {
       partialOutput,
       currentOutput,
     });
