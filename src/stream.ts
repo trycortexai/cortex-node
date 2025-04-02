@@ -1,7 +1,7 @@
 import {STREAM_PARSERS_TYPES} from './constants';
 import {CortexStreamError} from './errors';
 import {readSSE} from './fetch';
-import {StepModelOutputSchema} from './openapi';
+import {RunStepOutputSchema, StepModelOutputSchema} from './openapi';
 import {CastRunStepOutputSchema} from './types';
 
 export interface SSEMessage {
@@ -122,54 +122,180 @@ export const readStream = async <
 };
 
 export const handleStepStream = (
-  event: 'step' | 'chunk',
+  eventType: 'step' | 'chunk',
   data: CastRunStepOutputSchema,
   currentOutput: CastRunStepOutputSchema,
-) => {
+): CastRunStepOutputSchema => {
   try {
-    switch (event) {
+    switch (eventType) {
       case 'step': {
         return data;
       }
       case 'chunk': {
-        // note: only step `model` supports `chunk` event at the moment
-
-        const output = (data.output ?? {}) as StepModelOutputSchema;
-
-        // loops support
-        if (typeof output.index !== 'undefined') {
-          const step = currentOutput as CastRunStepOutputSchema<
-            StepModelOutputSchema[]
-          >;
-
-          const stepOutput = step.output?.find(e => e.index === output.index);
-
-          output.message = `${stepOutput?.message ?? ''}${output.message ?? ''}`;
-
-          if (!step.output) {
-            step.output = [];
-          }
-
-          step.output = [
-            ...step.output.filter(e => e.index !== output.index),
-            output,
-          ];
-
-          return step;
-        } else {
-          const step =
-            currentOutput as CastRunStepOutputSchema<StepModelOutputSchema>;
-
-          output.message = `${step.output?.message ?? ''}${output?.message ?? ''}`;
-
-          step.output = output;
-
-          return step;
-        }
+        return processStepChunk(data, currentOutput) as CastRunStepOutputSchema;
       }
     }
   } catch (e) {
-    console.error('HANDLE_STEP_STREAM_ERROR', e);
-    return data;
+    console.error('handleStepStream error', e);
+    return currentOutput;
   }
+};
+
+const processStepChunk = (
+  partialOutput: RunStepOutputSchema,
+  currentOutput: RunStepOutputSchema,
+) => {
+  // if the step already finished, assign the output and return
+  if (partialOutput.status !== 'RUNNING') {
+    Object.assign(currentOutput, partialOutput);
+    return {...currentOutput};
+  }
+
+  if (!currentOutput) {
+    console.debug('handleStepStream: currentOutput is not defined', {
+      partialOutput,
+      currentOutput,
+    });
+    return currentOutput;
+  }
+
+  const {output, calls, ...rest} = partialOutput as CastRunStepOutputSchema;
+
+  // update rest of the properties
+  Object.assign(currentOutput, rest);
+
+  // calls
+  if (calls) {
+    calls.map(newCall => {
+      if (!currentOutput.calls) {
+        currentOutput.calls = [];
+      }
+
+      const currentCall = currentOutput.calls.find(e => e.id === newCall.id);
+
+      if (currentCall) {
+        const updatedOutput = processStepChunk(
+          newCall as RunStepOutputSchema,
+          currentCall as RunStepOutputSchema,
+        );
+
+        currentOutput.calls = currentOutput.calls.map(e =>
+          e.id === newCall.id ? updatedOutput : e,
+        );
+        return;
+      }
+
+      currentOutput.calls = [...currentOutput.calls, newCall];
+    });
+  }
+
+  // model
+  if (output && isModelOutput(partialOutput)) {
+    const output = partialOutput.output as StepModelOutputSchema;
+
+    // if in a loop
+    if (typeof output.index === 'undefined') {
+      const castedOutput =
+        currentOutput as CastRunStepOutputSchema<StepModelOutputSchema>;
+
+      castedOutput.output = consolidateStepModelOutput(
+        output,
+        castedOutput.output ?? {},
+      );
+    } else {
+      // if not in a loop
+      const castedOutput = currentOutput as CastRunStepOutputSchema<
+        StepModelOutputSchema[]
+      >;
+
+      if (!castedOutput.output) {
+        castedOutput.output = [];
+      }
+
+      if (!Array.isArray(castedOutput.output)) {
+        castedOutput.output = [castedOutput.output];
+      }
+
+      const stepOutput = castedOutput.output?.find(
+        e => e.index === output.index,
+      );
+
+      if (!stepOutput) {
+        castedOutput.output = [...castedOutput.output, output];
+      } else {
+        const newOutput = consolidateStepModelOutput(output, stepOutput);
+        castedOutput.output = castedOutput.output.map(e =>
+          e.index === output.index ? newOutput : e,
+        );
+      }
+    }
+  }
+
+  return {...currentOutput};
+};
+
+export const consolidateStepModelOutput = (
+  partialOutput: Partial<StepModelOutputSchema>,
+  currentOutput: StepModelOutputSchema,
+) => {
+  const {message, tool_calls, ...rest} = partialOutput;
+
+  // assign the rest of the properties
+  Object.assign(currentOutput, rest);
+
+  // message
+  if (message) {
+    if (!message) {
+      currentOutput.message = '';
+    }
+
+    if (typeof message === 'object') {
+      currentOutput.message = message;
+    }
+
+    if (typeof message === 'string') {
+      currentOutput.message = `${currentOutput.message ?? ''}${message}`;
+    }
+  }
+
+  // tools
+  if (tool_calls?.length) {
+    tool_calls.forEach(call => {
+      if (!currentOutput.tool_calls) {
+        currentOutput.tool_calls = [];
+      }
+
+      const currentCall = currentOutput.tool_calls.find(e => e.id === call.id);
+
+      if (currentCall) {
+        if (typeof call.input === 'object') {
+          currentCall.input = call.input;
+        }
+
+        if (typeof call.input === 'string') {
+          currentCall.input = `${currentCall.input ?? ''}${call.input}`;
+        }
+
+        currentOutput.tool_calls = currentOutput.tool_calls.map(e =>
+          e.id === call.id ? currentCall : e,
+        );
+        return;
+      }
+
+      currentOutput.tool_calls = [...currentOutput.tool_calls, call];
+    });
+  }
+
+  return {...currentOutput};
+};
+
+export const isModelOutput = (output: RunStepOutputSchema) => {
+  const modelOutput = output as CastRunStepOutputSchema<
+    StepModelOutputSchema | StepModelOutputSchema[]
+  >;
+
+  return (
+    (Array.isArray(modelOutput?.output) && !!modelOutput?.output?.[0]?.model) ||
+    (!Array.isArray(modelOutput?.output) && !!modelOutput?.output?.model)
+  );
 };
