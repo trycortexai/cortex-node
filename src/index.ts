@@ -1,9 +1,12 @@
-import {Cortex} from './classes/Cortex';
+import type {Components} from './openapi';
 
-export * from './utils/client';
-export * from './types/api';
-export * from './types/runs';
+export type {
+  ApiUrl,
+  CastRunStepOutputSchema,
+  PagedParams,
+  PaginationResult,
+} from './types';
 
-export * from './generated/openapi';
+export {Cortex} from './core/cortex';
 
-export {Cortex};
+export type Schema = Components['schemas'];

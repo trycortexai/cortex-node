@@ -10,31 +10,36 @@
     "build"
   ],
   "scripts": {
-    "build": "tsup src/index.ts",
-    "dev": "tsup src/index.ts --watch",
+    "build": "bunup",
+    "dev": "bunup --watch",
     "dev:hono": "pnpm -C examples/hono dev",
     "test": "vitest",
-    "generate": "bun openapi.ts && pnpm format",
+    "generate": "bun src/generate/index.ts && prettier --write src/openapi.ts",
     "tsc": "tsc --noEmit",
     "lint": "eslint . --ext .ts,.tsx --fix",
-    "validate": "pnpm build && pnpm tsc && pnpm lint",
     "format": "prettier --write .",
-    "release": "release-it",
+    "fresh-deps": "pnpx taze -w",
+    "release": "bumpp",
+    "publish:ci": "pnpm publish --access public --no-git-checks",
     "prepare": "husky"
   },
   "devDependencies": {
-    "@commitlint/cli": "^19.5.0",
-    "@commitlint/config-conventional": "^19.5.0",
-    "@ianvs/prettier-plugin-sort-imports": "^4.2.1",
-    "@release-it/conventional-changelog": "^9.0.3",
-    "@typescript-eslint/eslint-plugin": "^7.3.1",
-    "eslint": "^8.57.0",
-    "husky": "^9.1.6",
-    "openapi-typescript": "^7.4.3",
-    "prettier": "^3.2.5",
-    "release-it": "^17.6.0",
-    "tsup": "^8.0.2",
-    "typescript": "^5.4.3"
+    "@commitlint/cli": "^19.8.0",
+    "@commitlint/config-conventional": "^19.8.0",
+    "@ianvs/prettier-plugin-sort-imports": "^4.4.1",
+    "@types/debug": "^4.1.12",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "bumpp": "^10.1.0",
+    "bunup": "^0.3.15",
+    "chalk": "^5.4.1",
+    "debug": "^4.4.0",
+    "eslint": "^8.57.1",
+    "husky": "^9.1.7",
+    "openapi-typescript": "^7.6.1",
+    "ora": "^8.2.0",
+    "path": "^0.12.7",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.2"
   },
   "keywords": [
     "cortex",
@@ -50,8 +55,8 @@
     "access": "public"
   },
   "dependencies": {
-    "eventsource-parser": "^3.0.0",
-    "openapi-fetch": "^0.13.0",
+    "eventsource-parser": "^3.0.1",
+    "openapi-fetch": "^0.13.5",
     "openapi-typescript-helpers": "^0.0.15"
   }
 }

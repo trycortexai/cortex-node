@@ -1,12 +1,18 @@
-import {APP_LESS_PARAM} from '../constants/api';
-import {STREAM_PARSERS} from '../constants/stream';
-import {APIMethodRequest, APIMethods, createAPI} from '../generated/openapi';
-import {APIFetchClient, ClientOptions, ErrorResponse} from '../types/api';
-import {createAPIFetchClient, readSSE} from '../utils/api';
-import {getObjectProperty} from '../utils/object';
-import {CortexAPIError} from './CortexAPIError';
-import {HttpStream} from './HttpStream';
+import {APP_LESS_PARAM, STREAM_PARSERS} from '../constants';
+import {CortexError} from '../errors';
+import {createAPIFetchClient, readSSE} from '../fetch';
+import {APIMethodRequest, APIMethods, createAPI} from '../openapi';
+import {HttpStream} from '../stream';
+import {APIFetchClient, ClientOptions} from '../types';
+import {getObjectProperty} from '../utils';
 
+/**
+ * Cortex API client
+ * @example
+ * ```ts
+ * const cortex = new Cortex({apiKey: 'your-api-key'});
+ * ```
+ */
 export class Cortex {
   private readonly apiMethods: APIMethods;
   private readonly apiKey: string;
@@ -21,7 +27,7 @@ export class Cortex {
     this.apiKey = apiKey;
 
     if (!this.apiKey) {
-      throw new Error('API Key is required');
+      throw new CortexError('API Key is required');
     }
 
     const isCredentialsSupported = 'credentials' in Request.prototype;
@@ -71,11 +77,11 @@ export class Cortex {
       : null;
 
     if (isStream && isPagination) {
-      throw new Error('Pagination is not supported with stream');
+      throw new CortexError('Pagination is not supported with stream');
     }
 
     if (isStream && !streamParser) {
-      throw new Error(`Stream is yet available for ${endpoint}`);
+      throw new CortexError(`Stream is yet available for ${endpoint}`);
     }
 
     const requestParams = {
@@ -107,7 +113,7 @@ export class Cortex {
     ) as (...args: unknown[]) => Promise<unknown>;
 
     if (!method) {
-      throw new Error(`Method ${method} not found for ${endpoint}`);
+      throw new CortexError(`Method ${method} not found for ${endpoint}`);
     }
 
     const result = await clientMethod(endpoint, requestParams);
@@ -119,7 +125,7 @@ export class Cortex {
       };
 
       if (error) {
-        throw new CortexAPIError(error as ErrorResponse);
+        throw new CortexError(error);
       }
 
       let resultStream: unknown = null;
@@ -127,7 +133,7 @@ export class Cortex {
 
       const sse = readSSE(response, (event, data) => {
         if (!event) {
-          throw new Error(`Event is missing in stream for ${endpoint}`);
+          throw new CortexError(`Event is missing in stream for ${endpoint}`);
         }
 
         httpStream?.writeSSE({

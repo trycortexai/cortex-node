@@ -1,7 +1,7 @@
 import {
   Cortex,
   type CastRunStepOutputSchema,
-  type StepModelOutputSchema,
+  type Schema,
 } from '@cortex-ai/sdk';
 
 export const stepStreamResponse = async (cortex: Cortex) => {
@@ -26,7 +26,7 @@ export const stepStreamResponse = async (cortex: Cortex) => {
       {
         onStream: (partial, event) => {
           const stepOutput = partial.output as
-            | StepModelOutputSchema
+            | Schema['StepModelOutputSchema']
             | undefined;
 
           console.log(event, stepOutput?.message);
@@ -55,8 +55,9 @@ export const worklflowStreamResponse = async (
       },
       {
         onStream: (partial, event) => {
-          const stepOutput = partial.output
-            ?.MODEL as CastRunStepOutputSchema<StepModelOutputSchema>;
+          const stepOutput = partial.output?.MODEL as CastRunStepOutputSchema<
+            Schema['StepModelOutputSchema']
+          >;
 
           console.log(event, stepOutput?.output?.message);
         },

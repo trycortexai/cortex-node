@@ -10,6 +10,8 @@ import openapiTS, {
 } from 'openapi-typescript';
 import ts from 'typescript';
 
+import {setObjectProperty} from '../utils';
+
 export const generateTypes = async (schema: string) => {
   const STRING = ts.factory.createTypeReferenceNode(
     ts.factory.createIdentifier('string'),
@@ -43,38 +45,11 @@ export const generateTypes = async (schema: string) => {
 
   let template = astToString(ast);
 
-  template = template.replaceAll('export type Schema', 'export type ');
+  template = convertPathsAndComponentsToPascalCase(
+    template.replaceAll('export type Schema', 'export type '),
+  );
 
   return template;
-};
-
-const setObjectProperty = <T>(obj: T, path: string, value: unknown): T => {
-  const parts = path.split('.');
-  const len = parts.length;
-
-  let lastValue = obj as Record<string, unknown>;
-
-  for (let i = 0; i < len; i++) {
-    const isLastPart = i === len - 1;
-    const currentPart = parts[i];
-
-    if (isLastPart) {
-      lastValue[currentPart] = value;
-    } else {
-      if (!(currentPart in lastValue)) {
-        lastValue[currentPart] = {};
-      } else if (
-        typeof lastValue[currentPart] !== 'object' ||
-        lastValue[currentPart] === null
-      ) {
-        lastValue[currentPart] = {};
-      }
-
-      lastValue = lastValue[currentPart] as Record<string, unknown>;
-    }
-  }
-
-  return obj as T;
 };
 
 type MethodOptions = {
@@ -111,27 +86,16 @@ const cleanPathUrl = (path: string) => {
     .join('.');
 };
 
-/* 
-/apps/{app_id}/files
-/apps/{app_id}/files/{file_id}
-/apps/{app_id}/files/{file_id}/cancel
-*/
 export const generateAPIMethods = (schema: OpenAPI3): string => {
   const allMethods: Map<string, MethodOptions> = new Map();
 
   const allPaths = new Map(Object.entries(schema.paths ?? {}));
 
   allPaths.forEach((methods, endpoint) => {
-    /* if (endpoint !== '/apps/{app_id}/workflows/{workflow_id}/runs') {
-      return;
-    } */
-
     Object.entries(methods).forEach(([method, details]) => {
       const apiMethod = buildAPIMethodObject(schema, endpoint, method, details);
 
       const methodsToPush = [apiMethod];
-
-      //
 
       if (apiMethod.stream) {
         apiMethod.stream = false;
@@ -153,8 +117,6 @@ export const generateAPIMethods = (schema: OpenAPI3): string => {
           stream: true,
         });
       }
-
-      //
 
       methodsToPush.forEach(apiMethod => {
         const matchingPaths = [...allPaths.keys()].filter(
@@ -194,7 +156,7 @@ const buildAPIMethodObject = (
 
   const methodName = isPaginationSupported
     ? 'list'
-    : (METHOD_TO_NAME[method] ?? method);
+    : (METHOD_TO_NAME[method as keyof typeof METHOD_TO_NAME] ?? method);
 
   const methodParameters = (parameters as ParameterObject[])
     ?.filter(e => e.in === 'path')
@@ -214,18 +176,18 @@ const buildAPIMethodObject = (
     stream: isStreamingSupported(schema, requestBody),
     body: requestBody ? getBodyType(requestBody) : undefined,
     query: hasAnyQueryParameters
-      ? `paths['${endpoint}']['${method}']['parameters']['query']`
+      ? `Paths['${endpoint}']['${method}']['parameters']['query']`
       : undefined,
     parameters: Object.fromEntries(methodParameters),
     returns: isPaginationSupported
       ? `{
-  data: ${responseType};
-  pagination: {
-    page: number;
-    take: number;
-    count: number;
-  };
-}`
+      data: ${responseType};
+      pagination: {
+        page: number;
+        take: number;
+        count: number;
+      };
+    }`
       : responseType,
   };
 
@@ -393,8 +355,11 @@ const createMethod = ({
 
   const allParameters = [...params];
 
+  const isBodyRequired =
+    body && !body.includes('?:') && !body.startsWith('Omit<');
+
   if (body) {
-    allParameters.push(['body', body]);
+    allParameters.push([isBodyRequired ? 'body' : 'body?', body]);
   }
 
   const options: [string, string][] = [];
@@ -422,12 +387,12 @@ const createMethod = ({
   const parsedMethod = `(${allParameters
     .map(([key, value]) => `${convertToCamelCase(key)}: ${value}`)
     .join(', ')}): Promise<${finalReturns ?? returns}> => {
-  return callAPI(${encodeParam(name)}, {
-    method: ${encodeParam(method)},
-    endpoint: ${encodeParam(endpoint)},
-    ${paramsString}${body ? `body,` : ''}options,
-  }) as Promise<${finalReturns ?? returns}>;
-}`;
+      return callAPI(${encodeParam(name)}, {
+        method: ${encodeParam(method)},
+        endpoint: ${encodeParam(endpoint)},
+        ${paramsString}${body ? `body,` : ''}options,
+      }) as Promise<${finalReturns ?? returns}>;
+    }`;
 
   return parsedMethod;
 };
@@ -459,17 +424,23 @@ export const methodsToString = (
   });
 
   const finalTemplate = `export type APIMethodRequest = {
-  method: string;
-  endpoint: string;
-  params?: Record<string, unknown>;
-  body?: unknown;
-  options?: RequestInit & {
-    query?: Record<string, unknown>;
-    onStream?: (partialResult: any, event: unknown, data: unknown) => void;
-  }
-};
-export type APIMethods = ReturnType<typeof createAPI>;
-export const createAPI = (callAPI: (name: string, request: APIMethodRequest) => unknown) => (${template});`;
+      method: string;
+      endpoint: string;
+      params?: Record<string, unknown>;
+      body?: unknown;
+      options?: RequestInit & {
+        query?: Record<string, unknown>;
+        onStream?: (partialResult: any, event: unknown, data: unknown) => void;
+      }
+    };
+    export type APIMethods = ReturnType<typeof createAPI>;
+    export const createAPI = (callAPI: (name: string, request: APIMethodRequest) => unknown) => (${template});`;
 
-  return finalTemplate;
+  return convertPathsAndComponentsToPascalCase(finalTemplate);
+};
+
+const convertPathsAndComponentsToPascalCase = (str: string) => {
+  return str
+    .replaceAll('paths', 'Paths')
+    .replaceAll('components', 'Components');
 };

@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es2020",
+    "target": "es2021",
     "module": "esnext",
     "strict": true,
     "esModuleInterop": true,
@@ -13,6 +13,6 @@
     "outDir": "dist",
     "resolveJsonModule": true
   },
-  "include": ["src", "examples", "tsup.config.ts"],
+  "include": ["src", "examples", "bunup.config.ts", "bump.config.ts"],
   "exclude": ["node_modules", "build"]
 }

@@ -1,6 +1,9 @@
-import {paths, RunOutputSchema, RunSchema} from '../generated/openapi';
-import {CastRunStepOutputSchema} from '../types/runs';
-import {handleStepStream} from '../utils/runs';
+import {Paths, RunOutputSchema, RunSchema} from './openapi';
+import {handleStepStream} from './stream';
+import {CastRunStepOutputSchema} from './types';
+
+export const APP_LESS_PARAM = 'c';
+export const CORTEX_API_URL = 'https://api.withcortex.ai';
 
 export const STREAM_PARSERS = {
   '/apps/{app_id}/workflows/{workflow_id}/runs': (
@@ -66,7 +69,7 @@ export const STREAM_PARSERS = {
     return step;
   },
 } satisfies Partial<
-  Record<keyof paths, (current: any, event: any, data: any) => void>
+  Record<keyof Paths, (current: any, event: any, data: any) => void>
 >;
 
 export const STREAM_PARSERS_TYPES = {

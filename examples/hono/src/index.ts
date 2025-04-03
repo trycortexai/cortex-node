@@ -13,14 +13,13 @@ const PORT = 8085;
 const app = new Hono();
 
 const createCortex = (ctx: Context) => {
-  const {CORTEX_API_KEY, BASE_URL} = env<{
+  const {CORTEX_API_KEY} = env<{
     CORTEX_API_KEY: string;
-    BASE_URL: string;
   }>(ctx);
 
   const cortex = new Cortex({
     apiKey: CORTEX_API_KEY,
-    baseUrl: BASE_URL,
+    baseUrl: 'https://api.dev.withcortex.ai',
   });
 
   return cortex;
@@ -54,6 +53,18 @@ app.get('/stream/workflow', async ctx => {
   }
 
   return ctx.text(response);
+});
+
+app.get('/model-calls', async ctx => {
+  const {WORKFLOW_ID} = env<{WORKFLOW_ID: string}>(ctx);
+
+  const cortex = createCortex(ctx);
+
+  const result = await cortex.apps.workflows.runs.create(WORKFLOW_ID);
+
+  console.log('run finished', result);
+
+  return ctx.json(result);
 });
 
 console.log(`Server is running on http://localhost:${PORT}`);

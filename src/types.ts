@@ -8,8 +8,8 @@ import {
   RequiredKeysOf,
 } from 'openapi-typescript-helpers';
 
-import {paths} from '../generated/openapi';
-import {createAPIFetchClient} from '../utils/api';
+import {createAPIFetchClient} from './fetch';
+import {Paths, RunStepOutputSchema} from './openapi';
 
 export type APIFetchClient = ReturnType<typeof createAPIFetchClient>;
 export type APIFetchClientOptions = FetchClientOptions;
@@ -18,7 +18,7 @@ export type ClientOptions = APIFetchClientOptions & {
   apiKey: string;
 };
 
-export type ApiUrl = PathsWithMethod<paths, 'get'>;
+export type ApiUrl = PathsWithMethod<Paths, 'get'>;
 
 type InitParam<Init> =
   RequiredKeysOf<Init> extends never
@@ -26,9 +26,9 @@ type InitParam<Init> =
     : [Init & {[key: string]: unknown}];
 
 export type EndpointParams<
-  Path extends keyof paths,
+  Path extends keyof Paths,
   Method extends HttpMethod,
-> = InitParam<MaybeOptionalInit<paths[Path], Method>>;
+> = InitParam<MaybeOptionalInit<Paths[Path], Method>>;
 
 export type ErrorItem = {
   validation: string;
@@ -55,4 +55,16 @@ export type PaginationResult<D = unknown> = {
     take: number;
     count: number;
   };
+};
+
+/**
+ * Casted run step output schema with generic output type.
+ * @template T Output type (default: unknown)
+ * @example `CastRunStepOutputSchema<StepModelOutputSchema>`
+ */
+export type CastRunStepOutputSchema<T = unknown> = Omit<
+  RunStepOutputSchema,
+  'output'
+> & {
+  output: T;
 };

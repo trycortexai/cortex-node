@@ -2,15 +2,64 @@ import {createParser} from 'eventsource-parser';
 import createClient, {ClientOptions} from 'openapi-fetch';
 import type {PathsWithMethod} from 'openapi-typescript-helpers';
 
-import {CortexAPIError} from '../classes/CortexAPIError';
-import {API_ENDPOINT} from '../constants/api';
-import type {paths} from '../generated/openapi';
-import {EndpointParams, ErrorResponse, PaginationResult} from '../types/api';
+import {CORTEX_API_URL} from './constants';
+import {CortexError} from './errors';
+import {logger} from './logger';
+import type {Paths} from './openapi';
+import {EndpointParams, ErrorResponse, PaginationResult} from './types';
 
-export const createAPIFetchClient = (options: ClientOptions) => {
-  const CLIENT = createClient<paths>({
+export type APIFetchClient = {
+  CLIENT: ReturnType<typeof createClient<Paths>>;
+  GET: <
+    Path extends PathsWithMethod<Paths, 'get'>,
+    Init extends EndpointParams<Path, 'get'>,
+  >(
+    path: Path,
+    ...init: Init
+  ) => Promise<NonNullable<any>>;
+  POST: <
+    Path extends PathsWithMethod<Paths, 'post'>,
+    Init extends EndpointParams<Path, 'post'>,
+  >(
+    path: Path,
+    ...init: Init
+  ) => Promise<NonNullable<any>>;
+  PUT: <
+    Path extends PathsWithMethod<Paths, 'put'>,
+    Init extends EndpointParams<Path, 'put'>,
+  >(
+    path: Path,
+    ...init: Init
+  ) => Promise<NonNullable<any>>;
+  DELETE: <
+    Path extends PathsWithMethod<Paths, 'delete'>,
+    Init extends EndpointParams<Path, 'delete'>,
+  >(
+    path: Path,
+    ...init: Init
+  ) => Promise<NonNullable<any>>;
+  PATCH: <
+    Path extends PathsWithMethod<Paths, 'patch'>,
+    Init extends EndpointParams<Path, 'patch'>,
+  >(
+    path: Path,
+    ...init: Init
+  ) => Promise<NonNullable<any>>;
+  GETPaged: <
+    Path extends PathsWithMethod<Paths, 'get'>,
+    Init extends EndpointParams<Path, 'get'>,
+  >(
+    path: Path,
+    ...init: Init
+  ) => Promise<PaginationResult<NonNullable<any>>>;
+};
+
+export const createAPIFetchClient = (
+  options: ClientOptions,
+): APIFetchClient => {
+  const CLIENT = createClient<Paths>({
     credentials: 'include',
-    baseUrl: API_ENDPOINT,
+    baseUrl: CORTEX_API_URL,
     bodySerializer: body => {
       if (!body) return;
 
@@ -60,7 +109,7 @@ export const createAPIFetchClient = (options: ClientOptions) => {
   });
 
   const GET = async <
-    Path extends PathsWithMethod<paths, 'get'>,
+    Path extends PathsWithMethod<Paths, 'get'>,
     Init extends EndpointParams<Path, 'get'>,
   >(
     path: Path,
@@ -68,13 +117,13 @@ export const createAPIFetchClient = (options: ClientOptions) => {
   ) => {
     const {data, error} = await CLIENT.GET(path, ...init);
 
-    if (error) throw new CortexAPIError(error as unknown as ErrorResponse);
+    if (error) throw new CortexError(error as unknown as ErrorResponse);
 
     return data as NonNullable<typeof data>;
   };
 
   const POST = async <
-    Path extends PathsWithMethod<paths, 'post'>,
+    Path extends PathsWithMethod<Paths, 'post'>,
     Init extends EndpointParams<Path, 'post'>,
   >(
     path: Path,
@@ -82,13 +131,13 @@ export const createAPIFetchClient = (options: ClientOptions) => {
   ) => {
     const {data, error} = await CLIENT.POST(path, ...init);
 
-    if (error) throw new CortexAPIError(error as unknown as ErrorResponse);
+    if (error) throw new CortexError(error as unknown as ErrorResponse);
 
     return data as NonNullable<typeof data>;
   };
 
   const PUT = async <
-    Path extends PathsWithMethod<paths, 'put'>,
+    Path extends PathsWithMethod<Paths, 'put'>,
     Init extends EndpointParams<Path, 'put'>,
   >(
     path: Path,
@@ -96,13 +145,13 @@ export const createAPIFetchClient = (options: ClientOptions) => {
   ) => {
     const {data, error} = await CLIENT.PUT(path, ...init);
 
-    if (error) throw new CortexAPIError(error as unknown as ErrorResponse);
+    if (error) throw new CortexError(error as unknown as ErrorResponse);
 
     return data as NonNullable<typeof data>;
   };
 
   const DELETE = async <
-    Path extends PathsWithMethod<paths, 'delete'>,
+    Path extends PathsWithMethod<Paths, 'delete'>,
     Init extends EndpointParams<Path, 'delete'>,
   >(
     path: Path,
@@ -110,13 +159,13 @@ export const createAPIFetchClient = (options: ClientOptions) => {
   ) => {
     const {data, error} = await CLIENT.DELETE(path, ...init);
 
-    if (error) throw new CortexAPIError(error as unknown as ErrorResponse);
+    if (error) throw new CortexError(error as unknown as ErrorResponse);
 
     return data as NonNullable<typeof data>;
   };
 
   const PATCH = async <
-    Path extends PathsWithMethod<paths, 'patch'>,
+    Path extends PathsWithMethod<Paths, 'patch'>,
     Init extends EndpointParams<Path, 'patch'>,
   >(
     path: Path,
@@ -124,13 +173,13 @@ export const createAPIFetchClient = (options: ClientOptions) => {
   ) => {
     const {data, error} = await CLIENT.PATCH(path, ...init);
 
-    if (error) throw new CortexAPIError(error as unknown as ErrorResponse);
+    if (error) throw new CortexError(error as unknown as ErrorResponse);
 
     return data as NonNullable<typeof data>;
   };
 
   const GETPaged = async <
-    Path extends PathsWithMethod<paths, 'get'>,
+    Path extends PathsWithMethod<Paths, 'get'>,
     Init extends EndpointParams<Path, 'get'> = EndpointParams<Path, 'get'>,
   >(
     path: Path,
@@ -138,7 +187,7 @@ export const createAPIFetchClient = (options: ClientOptions) => {
   ) => {
     const {data, error, response} = await CLIENT.GET(path, ...init);
 
-    if (error) throw new CortexAPIError(error as unknown as ErrorResponse);
+    if (error) throw new CortexError(error as unknown as ErrorResponse);
 
     return {
       data: data as NonNullable<typeof data>,
@@ -164,7 +213,7 @@ export const createAPIFetchClient = (options: ClientOptions) => {
 export const readSSE = async (
   response: Response,
   onData: (eventId: string | undefined, response: unknown) => void,
-) => {
+): Promise<void> => {
   const decoder = new TextDecoder();
 
   const parser = createParser({
@@ -172,12 +221,12 @@ export const readSSE = async (
       onData(event.event ?? 'unknown', JSON.parse(event.data));
     },
     onRetry: retry => {
-      console.log('reconnect interval %d ms', retry);
+      logger.warn('reconnect interval %d ms', retry);
     },
   });
 
   if (!response.body) {
-    throw new CortexAPIError({
+    throw new CortexError({
       status: 0,
       message: 'No stream response body',
     });
