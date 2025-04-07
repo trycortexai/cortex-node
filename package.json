@@ -31,12 +31,14 @@
     "@types/debug": "^4.1.12",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "bumpp": "^10.1.0",
-    "bunup": "^0.3.15",
+    "bunup": "^0.3.55",
     "chalk": "^5.4.1",
     "debug": "^4.4.0",
     "eslint": "^8.57.1",
     "husky": "^9.1.7",
+    "openapi-fetch": "^0.13.5",
     "openapi-typescript": "^7.6.1",
+    "openapi-typescript-helpers": "^0.0.15",
     "ora": "^8.2.0",
     "path": "^0.12.7",
     "prettier": "^3.5.3",
@@ -56,8 +58,6 @@
     "access": "public"
   },
   "dependencies": {
-    "eventsource-parser": "^3.0.1",
-    "openapi-fetch": "^0.13.5",
-    "openapi-typescript-helpers": "^0.0.15"
+    "eventsource-parser": "^3.0.1"
   }
 }
