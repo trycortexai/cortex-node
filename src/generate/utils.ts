@@ -59,6 +59,7 @@ type MethodOptions = {
   stream: boolean;
   parameters: Record<string, string>;
   body?: string;
+  bodyRequired?: boolean;
   query?: string;
   returns: string;
   finalReturns?: string;
@@ -119,16 +120,6 @@ export const generateAPIMethods = (schema: OpenAPI3): string => {
       }
 
       methodsToPush.forEach(apiMethod => {
-        const matchingPaths = [...allPaths.keys()].filter(
-          path => path !== endpoint && path.startsWith(endpoint),
-        );
-
-        if (methodsToPush.length === 1 && !matchingPaths.length) {
-          const fullPath = `${cleanPathUrl(endpoint)}`;
-          allMethods.set(fullPath, apiMethod);
-          return;
-        }
-
         const fullPath = `${cleanPathUrl(endpoint)}.${apiMethod.name}`;
         allMethods.set(fullPath, apiMethod);
       });
@@ -168,13 +159,16 @@ const buildAPIMethodObject = (
   );
 
   const responseType = getResponseType(responses);
+  const bodyType = requestBody ? getBodyType(requestBody) : undefined;
+  const isBodyRequired = isBodySchemaRequired(schema, requestBody);
 
   const apiMethod: MethodOptions = {
     name: methodName,
     method,
     endpoint,
     stream: isStreamingSupported(schema, requestBody),
-    body: requestBody ? getBodyType(requestBody) : undefined,
+    body: bodyType,
+    bodyRequired: isBodyRequired,
     query: hasAnyQueryParameters
       ? `Paths['${endpoint}']['${method}']['parameters']['query']`
       : undefined,
@@ -280,6 +274,45 @@ const getBodyType = (requestBody: RequestBodyObject | ReferenceObject) => {
   throw new Error(`Unsupported body type: ${JSON.stringify(requestBody)}`);
 };
 
+const isBodySchemaRequired = (
+  schema: OpenAPI3,
+  requestBody: RequestBodyObject | ReferenceObject | undefined,
+): boolean => {
+  if (!requestBody) {
+    return false;
+  }
+  if ('required' in requestBody && requestBody.required === false) {
+    return false;
+  }
+  
+  if (isReferenceObject(requestBody)) {
+    const schemaObj = getSchemaObjectFromRef(schema, requestBody.$ref);
+    if (!schemaObj) return true;
+    
+    if (schemaObj && 'properties' in schemaObj && 
+        (!schemaObj.required || schemaObj.required.length === 0)) {
+      return false;
+    }
+    return true;
+  }
+  
+  const content = requestBody.content?.['application/json'];
+  if (!content) return false;
+  
+  if ('schema' in content && isReferenceObject(content.schema)) {
+    const schemaObj = getSchemaObjectFromRef(schema, content.schema.$ref);
+    if (!schemaObj) return true;
+    
+    if (schemaObj && 'properties' in schemaObj && 
+        (!schemaObj.required || schemaObj.required.length === 0)) {
+      return false;
+    }
+    return true;
+  }
+  
+  return true;
+};
+
 const getResponseType = (responses: ResponsesObject | undefined) => {
   const okResponse = responses?.['200'];
   if (!okResponse || !('content' in okResponse)) {
@@ -347,6 +380,7 @@ const createMethod = ({
   parameters,
   query,
   body,
+  bodyRequired,
   stream,
   returns,
   finalReturns,
@@ -355,11 +389,8 @@ const createMethod = ({
 
   const allParameters = [...params];
 
-  const isBodyRequired =
-    body && !body.includes('?:') && !body.startsWith('Omit<');
-
   if (body) {
-    allParameters.push([isBodyRequired ? 'body' : 'body?', body]);
+    allParameters.push([bodyRequired ? 'body' : 'body?', body]);
   }
 
   const options: [string, string][] = [];
