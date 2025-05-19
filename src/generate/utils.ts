@@ -86,16 +86,27 @@ const cleanPathUrl = (path: string) => {
     .join('.');
 };
 
+/*
+/apps/{app_id}/files
+/apps/{app_id}/files/{file_id}
+/apps/{app_id}/files/{file_id}/cancel
+*/
 export const generateAPIMethods = (schema: OpenAPI3): string => {
   const allMethods: Map<string, MethodOptions> = new Map();
 
   const allPaths = new Map(Object.entries(schema.paths ?? {}));
 
   allPaths.forEach((methods, endpoint) => {
+    /* if (endpoint !== '/apps/{app_id}/workflows/{workflow_id}/runs') {
+      return;
+    } */
+
     Object.entries(methods).forEach(([method, details]) => {
       const apiMethod = buildAPIMethodObject(schema, endpoint, method, details);
 
       const methodsToPush = [apiMethod];
+
+      //
 
       if (apiMethod.stream) {
         apiMethod.stream = false;
@@ -118,9 +129,13 @@ export const generateAPIMethods = (schema: OpenAPI3): string => {
         });
       }
 
+      //
+
       methodsToPush.forEach(apiMethod => {
-        const matchingPaths = [...allPaths.keys()].filter(
-          path => path !== endpoint && path.startsWith(endpoint),
+        const matchingPaths = [...allPaths.entries()].filter(
+          ([path, item]) =>
+            (path === endpoint && Object.keys(item).length > 1) ||
+            (path !== endpoint && path.startsWith(endpoint)),
         );
 
         if (methodsToPush.length === 1 && !matchingPaths.length) {
