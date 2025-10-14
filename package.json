@@ -17,6 +17,7 @@
     "./package.json": "./package.json"
   },
   "license": "MIT",
+  "packageManager": "pnpm@9.15.9",
   "scripts": {
     "build": "bunup --dts.resolve --exports --target browser",
     "dev": "pnpm build --watch",
