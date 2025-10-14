@@ -14,8 +14,102 @@ export type APIMethods = ReturnType<typeof createAPI>;
 export const createAPI = (
   callAPI: (name: string, request: APIMethodRequest) => unknown,
 ) => ({
+  public: {
+    apps: {
+      files: {
+        uploads: {
+          create: (
+            fileUploadId: string,
+            body?: UploadAppFileSchema,
+            options?: RequestInit,
+          ): Promise<AppFileSchema> => {
+            return callAPI('create', {
+              method: 'post',
+              endpoint: '/public/apps/files/uploads/{file_upload_id}',
+              params: {file_upload_id: fileUploadId},
+              body,
+              options,
+            }) as Promise<AppFileSchema>;
+          },
+        },
+      },
+    },
+  },
   apps: {
     files: {
+      uploads: {
+        list: (
+          options?: RequestInit & {
+            query?: Paths['/apps/{app_id}/files/uploads']['get']['parameters']['query'];
+          },
+        ): Promise<{
+          data: AppFileUploadSchema[];
+          pagination: {
+            page: number;
+            take: number;
+            count: number;
+          };
+        }> => {
+          return callAPI('list', {
+            method: 'get',
+            endpoint: '/apps/{app_id}/files/uploads',
+            options,
+          }) as Promise<{
+            data: AppFileUploadSchema[];
+            pagination: {
+              page: number;
+              take: number;
+              count: number;
+            };
+          }>;
+        },
+        create: (
+          body?: CreateAppFileUploadSchema,
+          options?: RequestInit,
+        ): Promise<AppFileUploadSchema> => {
+          return callAPI('create', {
+            method: 'post',
+            endpoint: '/apps/{app_id}/files/uploads',
+            body,
+            options,
+          }) as Promise<AppFileUploadSchema>;
+        },
+        retrieve: (
+          fileUploadId: string,
+          options?: RequestInit,
+        ): Promise<AppFileUploadSchema> => {
+          return callAPI('retrieve', {
+            method: 'get',
+            endpoint: '/apps/{app_id}/files/uploads/{file_upload_id}',
+            params: {file_upload_id: fileUploadId},
+            options,
+          }) as Promise<AppFileUploadSchema>;
+        },
+        update: (
+          fileUploadId: string,
+          body?: UpdateAppFileUploadSchema,
+          options?: RequestInit,
+        ): Promise<AppFileUploadSchema> => {
+          return callAPI('update', {
+            method: 'patch',
+            endpoint: '/apps/{app_id}/files/uploads/{file_upload_id}',
+            params: {file_upload_id: fileUploadId},
+            body,
+            options,
+          }) as Promise<AppFileUploadSchema>;
+        },
+        delete: (
+          fileUploadId: string,
+          options?: RequestInit,
+        ): Promise<void> => {
+          return callAPI('delete', {
+            method: 'delete',
+            endpoint: '/apps/{app_id}/files/uploads/{file_upload_id}',
+            params: {file_upload_id: fileUploadId},
+            options,
+          }) as Promise<void>;
+        },
+      },
       list: (
         options?: RequestInit & {
           query?: Paths['/apps/{app_id}/files']['get']['parameters']['query'];
@@ -42,7 +136,7 @@ export const createAPI = (
         }>;
       },
       create: (
-        body: CreateAppFileSchema,
+        body?: CreateAppFileSchema,
         options?: RequestInit,
       ): Promise<AppFileSchema> => {
         return callAPI('create', {
@@ -71,30 +165,85 @@ export const createAPI = (
           options,
         }) as Promise<void>;
       },
-      cancel: (
-        fileId: string,
-        options?: RequestInit,
-      ): Promise<AppFileSchema> => {
-        return callAPI('create', {
-          method: 'post',
-          endpoint: '/apps/{app_id}/files/{file_id}/cancel',
-          params: {file_id: fileId},
-          options,
-        }) as Promise<AppFileSchema>;
+      cancel: {
+        create: (
+          fileId: string,
+          options?: RequestInit,
+        ): Promise<AppFileSchema> => {
+          return callAPI('create', {
+            method: 'post',
+            endpoint: '/apps/{app_id}/files/{file_id}/cancel',
+            params: {file_id: fileId},
+            options,
+          }) as Promise<AppFileSchema>;
+        },
       },
     },
-    variables: (key: string, options?: RequestInit): Promise<void> => {
-      return callAPI('delete', {
-        method: 'delete',
-        endpoint: '/apps/{app_id}/variables/{key}',
-        params: {key: key},
-        options,
-      }) as Promise<void>;
+    variables: {
+      list: (
+        body: AppVariableSchema[],
+        options?: RequestInit & {
+          query?: Paths['/apps/{app_id}/variables']['patch']['parameters']['query'];
+        },
+      ): Promise<{
+        data: AppVariableSchema[];
+        pagination: {
+          page: number;
+          take: number;
+          count: number;
+        };
+      }> => {
+        return callAPI('list', {
+          method: 'patch',
+          endpoint: '/apps/{app_id}/variables',
+          body,
+          options,
+        }) as Promise<{
+          data: AppVariableSchema[];
+          pagination: {
+            page: number;
+            take: number;
+            count: number;
+          };
+        }>;
+      },
+      create: (
+        body: CreateAppVariableSchema,
+        options?: RequestInit,
+      ): Promise<AppVariableSchema> => {
+        return callAPI('create', {
+          method: 'post',
+          endpoint: '/apps/{app_id}/variables',
+          body,
+          options,
+        }) as Promise<AppVariableSchema>;
+      },
+      update: (
+        key: string,
+        body?: UpdateAppVariableSchema,
+        options?: RequestInit,
+      ): Promise<AppVariableSchema> => {
+        return callAPI('update', {
+          method: 'patch',
+          endpoint: '/apps/{app_id}/variables/{key}',
+          params: {key: key},
+          body,
+          options,
+        }) as Promise<AppVariableSchema>;
+      },
+      delete: (key: string, options?: RequestInit): Promise<void> => {
+        return callAPI('delete', {
+          method: 'delete',
+          endpoint: '/apps/{app_id}/variables/{key}',
+          params: {key: key},
+          options,
+        }) as Promise<void>;
+      },
     },
     runs: {
       step: {
         create: (
-          body?: Omit<CreateRunStepSchema, 'stream'>,
+          body: Omit<CreateRunStepSchema, 'stream'>,
           options?: RequestInit,
         ): Promise<RunStepSchema> => {
           return callAPI('create', {
@@ -105,7 +254,7 @@ export const createAPI = (
           }) as Promise<RunStepSchema>;
         },
         stream: (
-          body?: Omit<CreateRunStepSchema, 'stream'>,
+          body: Omit<CreateRunStepSchema, 'stream'>,
           options?: RequestInit & {
             onStream?: (
               partialResult: RunStepSchema,
@@ -122,7 +271,7 @@ export const createAPI = (
           }) as Promise<RunStepSchema>;
         },
         streamResponse: (
-          body?: Omit<CreateRunStepSchema, 'stream'>,
+          body: Omit<CreateRunStepSchema, 'stream'>,
           options?: RequestInit & {
             onStream?: (
               partialResult: RunStepSchema,
@@ -178,21 +327,23 @@ export const createAPI = (
             options,
           }) as Promise<WorkflowSchema>;
         },
-        versions: (
-          workflowId: string,
-          versionIdOrVersionNumber: string,
-          options?: RequestInit,
-        ): Promise<WorkflowVersionSchema> => {
-          return callAPI('retrieve', {
-            method: 'get',
-            endpoint:
-              '/apps/{app_id}/workflows/discover/{workflow_id}/versions/{version_id_or_version_number}',
-            params: {
-              workflow_id: workflowId,
-              version_id_or_version_number: versionIdOrVersionNumber,
-            },
-            options,
-          }) as Promise<WorkflowVersionSchema>;
+        versions: {
+          retrieve: (
+            workflowId: string,
+            versionIdOrVersionNumber: string,
+            options?: RequestInit,
+          ): Promise<WorkflowVersionSchema> => {
+            return callAPI('retrieve', {
+              method: 'get',
+              endpoint:
+                '/apps/{app_id}/workflows/discover/{workflow_id}/versions/{version_id_or_version_number}',
+              params: {
+                workflow_id: workflowId,
+                version_id_or_version_number: versionIdOrVersionNumber,
+              },
+              options,
+            }) as Promise<WorkflowVersionSchema>;
+          },
         },
         runs: {
           create: (
@@ -250,20 +401,22 @@ export const createAPI = (
               options,
             }) as Promise<Response>;
           },
-          cancel: (
-            workflowId: string,
-            runId: string,
-            options?: RequestInit & {
-              query?: Paths['/apps/{app_id}/workflows/discover/{workflow_id}/runs/{run_id}/cancel']['post']['parameters']['query'];
+          cancel: {
+            create: (
+              workflowId: string,
+              runId: string,
+              options?: RequestInit & {
+                query?: Paths['/apps/{app_id}/workflows/discover/{workflow_id}/runs/{run_id}/cancel']['post']['parameters']['query'];
+              },
+            ): Promise<RunSchema> => {
+              return callAPI('create', {
+                method: 'post',
+                endpoint:
+                  '/apps/{app_id}/workflows/discover/{workflow_id}/runs/{run_id}/cancel',
+                params: {workflow_id: workflowId, run_id: runId},
+                options,
+              }) as Promise<RunSchema>;
             },
-          ): Promise<RunSchema> => {
-            return callAPI('create', {
-              method: 'post',
-              endpoint:
-                '/apps/{app_id}/workflows/discover/{workflow_id}/runs/{run_id}/cancel',
-              params: {workflow_id: workflowId, run_id: runId},
-              options,
-            }) as Promise<RunSchema>;
           },
         },
       },
@@ -386,11 +539,25 @@ export const createAPI = (
             options,
           }) as Promise<Response>;
         },
+        retrieve: (
+          workflowId: string,
+          runId: string,
+          options?: RequestInit & {
+            query?: Paths['/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}']['get']['parameters']['query'];
+          },
+        ): Promise<RunSchema> => {
+          return callAPI('retrieve', {
+            method: 'get',
+            endpoint: '/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}',
+            params: {workflow_id: workflowId, run_id: runId},
+            options,
+          }) as Promise<RunSchema>;
+        },
         replay: {
           create: (
             workflowId: string,
             runId: string,
-            body?: Omit<ReplayRunSchema, 'stream'>,
+            body: Omit<ReplayRunSchema, 'stream'>,
             options?: RequestInit & {
               query?: Paths['/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/replay']['post']['parameters']['query'];
             },
@@ -407,7 +574,7 @@ export const createAPI = (
           stream: (
             workflowId: string,
             runId: string,
-            body?: Omit<ReplayRunSchema, 'stream'>,
+            body: Omit<ReplayRunSchema, 'stream'>,
             options?: RequestInit & {
               query?: Paths['/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/replay']['post']['parameters']['query'];
               onStream?: (
@@ -429,7 +596,7 @@ export const createAPI = (
           streamResponse: (
             workflowId: string,
             runId: string,
-            body?: Omit<ReplayRunSchema, 'stream'>,
+            body: Omit<ReplayRunSchema, 'stream'>,
             options?: RequestInit & {
               query?: Paths['/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/replay']['post']['parameters']['query'];
               onStream?: (
@@ -449,49 +616,128 @@ export const createAPI = (
             }) as Promise<Response>;
           },
         },
-        retrieve: (
-          workflowId: string,
-          runId: string,
-          options?: RequestInit & {
-            query?: Paths['/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}']['get']['parameters']['query'];
+        cancel: {
+          create: (
+            workflowId: string,
+            runId: string,
+            options?: RequestInit & {
+              query?: Paths['/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/cancel']['post']['parameters']['query'];
+            },
+          ): Promise<RunSchema> => {
+            return callAPI('create', {
+              method: 'post',
+              endpoint:
+                '/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/cancel',
+              params: {workflow_id: workflowId, run_id: runId},
+              options,
+            }) as Promise<RunSchema>;
           },
-        ): Promise<RunSchema> => {
-          return callAPI('retrieve', {
-            method: 'get',
-            endpoint: '/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}',
-            params: {workflow_id: workflowId, run_id: runId},
-            options,
-          }) as Promise<RunSchema>;
         },
-        cancel: (
-          workflowId: string,
-          runId: string,
-          options?: RequestInit & {
-            query?: Paths['/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/cancel']['post']['parameters']['query'];
+        retention: {
+          update: (
+            workflowId: string,
+            runId: string,
+            body?: UpdateRunDataRetentionConfigSchema,
+            options?: RequestInit & {
+              query?: Paths['/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/retention']['patch']['parameters']['query'];
+            },
+          ): Promise<RunSchema> => {
+            return callAPI('update', {
+              method: 'patch',
+              endpoint:
+                '/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/retention',
+              params: {workflow_id: workflowId, run_id: runId},
+              body,
+              options,
+            }) as Promise<RunSchema>;
           },
-        ): Promise<RunSchema> => {
-          return callAPI('create', {
-            method: 'post',
-            endpoint:
-              '/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/cancel',
-            params: {workflow_id: workflowId, run_id: runId},
-            options,
-          }) as Promise<RunSchema>;
         },
       },
       tests: {
-        expectations: (
-          workflowId: string,
-          expectationId: string,
-          options?: RequestInit,
-        ): Promise<void> => {
-          return callAPI('delete', {
-            method: 'delete',
-            endpoint:
-              '/apps/{app_id}/workflows/{workflow_id}/tests/expectations/{expectation_id}',
-            params: {workflow_id: workflowId, expectation_id: expectationId},
-            options,
-          }) as Promise<void>;
+        expectations: {
+          list: (
+            workflowId: string,
+            options?: RequestInit & {
+              query?: Paths['/apps/{app_id}/workflows/{workflow_id}/tests/expectations']['get']['parameters']['query'];
+            },
+          ): Promise<{
+            data: WorkflowExpectationSchema[];
+            pagination: {
+              page: number;
+              take: number;
+              count: number;
+            };
+          }> => {
+            return callAPI('list', {
+              method: 'get',
+              endpoint:
+                '/apps/{app_id}/workflows/{workflow_id}/tests/expectations',
+              params: {workflow_id: workflowId},
+              options,
+            }) as Promise<{
+              data: WorkflowExpectationSchema[];
+              pagination: {
+                page: number;
+                take: number;
+                count: number;
+              };
+            }>;
+          },
+          create: (
+            workflowId: string,
+            body: CreateWorkflowExpectationSchema,
+            options?: RequestInit,
+          ): Promise<WorkflowExpectationSchema> => {
+            return callAPI('create', {
+              method: 'post',
+              endpoint:
+                '/apps/{app_id}/workflows/{workflow_id}/tests/expectations',
+              params: {workflow_id: workflowId},
+              body,
+              options,
+            }) as Promise<WorkflowExpectationSchema>;
+          },
+          retrieve: (
+            workflowId: string,
+            expectationId: string,
+            options?: RequestInit,
+          ): Promise<WorkflowExpectationSchema> => {
+            return callAPI('retrieve', {
+              method: 'get',
+              endpoint:
+                '/apps/{app_id}/workflows/{workflow_id}/tests/expectations/{expectation_id}',
+              params: {workflow_id: workflowId, expectation_id: expectationId},
+              options,
+            }) as Promise<WorkflowExpectationSchema>;
+          },
+          update: (
+            workflowId: string,
+            expectationId: string,
+            body?: UpdateWorkflowExpectationSchema,
+            options?: RequestInit,
+          ): Promise<WorkflowExpectationSchema> => {
+            return callAPI('update', {
+              method: 'patch',
+              endpoint:
+                '/apps/{app_id}/workflows/{workflow_id}/tests/expectations/{expectation_id}',
+              params: {workflow_id: workflowId, expectation_id: expectationId},
+              body,
+              options,
+            }) as Promise<WorkflowExpectationSchema>;
+          },
+          delete: (
+            workflowId: string,
+            expectationId: string,
+            options?: RequestInit,
+          ): Promise<void> => {
+            return callAPI('delete', {
+              method: 'delete',
+              endpoint:
+                '/apps/{app_id}/workflows/{workflow_id}/tests/expectations/{expectation_id}',
+              params: {workflow_id: workflowId, expectation_id: expectationId},
+              options,
+            }) as Promise<void>;
+          },
         },
         list: (
           workflowId: string,
@@ -535,16 +781,18 @@ export const createAPI = (
             options,
           }) as Promise<WorkflowTestSchema>;
         },
-        stats: (
-          workflowId: string,
-          options?: RequestInit,
-        ): Promise<WorkflowTestStatsSchema> => {
-          return callAPI('retrieve', {
-            method: 'get',
-            endpoint: '/apps/{app_id}/workflows/{workflow_id}/tests/stats',
-            params: {workflow_id: workflowId},
-            options,
-          }) as Promise<WorkflowTestStatsSchema>;
+        stats: {
+          retrieve: (
+            workflowId: string,
+            options?: RequestInit,
+          ): Promise<WorkflowTestStatsSchema> => {
+            return callAPI('retrieve', {
+              method: 'get',
+              endpoint: '/apps/{app_id}/workflows/{workflow_id}/tests/stats',
+              params: {workflow_id: workflowId},
+              options,
+            }) as Promise<WorkflowTestStatsSchema>;
+          },
         },
         retrieve: (
           workflowId: string,
@@ -563,7 +811,7 @@ export const createAPI = (
         update: (
           workflowId: string,
           testId: string,
-          body: UpdateWorkflowTestSchema,
+          body?: UpdateWorkflowTestSchema,
           options?: RequestInit & {
             query?: Paths['/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}']['patch']['parameters']['query'];
           },
@@ -588,54 +836,87 @@ export const createAPI = (
             options,
           }) as Promise<void>;
         },
-        runs: (
-          workflowId: string,
-          testId: string,
-          body: RunWorkflowTestSchema,
-          options?: RequestInit & {
-            query?: Paths['/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}/runs']['post']['parameters']['query'];
+        runs: {
+          create: (
+            workflowId: string,
+            testId: string,
+            body?: RunWorkflowTestSchema,
+            options?: RequestInit & {
+              query?: Paths['/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}/runs']['post']['parameters']['query'];
+            },
+          ): Promise<WorkflowTestSchema> => {
+            return callAPI('create', {
+              method: 'post',
+              endpoint:
+                '/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}/runs',
+              params: {workflow_id: workflowId, test_id: testId},
+              body,
+              options,
+            }) as Promise<WorkflowTestSchema>;
           },
-        ): Promise<WorkflowTestSchema> => {
-          return callAPI('create', {
-            method: 'post',
-            endpoint:
-              '/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}/runs',
-            params: {workflow_id: workflowId, test_id: testId},
-            body,
-            options,
-          }) as Promise<WorkflowTestSchema>;
         },
-        cancel: (
-          workflowId: string,
-          testId: string,
-          options?: RequestInit & {
-            query?: Paths['/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}/cancel']['post']['parameters']['query'];
+        cancel: {
+          create: (
+            workflowId: string,
+            testId: string,
+            options?: RequestInit & {
+              query?: Paths['/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}/cancel']['post']['parameters']['query'];
+            },
+          ): Promise<WorkflowTestSchema> => {
+            return callAPI('create', {
+              method: 'post',
+              endpoint:
+                '/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}/cancel',
+              params: {workflow_id: workflowId, test_id: testId},
+              options,
+            }) as Promise<WorkflowTestSchema>;
           },
-        ): Promise<WorkflowTestSchema> => {
-          return callAPI('create', {
-            method: 'post',
-            endpoint:
-              '/apps/{app_id}/workflows/{workflow_id}/tests/{test_id}/cancel',
-            params: {workflow_id: workflowId, test_id: testId},
-            options,
-          }) as Promise<WorkflowTestSchema>;
         },
       },
-      versions: (
-        workflowId: string,
-        versionIdOrVersionNumber: string,
-        options?: RequestInit,
-      ): Promise<WorkflowVersionSchema> => {
-        return callAPI('retrieve', {
-          method: 'get',
-          endpoint:
-            '/apps/{app_id}/workflows/{workflow_id}/versions/{version_id_or_version_number}',
-          params: {
-            workflow_id: workflowId,
-            version_id_or_version_number: versionIdOrVersionNumber,
+      versions: {
+        list: (
+          workflowId: string,
+          options?: RequestInit & {
+            query?: Paths['/apps/{app_id}/workflows/{workflow_id}/versions']['get']['parameters']['query'];
           },
-          options,
-        }) as Promise<WorkflowVersionSchema>;
+        ): Promise<{
+          data: WorkflowVersionSchema[];
+          pagination: {
+            page: number;
+            take: number;
+            count: number;
+          };
+        }> => {
+          return callAPI('list', {
+            method: 'get',
+            endpoint: '/apps/{app_id}/workflows/{workflow_id}/versions',
+            params: {workflow_id: workflowId},
+            options,
+          }) as Promise<{
+            data: WorkflowVersionSchema[];
+            pagination: {
+              page: number;
+              take: number;
+              count: number;
+            };
+          }>;
+        },
+        retrieve: (
+          workflowId: string,
+          versionIdOrVersionNumber: string,
+          options?: RequestInit,
+        ): Promise<WorkflowVersionSchema> => {
+          return callAPI('retrieve', {
+            method: 'get',
+            endpoint:
+              '/apps/{app_id}/workflows/{workflow_id}/versions/{version_id_or_version_number}',
+            params: {
+              workflow_id: workflowId,
+              version_id_or_version_number: versionIdOrVersionNumber,
+            },
+            options,
+          }) as Promise<WorkflowVersionSchema>;
+        },
       },
     },
     collections: {
@@ -688,7 +969,7 @@ export const createAPI = (
       },
       update: (
         collectionId: string,
-        body: UpdateCollectionSchema,
+        body?: UpdateCollectionSchema,
         options?: RequestInit,
       ): Promise<ExtendedCollectionSchema> => {
         return callAPI('update', {
@@ -737,7 +1018,7 @@ export const createAPI = (
         },
         create: (
           collectionId: string,
-          body: CreateRecordSchema,
+          body?: CreateRecordSchema,
           options?: RequestInit & {
             query?: Paths['/apps/{app_id}/collections/{collection_id}/records']['post']['parameters']['query'];
           },
@@ -768,7 +1049,7 @@ export const createAPI = (
         update: (
           collectionId: string,
           recordId: string,
-          body: UpdateRecordSchema,
+          body?: UpdateRecordSchema,
           options?: RequestInit & {
             query?: Paths['/apps/{app_id}/collections/{collection_id}/records/{record_id}']['patch']['parameters']['query'];
           },
@@ -795,100 +1076,391 @@ export const createAPI = (
             options,
           }) as Promise<void>;
         },
-        status: (
-          collectionId: string,
-          recordId: string,
-          options?: RequestInit,
-        ): Promise<RecordStatusSchema> => {
-          return callAPI('retrieve', {
-            method: 'get',
-            endpoint:
-              '/apps/{app_id}/collections/{collection_id}/records/{record_id}/status',
-            params: {collection_id: collectionId, record_id: recordId},
-            options,
-          }) as Promise<RecordStatusSchema>;
+        status: {
+          retrieve: (
+            collectionId: string,
+            recordId: string,
+            options?: RequestInit,
+          ): Promise<RecordStatusSchema> => {
+            return callAPI('retrieve', {
+              method: 'get',
+              endpoint:
+                '/apps/{app_id}/collections/{collection_id}/records/{record_id}/status',
+              params: {collection_id: collectionId, record_id: recordId},
+              options,
+            }) as Promise<RecordStatusSchema>;
+          },
         },
-        run: (
-          collectionId: string,
-          recordId: string,
-          body: RunRecordSchema,
-          options?: RequestInit,
-        ): Promise<RecordSchema> => {
-          return callAPI('create', {
-            method: 'post',
-            endpoint:
-              '/apps/{app_id}/collections/{collection_id}/records/{record_id}/run',
-            params: {collection_id: collectionId, record_id: recordId},
-            body,
-            options,
-          }) as Promise<RecordSchema>;
+        run: {
+          create: (
+            collectionId: string,
+            recordId: string,
+            body: RunRecordSchema,
+            options?: RequestInit,
+          ): Promise<RecordSchema> => {
+            return callAPI('create', {
+              method: 'post',
+              endpoint:
+                '/apps/{app_id}/collections/{collection_id}/records/{record_id}/run',
+              params: {collection_id: collectionId, record_id: recordId},
+              body,
+              options,
+            }) as Promise<RecordSchema>;
+          },
         },
-        cancel: (
-          collectionId: string,
-          recordId: string,
-          options?: RequestInit,
-        ): Promise<RecordSchema> => {
-          return callAPI('create', {
-            method: 'post',
-            endpoint:
-              '/apps/{app_id}/collections/{collection_id}/records/{record_id}/cancel',
-            params: {collection_id: collectionId, record_id: recordId},
-            options,
-          }) as Promise<RecordSchema>;
+        cancel: {
+          create: (
+            collectionId: string,
+            recordId: string,
+            options?: RequestInit,
+          ): Promise<RecordSchema> => {
+            return callAPI('create', {
+              method: 'post',
+              endpoint:
+                '/apps/{app_id}/collections/{collection_id}/records/{record_id}/cancel',
+              params: {collection_id: collectionId, record_id: recordId},
+              options,
+            }) as Promise<RecordSchema>;
+          },
         },
-        updateRules: (
-          collectionId: string,
-          recordId: string,
-          options?: RequestInit,
-        ): Promise<RecordSchema> => {
-          return callAPI('create', {
-            method: 'post',
-            endpoint:
-              '/apps/{app_id}/collections/{collection_id}/records/{record_id}/update-rules',
-            params: {collection_id: collectionId, record_id: recordId},
-            options,
-          }) as Promise<RecordSchema>;
+        updateRules: {
+          create: (
+            collectionId: string,
+            recordId: string,
+            options?: RequestInit,
+          ): Promise<RecordSchema> => {
+            return callAPI('create', {
+              method: 'post',
+              endpoint:
+                '/apps/{app_id}/collections/{collection_id}/records/{record_id}/update-rules',
+              params: {collection_id: collectionId, record_id: recordId},
+              options,
+            }) as Promise<RecordSchema>;
+          },
         },
-        reset: (
-          collectionId: string,
-          recordId: string,
-          options?: RequestInit,
-        ): Promise<RecordSchema> => {
-          return callAPI('create', {
-            method: 'post',
-            endpoint:
-              '/apps/{app_id}/collections/{collection_id}/records/{record_id}/reset',
-            params: {collection_id: collectionId, record_id: recordId},
-            options,
-          }) as Promise<RecordSchema>;
+        reset: {
+          create: (
+            collectionId: string,
+            recordId: string,
+            options?: RequestInit,
+          ): Promise<RecordSchema> => {
+            return callAPI('create', {
+              method: 'post',
+              endpoint:
+                '/apps/{app_id}/collections/{collection_id}/records/{record_id}/reset',
+              params: {collection_id: collectionId, record_id: recordId},
+              options,
+            }) as Promise<RecordSchema>;
+          },
         },
-        download: (
-          collectionId: string,
-          recordId: string,
-          options?: RequestInit,
-        ): Promise<void> => {
-          return callAPI('retrieve', {
-            method: 'get',
-            endpoint:
-              '/apps/{app_id}/collections/{collection_id}/records/{record_id}/download',
-            params: {collection_id: collectionId, record_id: recordId},
-            options,
-          }) as Promise<void>;
+        download: {
+          retrieve: (
+            collectionId: string,
+            recordId: string,
+            options?: RequestInit,
+          ): Promise<void> => {
+            return callAPI('retrieve', {
+              method: 'get',
+              endpoint:
+                '/apps/{app_id}/collections/{collection_id}/records/{record_id}/download',
+              params: {collection_id: collectionId, record_id: recordId},
+              options,
+            }) as Promise<void>;
+          },
         },
       },
     },
-    webhooks: (webhookId: string, options?: RequestInit): Promise<void> => {
-      return callAPI('delete', {
-        method: 'delete',
-        endpoint: '/apps/{app_id}/webhooks/{webhook_id}',
-        params: {webhook_id: webhookId},
-        options,
-      }) as Promise<void>;
+    webhooks: {
+      list: (
+        options?: RequestInit & {
+          query?: Paths['/apps/{app_id}/webhooks']['get']['parameters']['query'];
+        },
+      ): Promise<{
+        data: WebhookSchema[];
+        pagination: {
+          page: number;
+          take: number;
+          count: number;
+        };
+      }> => {
+        return callAPI('list', {
+          method: 'get',
+          endpoint: '/apps/{app_id}/webhooks',
+          options,
+        }) as Promise<{
+          data: WebhookSchema[];
+          pagination: {
+            page: number;
+            take: number;
+            count: number;
+          };
+        }>;
+      },
+      create: (
+        body: CreateWebhookSchema,
+        options?: RequestInit,
+      ): Promise<WebhookSchema> => {
+        return callAPI('create', {
+          method: 'post',
+          endpoint: '/apps/{app_id}/webhooks',
+          body,
+          options,
+        }) as Promise<WebhookSchema>;
+      },
+      update: (
+        webhookId: string,
+        body?: UpdateWebhookSchema,
+        options?: RequestInit,
+      ): Promise<WebhookSchema> => {
+        return callAPI('update', {
+          method: 'patch',
+          endpoint: '/apps/{app_id}/webhooks/{webhook_id}',
+          params: {webhook_id: webhookId},
+          body,
+          options,
+        }) as Promise<WebhookSchema>;
+      },
+      delete: (webhookId: string, options?: RequestInit): Promise<void> => {
+        return callAPI('delete', {
+          method: 'delete',
+          endpoint: '/apps/{app_id}/webhooks/{webhook_id}',
+          params: {webhook_id: webhookId},
+          options,
+        }) as Promise<void>;
+      },
     },
   },
 });
 
 export type Paths = {
+  '/public/apps/files/uploads/{file_upload_id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Upload a file
+     * @description Uploads a file to the specified file upload ID placeholder
+     */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          /** @description The ID of the file upload */
+          file_upload_id: string;
+        };
+        cookie?: never;
+      };
+      /** @description The file to upload */
+      requestBody?: {
+        content: {
+          'application/json': Components['schemas']['UploadAppFileSchema'];
+          'multipart/form-data': Components['schemas']['UploadAppFileSchema'];
+        };
+      };
+      responses: {
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': Components['schemas']['AppFileSchema'];
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/apps/{app_id}/files/uploads': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * List File Uploads
+     * @description Retrieve a list of files for a specific app.
+     */
+    get: {
+      parameters: {
+        query?: {
+          /** @description Page number */
+          page?: number;
+          /** @description Number of items to take */
+          take?: number;
+          /** @description Next page token (Only used on special endpoints) */
+          next?: string;
+        };
+        header?: never;
+        path: {
+          /** @description The ID of the app */
+          app_id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': Components['schemas']['AppFileUploadSchema'][];
+          };
+        };
+      };
+    };
+    put?: never;
+    /**
+     * Create a new file upload
+     * @description Create a new file upload that generates an upload URL.
+     */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          /** @description The ID of the app */
+          app_id: string;
+        };
+        cookie?: never;
+      };
+      /** @description Request body for creating a new file upload */
+      requestBody?: {
+        content: {
+          'application/json': Components['schemas']['CreateAppFileUploadSchema'];
+          'multipart/form-data': Components['schemas']['CreateAppFileUploadSchema'];
+        };
+      };
+      responses: {
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': Components['schemas']['AppFileUploadSchema'];
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/apps/{app_id}/files/uploads/{file_upload_id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get File Upload
+     * @description Retrieve details of a specific file upload.
+     */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          /** @description The ID of the app */
+          app_id: string;
+          /** @description The ID of the file upload */
+          file_upload_id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': Components['schemas']['AppFileUploadSchema'];
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    /**
+     * Delete File Upload
+     * @description Delete a specific file upload.
+     */
+    delete: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          /** @description The ID of the app */
+          app_id: string;
+          /** @description The ID of the file upload */
+          file_upload_id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': unknown;
+          };
+        };
+      };
+    };
+    options?: never;
+    head?: never;
+    /**
+     * Update File Upload
+     * @description Update details of a specific file upload.
+     */
+    patch: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          /** @description The ID of the app */
+          app_id: string;
+          /** @description The ID of the file upload */
+          file_upload_id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: {
+        content: {
+          'application/json': Components['schemas']['UpdateAppFileUploadSchema'];
+          'multipart/form-data': Components['schemas']['UpdateAppFileUploadSchema'];
+        };
+      };
+      responses: {
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': Components['schemas']['AppFileUploadSchema'];
+          };
+        };
+      };
+    };
+    trace?: never;
+  };
   '/apps/{app_id}/files': {
     parameters: {
       query?: never;
@@ -1674,7 +2246,8 @@ export type Paths = {
             | 'TRIGGER'
             | 'RECORD'
             | 'TEST'
-            | 'ENDPOINT';
+            | 'ENDPOINT'
+            | 'WEBHOOK';
           status?:
             | 'ALL'
             | 'PENDING'
@@ -1753,6 +2326,53 @@ export type Paths = {
     patch?: never;
     trace?: never;
   };
+  '/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get a Workflow Run
+     * @description Retrieve details of a specific workflow run.
+     */
+    get: {
+      parameters: {
+        query?: {
+          verbose?: Components['schemas']['IncludeRunPropsSchema'];
+        };
+        header?: never;
+        path: {
+          /** @description The ID of the app */
+          app_id: string;
+          /** @description The ID of the workflow */
+          workflow_id: string;
+          /** @description The ID of the workflow run. */
+          run_id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': Components['schemas']['RunSchema'];
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/replay': {
     parameters: {
       query?: never;
@@ -1805,53 +2425,6 @@ export type Paths = {
     patch?: never;
     trace?: never;
   };
-  '/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Get a Workflow Run
-     * @description Retrieve details of a specific workflow run.
-     */
-    get: {
-      parameters: {
-        query?: {
-          verbose?: Components['schemas']['IncludeRunPropsSchema'];
-        };
-        header?: never;
-        path: {
-          /** @description The ID of the app */
-          app_id: string;
-          /** @description The ID of the workflow */
-          workflow_id: string;
-          /** @description The ID of the workflow run. */
-          run_id: string;
-        };
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            'application/json': Components['schemas']['RunSchema'];
-          };
-        };
-      };
-    };
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
   '/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/cancel': {
     parameters: {
       query?: never;
@@ -1897,6 +2470,58 @@ export type Paths = {
     options?: never;
     head?: never;
     patch?: never;
+    trace?: never;
+  };
+  '/apps/{app_id}/workflows/{workflow_id}/runs/{run_id}/retention': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /**
+     * Update Run Data Retention Configuration
+     * @description Update the data retention configuration for a specific workflow run.
+     */
+    patch: {
+      parameters: {
+        query?: {
+          verbose?: Components['schemas']['IncludeRunPropsSchema'];
+        };
+        header?: never;
+        path: {
+          /** @description The ID of the app */
+          app_id: string;
+          /** @description The ID of the workflow */
+          workflow_id: string;
+          /** @description The ID of the workflow run. */
+          run_id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: {
+        content: {
+          'application/json': Components['schemas']['UpdateRunDataRetentionConfigSchema'];
+          'multipart/form-data': Components['schemas']['UpdateRunDataRetentionConfigSchema'];
+        };
+      };
+      responses: {
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            'application/json': Components['schemas']['RunSchema'];
+          };
+        };
+      };
+    };
     trace?: never;
   };
   '/apps/{app_id}/workflows/{workflow_id}/tests/expectations': {
@@ -2840,6 +3465,7 @@ export type Paths = {
             | 'COMPLETED'
             | 'FAILED';
           tags?: string[];
+          tag_ids?: string[];
           /** @description Page number */
           page?: number;
           /** @description Number of items to take */
@@ -3477,7 +4103,14 @@ export type Components = {
     };
     QueryRunSchema: Components['schemas']['IncludeRunSchema'] & {
       /** @enum {string} */
-      origin?: 'ALL' | 'WORKFLOW' | 'TRIGGER' | 'RECORD' | 'TEST' | 'ENDPOINT';
+      origin?:
+        | 'ALL'
+        | 'WORKFLOW'
+        | 'TRIGGER'
+        | 'RECORD'
+        | 'TEST'
+        | 'ENDPOINT'
+        | 'WEBHOOK';
       /** @enum {string} */
       status?:
         | 'ALL'
@@ -3550,6 +4183,7 @@ export type Components = {
         | 'COMPLETED'
         | 'FAILED';
       tags?: string[];
+      tag_ids?: string[];
     };
     /** @description Detailed information about the content of a document */
     DocumentContentSchema: {
@@ -3636,6 +4270,13 @@ export type Components = {
       /** @description Time taken to process the document */
       time?: number;
     };
+    /**
+     * @description Whether the file is stored permanently or temporarily, indicating the storage type
+     * @default PERSISTENT
+     * @example PERSISTENT
+     * @enum {string}
+     */
+    AppFileStorageSchema: 'PERSISTENT' | 'TEMPORARY';
     /** @description Detailed information about a file */
     AppFileSchema: {
       /** @description Unique identifier for the file */
@@ -3662,9 +4303,9 @@ export type Components = {
       /**
        * @description Format of the file
        * @example DOCUMENT
-       * @enum {string|null}
+       * @enum {string}
        */
-      file_format: 'DOCUMENT' | null;
+      file_format?: 'DOCUMENT';
       /**
        * @description Current status of the file
        * @example PROCESSED
@@ -3675,11 +4316,11 @@ export type Components = {
       file_status_message?: string;
       document?: Components['schemas']['DocumentSchema'];
       /** @description Flag indicating whether to extract contents from the document */
-      document_extract_contents: boolean;
+      document_extract_contents?: boolean;
       /** @description Flag indicating whether to extract images from the document */
-      document_extract_images: boolean;
+      document_extract_images?: boolean;
       /** @description Flag indicating whether to extract pages from the document */
-      document_extract_pages: boolean;
+      document_extract_pages?: boolean;
       /**
        * @description Array of page numbers to extract from the document
        * @example [
@@ -3691,6 +4332,7 @@ export type Components = {
       document_pages?: number[];
       /** @description Progress of the document extraction process */
       document_progress?: number;
+      storage?: Components['schemas']['AppFileStorageSchema'];
       /**
        * Format: date
        * @description Timestamp when the file was created
@@ -3721,6 +4363,174 @@ export type Components = {
        */
       encoding?: 'base64' | 'raw';
     };
+    UploadAppFileSchema: {
+      /** @description File to be uploaded. It can be a file object, a base64 encoded string, or a file data object containing base64 data, name, and type. */
+      file?:
+        | (File | Blob | string)
+        | Components['schemas']['FileDataSchema']
+        | string;
+      /**
+       * @description URL of the file to be uploaded
+       * @example https://example.com/files/document.pdf
+       */
+      file_url?: string;
+    };
+    /** @description The file associated with the upload, if available */
+    AppFileNullableSchema: {
+      /** @description Unique identifier for the file */
+      id: string;
+      /** @description File identifier used in the storage system */
+      file_id: string;
+      /**
+       * @description Name of the file
+       * @example document.pdf
+       */
+      file_filename: string;
+      /**
+       * @description Size of the file in bytes
+       * @example 1024
+       */
+      file_size: number;
+      /**
+       * @description MIME type of the file
+       * @example application/pdf
+       */
+      file_mimetype: string;
+      /** @description URL to access the file */
+      file_url: string;
+      /**
+       * @description Format of the file
+       * @example DOCUMENT
+       * @enum {string}
+       */
+      file_format?: 'DOCUMENT';
+      /**
+       * @description Current status of the file
+       * @example PROCESSED
+       * @enum {string}
+       */
+      file_status?: 'PROCESSING' | 'PROCESSED' | 'FAILED';
+      /** @description Status message providing additional information about the file status */
+      file_status_message?: string;
+      document?: Components['schemas']['DocumentSchema'];
+      /** @description Flag indicating whether to extract contents from the document */
+      document_extract_contents?: boolean;
+      /** @description Flag indicating whether to extract images from the document */
+      document_extract_images?: boolean;
+      /** @description Flag indicating whether to extract pages from the document */
+      document_extract_pages?: boolean;
+      /**
+       * @description Array of page numbers to extract from the document
+       * @example [
+       *       1,
+       *       2,
+       *       3
+       *     ]
+       */
+      document_pages?: number[];
+      /** @description Progress of the document extraction process */
+      document_progress?: number;
+      storage?: Components['schemas']['AppFileStorageSchema'];
+      /**
+       * Format: date
+       * @description Timestamp when the file was created
+       */
+      created_at: string | null;
+    } | null;
+    /** @description Custom metadata for the uploaded file as key-value pairs (Max 2KB) */
+    AppFileUploadMetadata: {
+      [key: string]: unknown;
+    } | null;
+    /**
+     * @description The allowed mime types for the file field (e.g. image/*, application/pdf)
+     * @default [
+     *       "*\/*"
+     *     ]
+     */
+    FileAllowedTypesSchema: string[] | null;
+    /**
+     * @description Whether the file is private or public, private files URLs are signed with a token and can be accessed temporarily
+     * @example PRIVATE
+     * @enum {string}
+     */
+    AppFileVisibilitySchema: 'PUBLIC' | 'PRIVATE';
+    /** @description Uploaded file information */
+    AppFileUploadSchema: {
+      /** @description Unique identifier for the uploaded file */
+      id: string;
+      /** @description Future file ID for the uploaded file */
+      future_file_id: string;
+      file: Components['schemas']['AppFileNullableSchema'];
+      /** @description URL to upload the file */
+      upload_url: string;
+      /**
+       * Format: date
+       * @description Timestamp when the uploaded file will expire
+       */
+      expires_at: string | null;
+      metadata?: Components['schemas']['AppFileUploadMetadata'];
+      allowed_types?: Components['schemas']['FileAllowedTypesSchema'];
+      /** @description Whether to extract contents from the document. If true, the file will be processed and contents extracted. */
+      document_extract_contents?: boolean;
+      /** @description Whether to extract images from the document. If true, images will be extracted. */
+      document_extract_images?: boolean;
+      /**
+       * @description Array of page numbers to extract from the document
+       * @example [
+       *       1,
+       *       2,
+       *       3
+       *     ]
+       */
+      document_pages: number[] | null;
+      storage: Components['schemas']['AppFileStorageSchema'];
+      visibility: Components['schemas']['AppFileVisibilitySchema'];
+      /**
+       * Format: date
+       * @description Timestamp when the uploaded file was created
+       */
+      created_at: string | null;
+      /**
+       * Format: date
+       * @description Timestamp when the uploaded file was last updated
+       */
+      updated_at: string | null;
+    };
+    /** @description Create a new file upload */
+    CreateAppFileUploadSchema: {
+      allowed_types?: Components['schemas']['FileAllowedTypesSchema'];
+      /** @description Whether to extract contents from the document. If true, the file will be processed and contents extracted. */
+      document_extract_contents?: boolean;
+      /** @description Whether to extract images from the document. If true, images will be extracted. */
+      document_extract_images?: boolean;
+      /**
+       * @description Array of page numbers to extract from the document
+       * @example [
+       *       1,
+       *       2,
+       *       3
+       *     ]
+       */
+      document_pages?: number[];
+      /**
+       * @description Timestamp when the uploaded file will expire. By default, it is set to 30 days
+       * @example 3600
+       */
+      expires_in_seconds?: number;
+      visibility?: Components['schemas']['AppFileVisibilitySchema'];
+      storage?: Components['schemas']['AppFileStorageSchema'];
+      metadata?: Components['schemas']['AppFileUploadMetadata'];
+    };
+    /** @description Update an existing file upload */
+    UpdateAppFileUploadSchema: {
+      metadata?: Components['schemas']['AppFileUploadMetadata'];
+    };
+    /**
+     * @description Whether the file is private or public, private files URLs are signed with a token and can be accessed temporarily
+     * @example PRIVATE
+     * @enum {string}
+     */
+    FileVisibilitySchema: 'PUBLIC' | 'PRIVATE';
     CreateAppFileSchema: {
       /** @description File to be uploaded. It can be a file object, a base64 encoded string, or a file data object containing base64 data, name, and type. */
       file?:
@@ -3732,11 +4542,10 @@ export type Components = {
        * @example https://example.com/files/document.pdf
        */
       file_url?: string;
-      /** @description The allowed mime types for the file field (e.g. image/*, application/pdf) */
-      allowed_types?: string[];
+      allowed_types?: Components['schemas']['FileAllowedTypesSchema'];
       /**
        * @description Flag indicating whether to extract contents from the document
-       * @example true
+       * @example false
        */
       document_extract_contents?: boolean;
       /**
@@ -3746,7 +4555,7 @@ export type Components = {
       document_extract_images?: boolean;
       /**
        * @description Flag indicating whether to extract pages from the document
-       * @example true
+       * @example false
        */
       document_extract_pages?: boolean;
       /**
@@ -3763,12 +4572,8 @@ export type Components = {
        * @example 10
        */
       document_max_pages?: number;
-      /**
-       * @description If the file should be public or private, by default is private and the file url is signed
-       * @example PRIVATE
-       * @enum {string}
-       */
-      visibility?: 'PUBLIC' | 'PRIVATE';
+      storage?: Components['schemas']['AppFileStorageSchema'];
+      visibility?: Components['schemas']['FileVisibilitySchema'];
     };
     /** @description Detailed information about a variable in your app */
     AppVariableSchema: {
@@ -3806,6 +4611,20 @@ export type Components = {
        */
       secret?: boolean;
     };
+    /**
+     * @description Step type
+     * @enum {string}
+     */
+    StepTypeSchema:
+      | 'note'
+      | 'branch'
+      | 'code'
+      | 'model'
+      | 'http_request'
+      | 'browser'
+      | 'workflow'
+      | 'service'
+      | 'input';
     CreditsCallUsageSchema: {
       id: string;
       total: number;
@@ -3823,6 +4642,23 @@ export type Components = {
     };
     /** @description Result of the workflow step run */
     RunResultSchema: unknown;
+    /** @description Request information for the workflow step run when executed from API or Webhook */
+    RunRequestSchema: {
+      /** @description HTTP method of the request */
+      method: string;
+      /** @description URL of the request */
+      url: string;
+      /** @description Headers of the request */
+      headers: {
+        [key: string]: string;
+      };
+      /** @description Query parameters of the request */
+      query: {
+        [key: string]: string;
+      };
+      /** @description IP address of the request */
+      ip: string | null;
+    };
     StepWorkflowOutputSchema: {
       /** @description ID of the workflow run that ran this step */
       run_id: string;
@@ -3849,13 +4685,22 @@ export type Components = {
        * @example RECORD
        * @enum {string}
        */
-      origin: 'WORKFLOW' | 'TRIGGER' | 'RECORD' | 'TEST' | 'ENDPOINT';
+      origin:
+        | 'WORKFLOW'
+        | 'TRIGGER'
+        | 'RECORD'
+        | 'TEST'
+        | 'ENDPOINT'
+        | 'WEBHOOK';
       /** @description Error message if the step run failed */
       error: string | null;
       usage?: Components['schemas']['CreditsRunUsageSchema'];
       result?: Components['schemas']['RunResultSchema'];
       /** @description Output of the workflow step run */
       output?: unknown;
+      /** @description Date of the workflow step run */
+      date: string;
+      request?: Components['schemas']['RunRequestSchema'];
     };
     StepWorkflowRecordOutputSchema: {
       /** @description Name of the record that ran this run */
@@ -3904,6 +4749,10 @@ export type Components = {
       provider?: string;
       /** @description The model ran */
       model: string;
+      /** @description The connection id of the model */
+      connection_id?: string;
+      /** @description The connection type of the model */
+      connection_type?: string;
       /** @description The message output of the model, can be a string or an object based on the response_format. */
       message?:
         | {
@@ -3965,8 +4814,27 @@ export type Components = {
       | Components['schemas']['StepBrowserOutputSchema']
       | Components['schemas']['StepServiceOutputSchema']
       | unknown;
+    RuntimeLogs: unknown[];
     /** @description Step run output */
     RunStepSchema: {
+      /**
+       * @description Status of the call
+       * @enum {string}
+       */
+      status:
+        | 'PENDING'
+        | 'RUNNING'
+        | 'CANCELLED'
+        | 'COMPLETED'
+        | 'SKIPPED'
+        | 'FAILED';
+      /**
+       * @description Key of the step run
+       * @example STEP_1
+       */
+      key: string;
+      type?: Components['schemas']['StepTypeSchema'];
+      /** @description Output of the step run */
       output?:
         | Components['schemas']['StepWorkflowOutputSchema']
         | Components['schemas']['StepWorkflowRecordOutputSchema']
@@ -3978,9 +4846,21 @@ export type Components = {
         | Components['schemas']['StepServiceOutputSchema']
         | Components['schemas']['StepOutputSchema'][]
         | unknown;
+      logs?: Components['schemas']['RuntimeLogs'];
+      /** @description Timestamp of when the step run started */
+      start: number;
+      /** @description Timestamp of when the step run ended */
+      end?: number;
+      /** @description Error message if the step run failed */
+      error?: string;
     };
     /** @description A unique key for the step */
     StepKeySchema: string;
+    /**
+     * @description Display mode of the step
+     * @enum {string}
+     */
+    StepDisplaySchema: 'expanded' | 'collapsed' | 'minimal';
     /** @description Auto configuration for the step */
     StepAutoConfigSchema: {
       /** @description Model provider name */
@@ -3998,6 +4878,7 @@ export type Components = {
        */
       type: 'note';
       key: Components['schemas']['StepKeySchema'];
+      display?: Components['schemas']['StepDisplaySchema'];
       /** @description A condition to determine if the step should run */
       conditional?: string;
       /** @description A loop condition for the step to repeat running until the condition is met */
@@ -4065,12 +4946,15 @@ export type Components = {
       config?: boolean;
       /** @description The link to the documentation for the input field */
       link?: string;
+      /** @description Additional metadata for the input field */
+      metadata?: Record<string, unknown>;
       /** @description Allowed mime types for the file field (e.g. image/*, application/pdf) */
       allowed_types?: string[];
       /** @description Flag to extract contents from the file */
       extract_contents?: boolean;
       /** @description Flag to extract images from the file */
       extract_images?: boolean;
+      visibility?: Components['schemas']['AppFileVisibilitySchema'];
     };
     /** @description The key of the input field */
     InputFieldKeySchema: string;
@@ -4105,6 +4989,8 @@ export type Components = {
       config?: boolean;
       /** @description The link to the documentation for the input field */
       link?: string;
+      /** @description Additional metadata for the input field */
+      metadata?: Record<string, unknown>;
       /** @description The default value of the number field */
       default?: number;
       list?: Components['schemas']['InputListSchema'];
@@ -4141,10 +5027,22 @@ export type Components = {
       config?: boolean;
       /** @description The link to the documentation for the input field */
       link?: string;
+      /** @description Additional metadata for the input field */
+      metadata?: Record<string, unknown>;
       /** @description The default value of the string field */
       default?: string;
+      /**
+       * @description The validation type for the input field
+       * @enum {string}
+       */
+      validation?: 'url';
       list?: Components['schemas']['InputListSchema'];
     };
+    /**
+     * @description Indicates the mode of the selector, auto will allow AI to determine the value, manual will allow the user to manually input a value
+     * @enum {string}
+     */
+    FieldSelectorModeSchema: 'all' | 'auto' | 'manual';
     /** @description The boolean field allows users mark a field as true or false */
     FieldBooleanSchema: {
       /**
@@ -4169,6 +5067,9 @@ export type Components = {
       config?: boolean;
       /** @description The link to the documentation for the input field */
       link?: string;
+      /** @description Additional metadata for the input field */
+      metadata?: Record<string, unknown>;
+      allowed_modes?: Components['schemas']['FieldSelectorModeSchema'][];
     };
     /** @description The date field allows users to select a date */
     FieldDateSchema: {
@@ -4194,6 +5095,62 @@ export type Components = {
       config?: boolean;
       /** @description The link to the documentation for the input field */
       link?: string;
+      /** @description Additional metadata for the input field */
+      metadata?: Record<string, unknown>;
+    };
+    /** @description The date and time field allows users to select a date and time */
+    FieldDateTimeSchema: {
+      /**
+       * @description The type of the input field (enum property replaced by openapi-typescript)
+       * @enum {string}
+       */
+      type: 'datetime';
+      /** @description The name of the input field */
+      name?: string;
+      /** @description The description of the input field */
+      desc?: string;
+      /** @description Indicates whether the input field is optional */
+      optional?: boolean;
+      /** @description Indicates whether the input field can contain multiple values */
+      array?: boolean;
+      /** @description The placeholder of the input field */
+      placeholder?: string;
+      display?: Components['schemas']['InputDisplaySchema'];
+      /** @description The order of the input field relative to other fields in the form */
+      order?: number;
+      /** @description Whether to make the field a configuration field (only visible in the configuration tab) */
+      config?: boolean;
+      /** @description The link to the documentation for the input field */
+      link?: string;
+      /** @description Additional metadata for the input field */
+      metadata?: Record<string, unknown>;
+    };
+    /** @description The time field allows users to select a time */
+    FieldTimeSchema: {
+      /**
+       * @description The type of the input field (enum property replaced by openapi-typescript)
+       * @enum {string}
+       */
+      type: 'time';
+      /** @description The name of the input field */
+      name?: string;
+      /** @description The description of the input field */
+      desc?: string;
+      /** @description Indicates whether the input field is optional */
+      optional?: boolean;
+      /** @description Indicates whether the input field can contain multiple values */
+      array?: boolean;
+      /** @description The placeholder of the input field */
+      placeholder?: string;
+      display?: Components['schemas']['InputDisplaySchema'];
+      /** @description The order of the input field relative to other fields in the form */
+      order?: number;
+      /** @description Whether to make the field a configuration field (only visible in the configuration tab) */
+      config?: boolean;
+      /** @description The link to the documentation for the input field */
+      link?: string;
+      /** @description Additional metadata for the input field */
+      metadata?: Record<string, unknown>;
     };
     /** @description Display options for the select field */
     FieldSelectDisplaySchema: Components['schemas']['InputDisplaySchema'] & {
@@ -4209,14 +5166,11 @@ export type Components = {
       label: string;
       /** @description Value of the select option */
       value: string;
+      /** @description Description of the select option */
+      description?: string;
       /** @description Icon of the selected option */
       icon?: string;
     };
-    /**
-     * @description Indicates the mode of the selector, auto will allow AI to determine the value, manual will allow the user to manually input a value
-     * @enum {string}
-     */
-    FieldSelectorModeSchema: 'all' | 'auto' | 'manual';
     /** @description The select field used to select from a list of options */
     FieldSelectSchema: {
       /**
@@ -4241,6 +5195,8 @@ export type Components = {
       config?: boolean;
       /** @description The link to the documentation for the input field */
       link?: string;
+      /** @description Additional metadata for the input field */
+      metadata?: Record<string, unknown>;
       /** @description The default value of the select field */
       default?: string;
       /** @description The options for the select field (min 1) */
@@ -4250,8 +5206,6 @@ export type Components = {
       ];
       list?: Components['schemas']['InputListSchema'];
       allowed_modes?: Components['schemas']['FieldSelectorModeSchema'][];
-      /** @description Indicates if multiple selections are allowed */
-      multiple?: boolean;
       /** @description Indicates whether additional unlisted options are allowed */
       additional_options?: boolean;
     };
@@ -4279,6 +5233,8 @@ export type Components = {
       config?: boolean;
       /** @description The link to the documentation for the input field */
       link?: string;
+      /** @description Additional metadata for the input field */
+      metadata?: Record<string, unknown>;
       /** @description Any markdown content */
       content?: string;
     };
@@ -4291,13 +5247,23 @@ export type Components = {
       | 'SCHEDULER'
       | 'TOOLS'
       | 'FILES'
+      | 'COLLECTIONS'
       | 'OAUTH'
       | 'GOOGLE_SHEETS'
+      | 'GOOGLE_CALENDAR'
       | 'GMAIL'
+      | 'GOOGLE_DRIVE'
       | 'SLACK'
       | 'ENCOMPASS'
       | 'PERSONA'
-      | 'NOTION';
+      | 'NOTION'
+      | 'OPENAI'
+      | 'ANTHROPIC'
+      | 'GOOGLE_AI'
+      | 'XAI'
+      | 'AZURE_AI'
+      | 'OPENROUTER'
+      | 'GROQ';
     /** @description The connection field used to select a connection */
     FieldConnectionSchema: {
       /**
@@ -4322,6 +5288,8 @@ export type Components = {
       config?: boolean;
       /** @description The link to the documentation for the input field */
       link?: string;
+      /** @description Additional metadata for the input field */
+      metadata?: Record<string, unknown>;
       allowed_types?: Components['schemas']['FieldConnectionTypesSchema'];
     };
     /** @description The object field that can contain other fields, including nested objects */
@@ -4348,6 +5316,8 @@ export type Components = {
       config?: boolean;
       /** @description The link to the documentation for the input field */
       link?: string;
+      /** @description Additional metadata for the input field */
+      metadata?: Record<string, unknown>;
       /** @description A record of fields that can be of various types including object fields */
       fields: {
         [key: string]: Components['schemas']['InputSchema'];
@@ -4361,6 +5331,8 @@ export type Components = {
       | Components['schemas']['FieldStringSchema']
       | Components['schemas']['FieldBooleanSchema']
       | Components['schemas']['FieldDateSchema']
+      | Components['schemas']['FieldDateTimeSchema']
+      | Components['schemas']['FieldTimeSchema']
       | Components['schemas']['FieldSelectSchema']
       | Components['schemas']['FieldContentSchema']
       | Components['schemas']['FieldConnectionSchema']
@@ -4368,6 +5340,16 @@ export type Components = {
     /** @description The definition of the input fields */
     InputDefinitionSchema: {
       [key: string]: Components['schemas']['InputSchema'];
+    };
+    /** @description Webhook configuration for the input step */
+    StepWebhookConfigSchema: {
+      /**
+       * @description HTTP method for the webhook
+       * @enum {string}
+       */
+      method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+      /** @description The path for the webhook, e.g. /some/path */
+      path?: string;
     };
     /** @description A step that provides input values for the workflow */
     StepInputSchema: {
@@ -4377,6 +5359,7 @@ export type Components = {
        */
       type: 'input';
       key: Components['schemas']['StepKeySchema'];
+      display?: Components['schemas']['StepDisplaySchema'];
       /** @description A condition to determine if the step should run */
       conditional?: string;
       /** @description A loop condition for the step to repeat running until the condition is met */
@@ -4393,6 +5376,7 @@ export type Components = {
       size?: [number, number];
       auto?: Components['schemas']['StepAutoConfigSchema'];
       input: Components['schemas']['InputDefinitionSchema'];
+      webhook?: Components['schemas']['StepWebhookConfigSchema'];
     };
     /** @description A condition to evaluate for branching */
     StepBranchConditionSchema: {
@@ -4411,6 +5395,7 @@ export type Components = {
        */
       type: 'branch';
       key: Components['schemas']['StepKeySchema'];
+      display?: Components['schemas']['StepDisplaySchema'];
       /** @description A condition to determine if the step should run */
       conditional?: string;
       /** @description A loop condition for the step to repeat running until the condition is met */
@@ -4440,6 +5425,7 @@ export type Components = {
        */
       type: 'code';
       key: Components['schemas']['StepKeySchema'];
+      display?: Components['schemas']['StepDisplaySchema'];
       /** @description A condition to determine if the step should run */
       conditional?: string;
       /** @description A loop condition for the step to repeat running until the condition is met */
@@ -4608,6 +5594,7 @@ export type Components = {
        */
       type: 'model';
       key: Components['schemas']['StepKeySchema'];
+      display?: Components['schemas']['StepDisplaySchema'];
       /** @description A condition to determine if the step should run */
       conditional?: string;
       /** @description A loop condition for the step to repeat running until the condition is met */
@@ -4633,6 +5620,7 @@ export type Components = {
        */
       type: 'http_request';
       key: Components['schemas']['StepKeySchema'];
+      display?: Components['schemas']['StepDisplaySchema'];
       /** @description A condition to determine if the step should run */
       conditional?: string;
       /** @description A loop condition for the step to repeat running until the condition is met */
@@ -4655,10 +5643,12 @@ export type Components = {
        * @enum {string}
        */
       method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
-      /** @description Headers to include in the HTTP request in key-value pairs */
-      headers?: {
-        [key: string]: string;
-      };
+      /** @description Headers to include in the HTTP request as JSON key-value pairs */
+      headers?:
+        | string
+        | {
+            [key: string]: string;
+          };
       /** @description The body string of the HTTP request (E.g. JSON string) */
       body?: string;
     };
@@ -4670,6 +5660,7 @@ export type Components = {
        */
       type: 'browser';
       key: Components['schemas']['StepKeySchema'];
+      display?: Components['schemas']['StepDisplaySchema'];
       /** @description A condition to determine if the step should run */
       conditional?: string;
       /** @description A loop condition for the step to repeat running until the condition is met */
@@ -4711,6 +5702,7 @@ export type Components = {
        */
       type: 'workflow';
       key: Components['schemas']['StepKeySchema'];
+      display?: Components['schemas']['StepDisplaySchema'];
       /** @description A condition to determine if the step should run */
       conditional?: string;
       /** @description A loop condition for the step to repeat running until the condition is met */
@@ -4742,7 +5734,7 @@ export type Components = {
     SchedulerOnScheduleActionServiceInputSchema: {
       /**
        * @description The interval (seconds) or cron expression
-       * @enum {string}
+       * @enum {string|null}
        */
       schedule?:
         | '60'
@@ -4761,7 +5753,8 @@ export type Components = {
         | '0 0 * * 6'
         | '0 0 * * 0'
         | '0 0 * * 1-5'
-        | '0 0 * * 6,0';
+        | '0 0 * * 6,0'
+        | null;
       /** @description The timezone to use for the schedule */
       timezone?: string | null;
     };
@@ -4784,7 +5777,7 @@ export type Components = {
     ToolsWebSearchActionServiceInputSchema: {
       /**
        * @description The search engine to be used for the search
-       * @enum {string}
+       * @enum {string|null}
        */
       engine?:
         | 'google'
@@ -4806,7 +5799,8 @@ export type Components = {
         | 'ebay'
         | 'baidu'
         | 'yandex'
-        | 'naver';
+        | 'naver'
+        | null;
       /** @description The search query to be used for the search */
       query?: string | null;
     };
@@ -4831,9 +5825,14 @@ export type Components = {
       file?: string | null;
       /**
        * @description Persistent storage will keep the file even after the run finishes. Temporary storage will delete the file after 24 hours
-       * @enum {string}
+       * @enum {string|null}
        */
-      storage?: 'PERSISTENT' | 'TEMPORARY';
+      storage?: 'PERSISTENT' | 'TEMPORARY' | null;
+      /**
+       * @description Whether the file is private or public, private files URLs are signed with a token and can be accessed temporarily
+       * @enum {string|null}
+       */
+      visibility?: 'PRIVATE' | 'PUBLIC' | null;
     };
     /** @description The DOWNLOAD_FILE service */
     FilesDownloadFileActionServiceSchema: {
@@ -4858,7 +5857,7 @@ export type Components = {
       name?: string | null;
       /**
        * @description MIME type of the file, by default it will be auto-detected
-       * @enum {string}
+       * @enum {string|null}
        */
       mime_type?:
         | 'auto'
@@ -4866,12 +5865,18 @@ export type Components = {
         | 'text/csv'
         | 'text/html'
         | 'application/json'
-        | 'application/xml';
+        | 'application/xml'
+        | null;
       /**
        * @description Persistent storage will keep the file even after the run finishes. Temporary storage will delete the file after 24 hours
-       * @enum {string}
+       * @enum {string|null}
        */
-      storage?: 'PERSISTENT' | 'TEMPORARY';
+      storage?: 'PERSISTENT' | 'TEMPORARY' | null;
+      /**
+       * @description Whether the file is private or public, private files URLs are signed with a token and can be accessed temporarily
+       * @enum {string|null}
+       */
+      visibility?: 'PRIVATE' | 'PUBLIC' | null;
     };
     /** @description The UPLOAD_FILE service */
     FilesUploadFileActionServiceSchema: {
@@ -4888,9 +5893,29 @@ export type Components = {
         | Components['schemas']['FilesUploadFileActionServiceInputSchema']
         | string;
     };
+    /** @description The input for DELETE_FILE */
+    FilesDeleteFileActionServiceInputSchema: {
+      /** @description ID of the file to delete */
+      file_id?: string | null;
+    };
+    /** @description The DELETE_FILE service */
+    FilesDeleteFileActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'FILES';
+      /** @enum {string} */
+      action: 'DELETE_FILE';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['FilesDeleteFileActionServiceInputSchema']
+        | string;
+    };
     /** @description The input for EXTRACT_PAGES */
     FilesExtractPagesActionServiceInputSchema: {
-      /** @description PDF Document to extract pages from */
+      /** @description Document to extract pages from */
       file?: string | null;
       /** @description A custom name for the file */
       name?: string | null;
@@ -4898,9 +5923,14 @@ export type Components = {
       pages?: string | null;
       /**
        * @description Persistent storage will keep the file even after the run finishes. Temporary storage will delete the file after 24 hours
-       * @enum {string}
+       * @enum {string|null}
        */
-      storage?: 'PERSISTENT' | 'TEMPORARY';
+      storage?: 'PERSISTENT' | 'TEMPORARY' | null;
+      /**
+       * @description Whether the file is private or public, private files URLs are signed with a token and can be accessed temporarily
+       * @enum {string|null}
+       */
+      visibility?: 'PRIVATE' | 'PUBLIC' | null;
     };
     /** @description The EXTRACT_PAGES service */
     FilesExtractPagesActionServiceSchema: {
@@ -4919,13 +5949,18 @@ export type Components = {
     };
     /** @description The input for EXTRACT_CONTENTS */
     FilesExtractContentsActionServiceInputSchema: {
-      /** @description Document or image to extract contents from */
+      /** @description Document to extract contents from */
       file?: string | null;
       /**
        * @description Persistent storage will keep the file even after the run finishes. Temporary storage will delete the file after 24 hours
-       * @enum {string}
+       * @enum {string|null}
        */
-      storage?: 'PERSISTENT' | 'TEMPORARY';
+      storage?: 'PERSISTENT' | 'TEMPORARY' | null;
+      /**
+       * @description Whether the file is private or public, private files URLs are signed with a token and can be accessed temporarily
+       * @enum {string|null}
+       */
+      visibility?: 'PRIVATE' | 'PUBLIC' | null;
     };
     /** @description The EXTRACT_CONTENTS service */
     FilesExtractContentsActionServiceSchema: {
@@ -4948,9 +5983,14 @@ export type Components = {
       file?: string | null;
       /**
        * @description Persistent storage will keep the file even after the run finishes. Temporary storage will delete the file after 24 hours
-       * @enum {string}
+       * @enum {string|null}
        */
-      storage?: 'PERSISTENT' | 'TEMPORARY';
+      storage?: 'PERSISTENT' | 'TEMPORARY' | null;
+      /**
+       * @description Whether the file is private or public, private files URLs are signed with a token and can be accessed temporarily
+       * @enum {string|null}
+       */
+      visibility?: 'PRIVATE' | 'PUBLIC' | null;
     };
     /** @description The EXTRACT_IMAGES service */
     FilesExtractImagesActionServiceSchema: {
@@ -4966,6 +6006,334 @@ export type Components = {
       input:
         | Components['schemas']['FilesExtractImagesActionServiceInputSchema']
         | string;
+    };
+    /** @description The input for MARKDOWN_TO_PDF */
+    FilesMarkdownToPdfActionServiceInputSchema: {
+      /** @description Markdown to convert to PDF */
+      file?: string | null;
+      /** @description A custom name for the file */
+      name?: string | null;
+      /**
+       * @description Persistent storage will keep the file even after the run finishes. Temporary storage will delete the file after 24 hours
+       * @enum {string|null}
+       */
+      storage?: 'PERSISTENT' | 'TEMPORARY' | null;
+      /**
+       * @description Whether the file is private or public, private files URLs are signed with a token and can be accessed temporarily
+       * @enum {string|null}
+       */
+      visibility?: 'PRIVATE' | 'PUBLIC' | null;
+    };
+    /** @description The MARKDOWN_TO_PDF service */
+    FilesMarkdownToPdfActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'FILES';
+      /** @enum {string} */
+      action: 'MARKDOWN_TO_PDF';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['FilesMarkdownToPdfActionServiceInputSchema']
+        | string;
+    };
+    /** @description The input for HTML_TO_PDF */
+    FilesHtmlToPdfActionServiceInputSchema: {
+      /** @description Raw HTML or Website URL to convert to PDF */
+      file?: string | null;
+      /** @description A custom name for the file */
+      name?: string | null;
+      /**
+       * @description Persistent storage will keep the file even after the run finishes. Temporary storage will delete the file after 24 hours
+       * @enum {string|null}
+       */
+      storage?: 'PERSISTENT' | 'TEMPORARY' | null;
+      /**
+       * @description Whether the file is private or public, private files URLs are signed with a token and can be accessed temporarily
+       * @enum {string|null}
+       */
+      visibility?: 'PRIVATE' | 'PUBLIC' | null;
+    };
+    /** @description The HTML_TO_PDF service */
+    FilesHtmlToPdfActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'FILES';
+      /** @enum {string} */
+      action: 'HTML_TO_PDF';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['FilesHtmlToPdfActionServiceInputSchema']
+        | string;
+    };
+    /** @description The input for RECORDS_SEARCH */
+    CollectionsRecordsSearchActionServiceInputSchema: {
+      /** @description The collection to search in */
+      collection_id?: string | null;
+      /** @description Search term to filter records by name */
+      search?: string | null;
+      /**
+       * @description Filter records by status
+       * @enum {string|null}
+       */
+      status?:
+        | 'ALL'
+        | 'DRAFT'
+        | 'QUEUED'
+        | 'RUNNING'
+        | 'COMPLETED'
+        | 'FAILED'
+        | 'CANCELLED'
+        | null;
+      /** @description Filter records by tags */
+      tag_ids?: string[] | null;
+    };
+    /** @description The RECORDS_SEARCH service */
+    CollectionsRecordsSearchActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'COLLECTIONS';
+      /** @enum {string} */
+      action: 'RECORDS_SEARCH';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['CollectionsRecordsSearchActionServiceInputSchema']
+        | string;
+    };
+    /** @description The input for RECORDS_GET */
+    CollectionsRecordsGetActionServiceInputSchema: {
+      /** @description The collection to get the record from */
+      collection_id?: string | null;
+      /** @description The record to retrieve */
+      record_id?: string | null;
+    };
+    /** @description The RECORDS_GET service */
+    CollectionsRecordsGetActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'COLLECTIONS';
+      /** @enum {string} */
+      action: 'RECORDS_GET';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['CollectionsRecordsGetActionServiceInputSchema']
+        | string;
+    };
+    /** @description The input for RECORDS_CREATE */
+    CollectionsRecordsCreateActionServiceInputSchema: {
+      /** @description The ID of the collection to create the record in */
+      collection_id?: string | null;
+      /** @description Name of the record */
+      name?: string | null;
+      /**
+       * @description Whether to run rules after creation
+       * @enum {string|null}
+       */
+      run?: 'all' | 'changed' | null;
+      /** @description Tags to apply to the record */
+      tags_ids?: string[] | null;
+    };
+    /** @description The RECORDS_CREATE service */
+    CollectionsRecordsCreateActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'COLLECTIONS';
+      /** @enum {string} */
+      action: 'RECORDS_CREATE';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['CollectionsRecordsCreateActionServiceInputSchema']
+        | string;
+    };
+    /** @description The input for RECORDS_UPDATE */
+    CollectionsRecordsUpdateActionServiceInputSchema: {
+      /** @description The collection to update the record in */
+      collection_id?: string | null;
+      /** @description The record to update */
+      record_id?: string | null;
+      /** @description Name of the record */
+      name?: string | null;
+      /** @description Tags to apply to the record */
+      tag_ids?: string[] | null;
+    };
+    /** @description The RECORDS_UPDATE service */
+    CollectionsRecordsUpdateActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'COLLECTIONS';
+      /** @enum {string} */
+      action: 'RECORDS_UPDATE';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['CollectionsRecordsUpdateActionServiceInputSchema']
+        | string;
+    };
+    /** @description The input for RECORDS_DELETE */
+    CollectionsRecordsDeleteActionServiceInputSchema: {
+      /** @description The collection to update the record in */
+      collection_id?: string | null;
+      /** @description The record to delete */
+      record_id?: string | null;
+    };
+    /** @description The RECORDS_DELETE service */
+    CollectionsRecordsDeleteActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'COLLECTIONS';
+      /** @enum {string} */
+      action: 'RECORDS_DELETE';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['CollectionsRecordsDeleteActionServiceInputSchema']
+        | string;
+    };
+    /** @description The input for RECORDS_ANALYZE */
+    CollectionsRecordsAnalyzeActionServiceInputSchema: {
+      /** @description The collection to update the record in */
+      collection_id?: string | null;
+      /** @description The record to analyze */
+      record_id?: string | null;
+      /**
+       * @description Whether to analyze all rules or only those that have been changed
+       * @enum {string|null}
+       */
+      rules_scope?: 'all' | 'changed' | null;
+      /**
+       * @description Whether to wait for results or run in the background
+       * @enum {string|null}
+       */
+      execution_type?: 'sync' | 'async' | null;
+    };
+    /** @description The RECORDS_ANALYZE service */
+    CollectionsRecordsAnalyzeActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'COLLECTIONS';
+      /** @enum {string} */
+      action: 'RECORDS_ANALYZE';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['CollectionsRecordsAnalyzeActionServiceInputSchema']
+        | string;
+    };
+    /** @description The input for RECORDS_CANCEL */
+    CollectionsRecordsCancelActionServiceInputSchema: {
+      /** @description The collection to update the record in */
+      collection_id?: string | null;
+      /** @description The record with running analysis to cancel */
+      record_id?: string | null;
+    };
+    /** @description The RECORDS_CANCEL service */
+    CollectionsRecordsCancelActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'COLLECTIONS';
+      /** @enum {string} */
+      action: 'RECORDS_CANCEL';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['CollectionsRecordsCancelActionServiceInputSchema']
+        | string;
+    };
+    /** @description The input for RULES_UPDATE */
+    CollectionsRulesUpdateActionServiceInputSchema: {
+      /** @description The collection to update the record in */
+      collection_id?: string | null;
+      /** @description The rule to update */
+      rule_key?: string | null;
+      /** @description The record to update rules for */
+      record_id?: string | null;
+      /** @description Input values for the selected rule */
+      rule_input?: unknown;
+    };
+    /** @description The RULES_UPDATE service */
+    CollectionsRulesUpdateActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'COLLECTIONS';
+      /** @enum {string} */
+      action: 'RULES_UPDATE';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['CollectionsRulesUpdateActionServiceInputSchema']
+        | string;
+    };
+    /** @description The input for RULES_UPDATE_ALL */
+    CollectionsRulesUpdateAllActionServiceInputSchema: {
+      /** @description The collection to update the record in */
+      collection_id?: string | null;
+      /** @description The record to update rules for */
+      record_id?: string | null;
+      /** @description Input values for all rules */
+      rules?: unknown;
+    };
+    /** @description The RULES_UPDATE_ALL service */
+    CollectionsRulesUpdateAllActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'COLLECTIONS';
+      /** @enum {string} */
+      action: 'RULES_UPDATE_ALL';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['CollectionsRulesUpdateAllActionServiceInputSchema']
+        | string;
+    };
+    /** @description The input for ON_SPREADSHEETS_NEW_ROW */
+    GoogleSheetsOnSpreadsheetsNewRowActionServiceInputSchema: {
+      /** @description Spreadsheet to watch for new rows */
+      spreadsheet_id?: string | null;
+      /** @description Worksheet to watch for new rows. Defaults to the first sheet */
+      worksheet?: string | null;
+    };
+    /** @description The ON_SPREADSHEETS_NEW_ROW service */
+    GoogleSheetsOnSpreadsheetsNewRowActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'GOOGLE_SHEETS';
+      /** @enum {string} */
+      action: 'ON_SPREADSHEETS_NEW_ROW';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['GoogleSheetsOnSpreadsheetsNewRowActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
     };
     /** @description The input for SPREADSHEETS_LIST */
     GoogleSheetsSpreadsheetsListActionServiceInputSchema: Record<
@@ -5037,28 +6405,1301 @@ export type Components = {
       /** @description ID of the connection integration */
       connection_id?: string;
     };
-    /** @description The input for SEND_EMAIL */
-    GmailSendEmailActionServiceInputSchema: {
-      /** @description Email addresses of the recipients, separated by commas */
-      recipients?: string | null;
-      /** @description Subject */
-      subject?: string | null;
-      /** @description Body */
-      body?: string | null;
+    /** @description The input for ON_NEW_FILE */
+    GoogleDriveOnNewFileActionServiceInputSchema: {
+      /** @description The folder to monitor for new files */
+      folder_id?: string | null;
+      /**
+       * @description Filter results by file type (e.g., image/*, application/pdf)
+       * @enum {string|null}
+       */
+      mime_type?:
+        | '*/*'
+        | 'application/vnd.google-apps.document'
+        | 'application/vnd.google-apps.spreadsheet'
+        | 'application/vnd.google-apps.presentation'
+        | 'application/pdf'
+        | 'image/*'
+        | 'video/*'
+        | 'audio/*'
+        | 'application/zip'
+        | 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        | 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        | 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+        | 'text/plain'
+        | null;
     };
-    /** @description The SEND_EMAIL service */
-    GmailSendEmailActionServiceSchema: {
+    /** @description The ON_NEW_FILE service */
+    GoogleDriveOnNewFileActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'GOOGLE_DRIVE';
+      /** @enum {string} */
+      action: 'ON_NEW_FILE';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['GoogleDriveOnNewFileActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
+    /** @description The input for FILES_SEARCH */
+    GoogleDriveFilesSearchActionServiceInputSchema: {
+      /** @description The folder where to search for files */
+      folder_id?: string | null;
+      /** @description Search for files in Google Drive */
+      search_text?: string | null;
+      /**
+       * @description Filter results by file type (e.g., image/*, application/pdf)
+       * @enum {string|null}
+       */
+      mime_type?:
+        | '*/*'
+        | 'application/vnd.google-apps.document'
+        | 'application/vnd.google-apps.spreadsheet'
+        | 'application/vnd.google-apps.presentation'
+        | 'application/pdf'
+        | 'image/*'
+        | 'video/*'
+        | 'audio/*'
+        | 'application/zip'
+        | 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        | 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        | 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+        | 'text/plain'
+        | null;
+      /** @description Show folders created after this date */
+      created_after?: unknown;
+      /** @description Show folders created before this date */
+      created_before?: unknown;
+      /** @description Show folders modified after this date */
+      modified_after?: unknown;
+      /** @description Show folders modified before this date */
+      modified_before?: unknown;
+      /** @description include files that have been moved to trash */
+      include_trashed?: boolean | null;
+    };
+    /** @description The FILES_SEARCH service */
+    GoogleDriveFilesSearchActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'GOOGLE_DRIVE';
+      /** @enum {string} */
+      action: 'FILES_SEARCH';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['GoogleDriveFilesSearchActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
+    /** @description The input for FILES_GET */
+    GoogleDriveFilesGetActionServiceInputSchema: {
+      /** @description The Google Drive File ID of the file to retrieve */
+      file_id?: string | null;
+    };
+    /** @description The FILES_GET service */
+    GoogleDriveFilesGetActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'GOOGLE_DRIVE';
+      /** @enum {string} */
+      action: 'FILES_GET';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['GoogleDriveFilesGetActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
+    /** @description The input for FILES_UPLOAD */
+    GoogleDriveFilesUploadActionServiceInputSchema: {
+      /** @description The folder where to upload the file. */
+      folder_id?: string | null;
+      /** @description File to upload (select a file or provide a URL) */
+      file?: unknown;
+      /** @description Name for the uploaded file */
+      name?: string | null;
+      /** @description Description for the file */
+      description?: string | null;
+      /** @description Convert the file to a Google format (e.g. Google Docs, Sheets) */
+      convert_to_google_format?: boolean | null;
+    };
+    /** @description The FILES_UPLOAD service */
+    GoogleDriveFilesUploadActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'GOOGLE_DRIVE';
+      /** @enum {string} */
+      action: 'FILES_UPLOAD';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['GoogleDriveFilesUploadActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
+    /** @description The input for FILES_DOWNLOAD */
+    GoogleDriveFilesDownloadActionServiceInputSchema: {
+      /** @description The Google Drive File ID of the file to retrieve */
+      file_id?: string | null;
+      /**
+       * @description Persistent storage will keep the file even after the run finishes. Temporary storage will delete the file after 24 hours
+       * @enum {string|null}
+       */
+      storage?: 'PERSISTENT' | 'TEMPORARY' | null;
+      /**
+       * @description Whether the file is private or public, private files URLs are signed with a token and can be accessed temporarily
+       * @enum {string|null}
+       */
+      visibility?: 'PRIVATE' | 'PUBLIC' | null;
+      /**
+       * @description Format for exporting Google Native files (e.g. Google Docs, Sheets)
+       * @enum {string|null}
+       */
+      export_mime_type?:
+        | 'auto'
+        | 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        | 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        | 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+        | 'application/pdf'
+        | 'text/markdown'
+        | 'image/jpeg'
+        | 'image/png'
+        | 'text/plain'
+        | 'application/zip'
+        | 'application/epub+zip'
+        | 'application/vnd.oasis.opendocument.text'
+        | 'application/vnd.oasis.opendocument.presentation'
+        | 'application/vnd.oasis.opendocument.spreadsheet'
+        | 'application/rtf'
+        | 'image/svg+xml'
+        | 'application/json'
+        | 'video/mp4'
+        | null;
+    };
+    /** @description The FILES_DOWNLOAD service */
+    GoogleDriveFilesDownloadActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'GOOGLE_DRIVE';
+      /** @enum {string} */
+      action: 'FILES_DOWNLOAD';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['GoogleDriveFilesDownloadActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
+    /** @description The input for FILES_MOVE */
+    GoogleDriveFilesMoveActionServiceInputSchema: {
+      /** @description The Google Drive File ID of the file to move */
+      file_id?: string | null;
+      /** @description The folder where to move the file */
+      destination_folder_id?: string | null;
+    };
+    /** @description The FILES_MOVE service */
+    GoogleDriveFilesMoveActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'GOOGLE_DRIVE';
+      /** @enum {string} */
+      action: 'FILES_MOVE';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['GoogleDriveFilesMoveActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
+    /** @description The input for FILES_COPY */
+    GoogleDriveFilesCopyActionServiceInputSchema: {
+      /** @description The Google Drive File ID of the file to copy */
+      file_id?: string | null;
+      /** @description Name for the copied file */
+      name?: string | null;
+      /** @description The folder where to place the copied file. Leave empty for same folder. */
+      folder_id?: string | null;
+      /** @description Description for the copied file */
+      description?: string | null;
+    };
+    /** @description The FILES_COPY service */
+    GoogleDriveFilesCopyActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'GOOGLE_DRIVE';
+      /** @enum {string} */
+      action: 'FILES_COPY';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['GoogleDriveFilesCopyActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
+    /** @description The input for FILES_UPDATE */
+    GoogleDriveFilesUpdateActionServiceInputSchema: {
+      /** @description The Google Drive File ID of the file to update */
+      file_id?: string | null;
+      /** @description New name for the file */
+      name?: string | null;
+      /** @description New description for the file */
+      description?: string | null;
+      /** @description Mark the file as starred */
+      starred?: boolean | null;
+    };
+    /** @description The FILES_UPDATE service */
+    GoogleDriveFilesUpdateActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'GOOGLE_DRIVE';
+      /** @enum {string} */
+      action: 'FILES_UPDATE';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['GoogleDriveFilesUpdateActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
+    /** @description The input for FILES_TRASH */
+    GoogleDriveFilesTrashActionServiceInputSchema: {
+      /** @description The Google Drive File ID of the file to move to trash */
+      file_id?: string | null;
+    };
+    /** @description The FILES_TRASH service */
+    GoogleDriveFilesTrashActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'GOOGLE_DRIVE';
+      /** @enum {string} */
+      action: 'FILES_TRASH';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['GoogleDriveFilesTrashActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
+    /** @description The input for FOLDERS_SEARCH */
+    GoogleDriveFoldersSearchActionServiceInputSchema: {
+      /** @description Search for folders in Google Drive */
+      search_text?: string | null;
+      /** @description Show folders created after this date */
+      created_after?: unknown;
+      /** @description Show folders created before this date */
+      created_before?: unknown;
+      /** @description Show folders modified after this date */
+      modified_after?: unknown;
+      /** @description Show folders modified before this date */
+      modified_before?: unknown;
+      /** @description include folders that have been moved to trash */
+      include_trashed?: boolean | null;
+    };
+    /** @description The FOLDERS_SEARCH service */
+    GoogleDriveFoldersSearchActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'GOOGLE_DRIVE';
+      /** @enum {string} */
+      action: 'FOLDERS_SEARCH';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['GoogleDriveFoldersSearchActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
+    /** @description The input for FOLDERS_CREATE */
+    GoogleDriveFoldersCreateActionServiceInputSchema: {
+      /** @description Name for the new folder */
+      name?: string | null;
+      /** @description The folder where to create the new folder. */
+      folder_id?: string | null;
+      /** @description Description for the folder */
+      description?: string | null;
+    };
+    /** @description The FOLDERS_CREATE service */
+    GoogleDriveFoldersCreateActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'GOOGLE_DRIVE';
+      /** @enum {string} */
+      action: 'FOLDERS_CREATE';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['GoogleDriveFoldersCreateActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
+    /** @description The input for FOLDERS_TRASH */
+    GoogleDriveFoldersTrashActionServiceInputSchema: {
+      /** @description The Google Drive ID of the folder to move to trash */
+      folder_id?: string | null;
+    };
+    /** @description The FOLDERS_TRASH service */
+    GoogleDriveFoldersTrashActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'GOOGLE_DRIVE';
+      /** @enum {string} */
+      action: 'FOLDERS_TRASH';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['GoogleDriveFoldersTrashActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
+    /** @description The input for ON_CALENDAR_NEW_EVENT */
+    GoogleCalendarOnCalendarNewEventActionServiceInputSchema: {
+      /** @description The calendar to watch for new events */
+      calendar_id?: string | null;
+    };
+    /** @description The ON_CALENDAR_NEW_EVENT service */
+    GoogleCalendarOnCalendarNewEventActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'GOOGLE_CALENDAR';
+      /** @enum {string} */
+      action: 'ON_CALENDAR_NEW_EVENT';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['GoogleCalendarOnCalendarNewEventActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
+    /** @description The input for CALENDARS_LIST */
+    GoogleCalendarCalendarsListActionServiceInputSchema: Record<
+      string,
+      unknown
+    >;
+    /** @description The CALENDARS_LIST service */
+    GoogleCalendarCalendarsListActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'GOOGLE_CALENDAR';
+      /** @enum {string} */
+      action: 'CALENDARS_LIST';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['GoogleCalendarCalendarsListActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
+    /** @description The input for CALENDARS_GET */
+    GoogleCalendarCalendarsGetActionServiceInputSchema: {
+      /** @description The calendar to retrieve */
+      calendar_id?: string | null;
+    };
+    /** @description The CALENDARS_GET service */
+    GoogleCalendarCalendarsGetActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'GOOGLE_CALENDAR';
+      /** @enum {string} */
+      action: 'CALENDARS_GET';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['GoogleCalendarCalendarsGetActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
+    /** @description The input for CALENDARS_CREATE */
+    GoogleCalendarCalendarsCreateActionServiceInputSchema: {
+      /** @description The name of the calendar */
+      summary?: string | null;
+      /** @description Description of the calendar */
+      description?: string | null;
+      /** @description The time zone of the calendar (e.g., America/New_York) */
+      timezone?: string | null;
+    };
+    /** @description The CALENDARS_CREATE service */
+    GoogleCalendarCalendarsCreateActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'GOOGLE_CALENDAR';
+      /** @enum {string} */
+      action: 'CALENDARS_CREATE';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['GoogleCalendarCalendarsCreateActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
+    /** @description The input for CALENDARS_UPDATE */
+    GoogleCalendarCalendarsUpdateActionServiceInputSchema: {
+      /** @description The calendar to update */
+      calendar_id?: string | null;
+      /** @description The name of the calendar */
+      summary?: string | null;
+      /** @description Description of the calendar */
+      description?: string | null;
+      /** @description The time zone of the calendar (e.g., America/New_York) */
+      timezone?: string | null;
+    };
+    /** @description The CALENDARS_UPDATE service */
+    GoogleCalendarCalendarsUpdateActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'GOOGLE_CALENDAR';
+      /** @enum {string} */
+      action: 'CALENDARS_UPDATE';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['GoogleCalendarCalendarsUpdateActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
+    /** @description The input for CALENDARS_DELETE */
+    GoogleCalendarCalendarsDeleteActionServiceInputSchema: {
+      /** @description The calendar to delete */
+      calendar_id?: string | null;
+    };
+    /** @description The CALENDARS_DELETE service */
+    GoogleCalendarCalendarsDeleteActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'GOOGLE_CALENDAR';
+      /** @enum {string} */
+      action: 'CALENDARS_DELETE';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['GoogleCalendarCalendarsDeleteActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
+    /** @description The input for CALENDARS_CLEAR */
+    GoogleCalendarCalendarsClearActionServiceInputSchema: {
+      /** @description The primary calendar to clear */
+      calendar_id?: string | null;
+    };
+    /** @description The CALENDARS_CLEAR service */
+    GoogleCalendarCalendarsClearActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'GOOGLE_CALENDAR';
+      /** @enum {string} */
+      action: 'CALENDARS_CLEAR';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['GoogleCalendarCalendarsClearActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
+    /** @description The input for EVENTS_SEARCH */
+    GoogleCalendarEventsSearchActionServiceInputSchema: {
+      /** @description The calendar to search in */
+      calendar_id?: string | null;
+      /** @description Free text search terms to find events that match */
+      q?: string | null;
+      /** @description Lower bound (inclusive) for an event's start time */
+      time_min?: unknown;
+      /** @description Upper bound (exclusive) for an event's start time */
+      time_max?: unknown;
+    };
+    /** @description The EVENTS_SEARCH service */
+    GoogleCalendarEventsSearchActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'GOOGLE_CALENDAR';
+      /** @enum {string} */
+      action: 'EVENTS_SEARCH';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['GoogleCalendarEventsSearchActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
+    /** @description The input for EVENTS_GET */
+    GoogleCalendarEventsGetActionServiceInputSchema: {
+      /** @description The calendar containing the event */
+      calendar_id?: string | null;
+      /** @description The event to retrieve */
+      event_id?: string | null;
+      /** @description Time zone used in the response */
+      timezone?: string | null;
+    };
+    /** @description The EVENTS_GET service */
+    GoogleCalendarEventsGetActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'GOOGLE_CALENDAR';
+      /** @enum {string} */
+      action: 'EVENTS_GET';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['GoogleCalendarEventsGetActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
+    /** @description The input for EVENTS_CREATE */
+    GoogleCalendarEventsCreateActionServiceInputSchema: {
+      /** @description The calendar where the event will be created */
+      calendar_id?: string | null;
+      /** @description Title of the event */
+      title?: string | null;
+      /** @description Description of the event */
+      description?: string | null;
+      /** @description Start date and time of the event (In ISO format) */
+      start_date?: unknown;
+      /** @description End date and time of the event (In ISO format) */
+      end_date?: unknown;
+      /** @description Whether the event is an all-day event */
+      all_day?: boolean | null;
+      /** @description Email addresses of attendees, separated by commas */
+      attendees?: string | null;
+      /**
+       * @description How often the event repeats
+       * @enum {string|null}
+       */
+      recurrence_pattern?:
+        | ''
+        | 'RRULE:FREQ=DAILY'
+        | 'RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR'
+        | 'RRULE:FREQ=WEEKLY'
+        | 'RRULE:FREQ=WEEKLY;INTERVAL=2'
+        | 'RRULE:FREQ=MONTHLY'
+        | 'RRULE:FREQ=YEARLY'
+        | null;
+      /** @description When the recurring event should stop */
+      recurrence_until_date?: unknown;
+      /**
+       * @description Visibility of the event
+       * @enum {string|null}
+       */
+      visibility?: 'default' | 'public' | 'private' | null;
+      /**
+       * @description Color of the event
+       * @enum {string|null}
+       */
+      color_id?:
+        | ''
+        | '1'
+        | '2'
+        | '3'
+        | '4'
+        | '5'
+        | '6'
+        | '7'
+        | '8'
+        | '9'
+        | '10'
+        | '11'
+        | null;
+      /**
+       * @description How the reminder should be delivered
+       * @enum {string|null}
+       */
+      reminder_method?: 'email' | 'popup' | null;
+      /**
+       * @description How many minutes before the event to send the reminder
+       * @enum {string|null}
+       */
+      reminder_minutes?:
+        | '5'
+        | '10'
+        | '15'
+        | '30'
+        | '60'
+        | '120'
+        | '1440'
+        | '2880'
+        | '10080'
+        | null;
+      /**
+       * @description Whether to send notifications about the event
+       * @enum {string|null}
+       */
+      send_updates?: 'none' | 'all' | 'externalOnly' | null;
+      /** @description Location of the event */
+      location?: string | null;
+    };
+    /** @description The EVENTS_CREATE service */
+    GoogleCalendarEventsCreateActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'GOOGLE_CALENDAR';
+      /** @enum {string} */
+      action: 'EVENTS_CREATE';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['GoogleCalendarEventsCreateActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
+    /** @description The input for EVENTS_UPDATE */
+    GoogleCalendarEventsUpdateActionServiceInputSchema: {
+      /** @description The calendar where the event will be created */
+      calendar_id?: string | null;
+      /** @description The event to update */
+      event_id?: string | null;
+      /** @description Title of the event */
+      title?: string | null;
+      /** @description Description of the event */
+      description?: string | null;
+      /** @description Start date and time of the event (In ISO format) */
+      start_date?: unknown;
+      /** @description End date and time of the event (In ISO format) */
+      end_date?: unknown;
+      /** @description Whether the event is an all-day event */
+      all_day?: boolean | null;
+      /** @description Email addresses of attendees, separated by commas */
+      attendees?: string | null;
+      /**
+       * @description How often the event repeats
+       * @enum {string|null}
+       */
+      recurrence_pattern?:
+        | ''
+        | 'RRULE:FREQ=DAILY'
+        | 'RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR'
+        | 'RRULE:FREQ=WEEKLY'
+        | 'RRULE:FREQ=WEEKLY;INTERVAL=2'
+        | 'RRULE:FREQ=MONTHLY'
+        | 'RRULE:FREQ=YEARLY'
+        | null;
+      /** @description When the recurring event should stop */
+      recurrence_until_date?: unknown;
+      /**
+       * @description Visibility of the event
+       * @enum {string|null}
+       */
+      visibility?: 'default' | 'public' | 'private' | null;
+      /**
+       * @description Color of the event
+       * @enum {string|null}
+       */
+      color_id?:
+        | ''
+        | '1'
+        | '2'
+        | '3'
+        | '4'
+        | '5'
+        | '6'
+        | '7'
+        | '8'
+        | '9'
+        | '10'
+        | '11'
+        | null;
+      /**
+       * @description How the reminder should be delivered
+       * @enum {string|null}
+       */
+      reminder_method?: 'email' | 'popup' | null;
+      /**
+       * @description How many minutes before the event to send the reminder
+       * @enum {string|null}
+       */
+      reminder_minutes?:
+        | '5'
+        | '10'
+        | '15'
+        | '30'
+        | '60'
+        | '120'
+        | '1440'
+        | '2880'
+        | '10080'
+        | null;
+      /**
+       * @description Whether to send notifications about the event
+       * @enum {string|null}
+       */
+      send_updates?: 'none' | 'all' | 'externalOnly' | null;
+      /** @description Location of the event */
+      location?: string | null;
+    };
+    /** @description The EVENTS_UPDATE service */
+    GoogleCalendarEventsUpdateActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'GOOGLE_CALENDAR';
+      /** @enum {string} */
+      action: 'EVENTS_UPDATE';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['GoogleCalendarEventsUpdateActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
+    /** @description The input for EVENTS_DELETE */
+    GoogleCalendarEventsDeleteActionServiceInputSchema: {
+      /** @description The calendar containing the event */
+      calendar_id?: string | null;
+      /** @description The event to delete */
+      event_id?: string | null;
+      /** @description Whether to send notifications about the deletion */
+      send_notifications?: boolean | null;
+      /**
+       * @description How to notify attendees about the deletion
+       * @enum {string|null}
+       */
+      send_updates?: 'none' | 'all' | 'externalOnly' | null;
+    };
+    /** @description The EVENTS_DELETE service */
+    GoogleCalendarEventsDeleteActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'GOOGLE_CALENDAR';
+      /** @enum {string} */
+      action: 'EVENTS_DELETE';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['GoogleCalendarEventsDeleteActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
+    /** @description The input for EVENTS_QUICK_ADD */
+    GoogleCalendarEventsQuickAddActionServiceInputSchema: {
+      /** @description The calendar where the event will be created */
+      calendar_id?: string | null;
+      /** @description Natural language expression describing the event (e.g., "Dinner with John tomorrow at 7pm") */
+      event_description?: string | null;
+      /**
+       * @description Whether to send notifications about the event
+       * @enum {string|null}
+       */
+      send_updates?: 'none' | 'all' | 'externalOnly' | null;
+    };
+    /** @description The EVENTS_QUICK_ADD service */
+    GoogleCalendarEventsQuickAddActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'GOOGLE_CALENDAR';
+      /** @enum {string} */
+      action: 'EVENTS_QUICK_ADD';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['GoogleCalendarEventsQuickAddActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
+    /** @description The input for ON_RECEIVED_EMAIL */
+    GmailOnReceivedEmailActionServiceInputSchema: {
+      /** @description Labels required from the received email */
+      label_ids?: string[] | null;
+    };
+    /** @description The ON_RECEIVED_EMAIL service */
+    GmailOnReceivedEmailActionServiceSchema: {
       /**
        * @description The type of the service
        * @enum {string}
        */
       type: 'GMAIL';
       /** @enum {string} */
-      action: 'SEND_EMAIL';
+      action: 'ON_RECEIVED_EMAIL';
       /** @description List of dynamic fields definitions */
       definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
       input:
-        | Components['schemas']['GmailSendEmailActionServiceInputSchema']
+        | Components['schemas']['GmailOnReceivedEmailActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
+    /** @description The input for ON_SENT_EMAIL */
+    GmailOnSentEmailActionServiceInputSchema: {
+      /** @description Labels required from the sent email */
+      label_ids?: string[] | null;
+    };
+    /** @description The ON_SENT_EMAIL service */
+    GmailOnSentEmailActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'GMAIL';
+      /** @enum {string} */
+      action: 'ON_SENT_EMAIL';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['GmailOnSentEmailActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
+    /** @description The input for EMAILS_SEARCH */
+    GmailEmailsSearchActionServiceInputSchema: {
+      /** @description Search in Gmail format (e.g. "from:example@gmail.com" or "is:unread") */
+      search?: string | null;
+      /** @description Labels to filter the search results */
+      label_ids?: string[] | null;
+    };
+    /** @description The EMAILS_SEARCH service */
+    GmailEmailsSearchActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'GMAIL';
+      /** @enum {string} */
+      action: 'EMAILS_SEARCH';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['GmailEmailsSearchActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
+    /** @description The input for EMAILS_SEND */
+    GmailEmailsSendActionServiceInputSchema: {
+      /** @description The email address to send the email from */
+      from?: string | null;
+      /** @description Email addresses of the recipients, separated by commas */
+      recipients?: string | null;
+      /** @description Subject */
+      subject?: string | null;
+      /** @description Plain text or HTML content of the email */
+      message?: string | null;
+      /** @description Labels to apply to the email */
+      label_ids?: string[] | null;
+      /** @description A list of files you want to attach */
+      attachments?: unknown;
+    };
+    /** @description The EMAILS_SEND service */
+    GmailEmailsSendActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'GMAIL';
+      /** @enum {string} */
+      action: 'EMAILS_SEND';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['GmailEmailsSendActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
+    /** @description The input for EMAILS_REPLY */
+    GmailEmailsReplyActionServiceInputSchema: {
+      /** @description The ID of the email to reply to */
+      message_id?: string | null;
+      /** @description The email address to send the email from */
+      from?: string | null;
+      /** @description Email addresses of the additional recipients, separated by commas */
+      recipients?: string | null;
+      /** @description Plain text or HTML content of the email */
+      message?: string | null;
+      /** @description A list of files you want to attach */
+      attachments?: unknown;
+    };
+    /** @description The EMAILS_REPLY service */
+    GmailEmailsReplyActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'GMAIL';
+      /** @enum {string} */
+      action: 'EMAILS_REPLY';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['GmailEmailsReplyActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
+    /** @description The input for EMAILS_GET */
+    GmailEmailsGetActionServiceInputSchema: {
+      /** @description The ID of the email message to retrieve */
+      message_id?: string | null;
+    };
+    /** @description The EMAILS_GET service */
+    GmailEmailsGetActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'GMAIL';
+      /** @enum {string} */
+      action: 'EMAILS_GET';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['GmailEmailsGetActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
+    /** @description The input for EMAILS_UPDATE */
+    GmailEmailsUpdateActionServiceInputSchema: {
+      /** @description The ID of the email to update */
+      message_id?: string | null;
+      /** @description Labels to add to the email */
+      add_label_ids?: string[] | null;
+      /** @description Labels to remove from the email */
+      remove_label_ids?: string[] | null;
+    };
+    /** @description The EMAILS_UPDATE service */
+    GmailEmailsUpdateActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'GMAIL';
+      /** @enum {string} */
+      action: 'EMAILS_UPDATE';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['GmailEmailsUpdateActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
+    /** @description The input for EMAILS_ATTACHMENTS_DOWNLOAD */
+    GmailEmailsAttachmentsDownloadActionServiceInputSchema: {
+      /** @description The ID of the email to download attachments from */
+      message_id?: string | null;
+      /**
+       * @description Persistent storage will keep the file even after the run finishes. Temporary storage will delete the file after 24 hours
+       * @enum {string|null}
+       */
+      storage?: 'PERSISTENT' | 'TEMPORARY' | null;
+      /**
+       * @description Whether the file is private or public, private files URLs are signed with a token and can be accessed temporarily
+       * @enum {string|null}
+       */
+      visibility?: 'PRIVATE' | 'PUBLIC' | null;
+    };
+    /** @description The EMAILS_ATTACHMENTS_DOWNLOAD service */
+    GmailEmailsAttachmentsDownloadActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'GMAIL';
+      /** @enum {string} */
+      action: 'EMAILS_ATTACHMENTS_DOWNLOAD';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['GmailEmailsAttachmentsDownloadActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
+    /** @description The input for DRAFTS_SEARCH */
+    GmailDraftsSearchActionServiceInputSchema: {
+      /** @description Search in Gmail format (e.g. "from:example@gmail.com" or "is:unread") */
+      search?: string | null;
+    };
+    /** @description The DRAFTS_SEARCH service */
+    GmailDraftsSearchActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'GMAIL';
+      /** @enum {string} */
+      action: 'DRAFTS_SEARCH';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['GmailDraftsSearchActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
+    /** @description The input for DRAFTS_SEND */
+    GmailDraftsSendActionServiceInputSchema: {
+      /** @description The ID of the draft to send */
+      draft_id?: string | null;
+      /** @description Labels to add to the draft */
+      label_ids?: string[] | null;
+    };
+    /** @description The DRAFTS_SEND service */
+    GmailDraftsSendActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'GMAIL';
+      /** @enum {string} */
+      action: 'DRAFTS_SEND';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['GmailDraftsSendActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
+    /** @description The input for DRAFTS_CREATE */
+    GmailDraftsCreateActionServiceInputSchema: {
+      /** @description The email address to send the email from */
+      from?: string | null;
+      /** @description Email addresses of the recipients, separated by commas */
+      recipients?: string | null;
+      /** @description Subject */
+      subject?: string | null;
+      /** @description Plain text or HTML content of the email */
+      message?: string | null;
+      /** @description A list of files you want to attach */
+      attachments?: unknown;
+    };
+    /** @description The DRAFTS_CREATE service */
+    GmailDraftsCreateActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'GMAIL';
+      /** @enum {string} */
+      action: 'DRAFTS_CREATE';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['GmailDraftsCreateActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
+    /** @description The input for LABELS_LIST */
+    GmailLabelsListActionServiceInputSchema: Record<string, unknown>;
+    /** @description The LABELS_LIST service */
+    GmailLabelsListActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'GMAIL';
+      /** @enum {string} */
+      action: 'LABELS_LIST';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['GmailLabelsListActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
+    /** @description The input for LABELS_CREATE */
+    GmailLabelsCreateActionServiceInputSchema: {
+      /** @description Name of the new label to create */
+      name?: string | null;
+      /**
+       * @description Color for the label text
+       * @enum {string|null}
+       */
+      text_color?:
+        | '#000000'
+        | '#434343'
+        | '#666666'
+        | '#999999'
+        | '#ffffff'
+        | '#fb4c2f'
+        | '#ffad47'
+        | '#fad165'
+        | '#16a766'
+        | '#43d692'
+        | '#4a86e8'
+        | '#a479e2'
+        | '#f691b3'
+        | '#3c78d8'
+        | '#0b804b'
+        | null;
+      /**
+       * @description Color for the label background
+       * @enum {string|null}
+       */
+      background_color?:
+        | '#ffffff'
+        | '#efefef'
+        | '#666666'
+        | '#000000'
+        | '#fb4c2f'
+        | '#ff7537'
+        | '#fad165'
+        | '#16a766'
+        | '#c6f3de'
+        | '#4a86e8'
+        | '#c9daf8'
+        | '#8e63ce'
+        | '#fcdee8'
+        | '#ffad46'
+        | '#0b804b'
+        | null;
+      /**
+       * @description The visibility of the label in the label list in the Gmail web interface
+       * @enum {string|null}
+       */
+      label_list_visibility?:
+        | 'labelShow'
+        | 'labelShowIfUnread'
+        | 'labelHide'
+        | null;
+      /**
+       * @description The visibility of the label in the label list in the Gmail web interface
+       * @enum {string|null}
+       */
+      message_list_visibility?: 'show' | 'hide' | null;
+    };
+    /** @description The LABELS_CREATE service */
+    GmailLabelsCreateActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'GMAIL';
+      /** @enum {string} */
+      action: 'LABELS_CREATE';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['GmailLabelsCreateActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
+    /** @description The input for ON_CHANNEL_NEW_MESSAGE */
+    SlackOnChannelNewMessageActionServiceInputSchema: {
+      /** @description The channel to watch for new messages */
+      channel?: string | null;
+    };
+    /** @description The ON_CHANNEL_NEW_MESSAGE service */
+    SlackOnChannelNewMessageActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'SLACK';
+      /** @enum {string} */
+      action: 'ON_CHANNEL_NEW_MESSAGE';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['SlackOnChannelNewMessageActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
+    /** @description The input for SEARCH */
+    SlackSearchActionServiceInputSchema: {
+      /** @description Search query to find messages and files */
+      search?: string | null;
+      /**
+       * @description Field to sort results by
+       * @enum {string|null}
+       */
+      sort_field?: 'score' | 'timestamp' | null;
+      /**
+       * @description Direction to sort results
+       * @enum {string|null}
+       */
+      sort_direction?: 'desc' | 'asc' | null;
+    };
+    /** @description The SEARCH service */
+    SlackSearchActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'SLACK';
+      /** @enum {string} */
+      action: 'SEARCH';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['SlackSearchActionServiceInputSchema']
         | string;
       /** @description ID of the connection integration */
       connection_id?: string;
@@ -5089,14 +7730,64 @@ export type Components = {
       /** @description ID of the connection integration */
       connection_id?: string;
     };
+    /** @description The input for CHANNELS_REPLY_MESSAGE */
+    SlackChannelsReplyMessageActionServiceInputSchema: {
+      /** @description Channel ID where the thread is located */
+      channel?: string | null;
+      /** @description Text of the message to send in the thread */
+      message?: string | null;
+      /** @description Timestamp of the parent message to reply to (e.g., 1744483861.471079) */
+      thread_ts?: string | null;
+      /** @description URLs of the files to upload */
+      file_urls?: string[] | null;
+    };
+    /** @description The CHANNELS_REPLY_MESSAGE service */
+    SlackChannelsReplyMessageActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'SLACK';
+      /** @enum {string} */
+      action: 'CHANNELS_REPLY_MESSAGE';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['SlackChannelsReplyMessageActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
+    /** @description The input for SEARCH */
+    NotionSearchActionServiceInputSchema: {
+      /** @description Text to search for across all properties */
+      search?: string | null;
+    };
+    /** @description The SEARCH service */
+    NotionSearchActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'NOTION';
+      /** @enum {string} */
+      action: 'SEARCH';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['NotionSearchActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
     /** @description The input for PAGES_CREATE */
     NotionPagesCreateActionServiceInputSchema: {
       /** @description Parent page where will be created the new page */
       parent_id?: string | null;
       /** @description Title of the new page */
       title?: string | null;
-      /** @description Content text, markdown or JSON objects representing Notion blocks */
-      content_blocks?: string[] | null;
+      /** @description It can contain either markdown text or a JSON array of Notion blocks (with type, content, children, etc.). */
+      content?: string | null;
     };
     /** @description The PAGES_CREATE service */
     NotionPagesCreateActionServiceSchema: {
@@ -5111,6 +7802,157 @@ export type Components = {
       definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
       input:
         | Components['schemas']['NotionPagesCreateActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
+    /** @description The input for PAGES_GET_CONTENT */
+    NotionPagesGetContentActionServiceInputSchema: {
+      /** @description Page to get content from */
+      page_id?: string | null;
+      /** @description Load nested child content from the page */
+      recursive?: boolean | null;
+    };
+    /** @description The PAGES_GET_CONTENT service */
+    NotionPagesGetContentActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'NOTION';
+      /** @enum {string} */
+      action: 'PAGES_GET_CONTENT';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['NotionPagesGetContentActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
+    /** @description The input for PAGES_ADD_CONTENT */
+    NotionPagesAddContentActionServiceInputSchema: {
+      /** @description Page to add content to */
+      page_id?: string | null;
+      /** @description It can contain either markdown text or a JSON array of Notion blocks (with type, content, children, etc.). */
+      content?: string | null;
+    };
+    /** @description The PAGES_ADD_CONTENT service */
+    NotionPagesAddContentActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'NOTION';
+      /** @enum {string} */
+      action: 'PAGES_ADD_CONTENT';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['NotionPagesAddContentActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
+    /** @description The input for PAGES_ADD_COMMENT */
+    NotionPagesAddCommentActionServiceInputSchema: {
+      /** @description Page to add the comment to */
+      page_id?: string | null;
+      /** @description Text of the comment to add */
+      comment?: string | null;
+    };
+    /** @description The PAGES_ADD_COMMENT service */
+    NotionPagesAddCommentActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'NOTION';
+      /** @enum {string} */
+      action: 'PAGES_ADD_COMMENT';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['NotionPagesAddCommentActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
+    /** @description The input for DATABASES_SEARCH */
+    NotionDatabasesSearchActionServiceInputSchema: {
+      /** @description The database to search in */
+      database_id?: string | null;
+      /** @description Search to filter across all properties */
+      search?: string | null;
+      /**
+       * @description Whether to sort the results in ascending or descending order
+       * @enum {string|null}
+       */
+      sort_direction?: 'descending' | 'ascending' | null;
+    };
+    /** @description The DATABASES_SEARCH service */
+    NotionDatabasesSearchActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'NOTION';
+      /** @enum {string} */
+      action: 'DATABASES_SEARCH';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['NotionDatabasesSearchActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
+    /** @description The input for DATABASES_ADD_ROW */
+    NotionDatabasesAddRowActionServiceInputSchema: {
+      /** @description Database where the row will be added */
+      database_id?: string | null;
+      /** @description Row properties to add */
+      properties?: unknown;
+    };
+    /** @description The DATABASES_ADD_ROW service */
+    NotionDatabasesAddRowActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'NOTION';
+      /** @enum {string} */
+      action: 'DATABASES_ADD_ROW';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['NotionDatabasesAddRowActionServiceInputSchema']
+        | string;
+      /** @description ID of the connection integration */
+      connection_id?: string;
+    };
+    /** @description The input for DATABASES_UPDATE_ROW */
+    NotionDatabasesUpdateRowActionServiceInputSchema: {
+      /** @description Database containing the row to update */
+      database_id?: string | null;
+      /** @description Select the row (page) you want to update */
+      page_id?: string | null;
+      /** @description Row properties to update */
+      properties?: unknown;
+    };
+    /** @description The DATABASES_UPDATE_ROW service */
+    NotionDatabasesUpdateRowActionServiceSchema: {
+      /**
+       * @description The type of the service
+       * @enum {string}
+       */
+      type: 'NOTION';
+      /** @enum {string} */
+      action: 'DATABASES_UPDATE_ROW';
+      /** @description List of dynamic fields definitions */
+      definitions?: Components['schemas']['DynamicFieldsInputDefinition'][];
+      input:
+        | Components['schemas']['NotionDatabasesUpdateRowActionServiceInputSchema']
         | string;
       /** @description ID of the connection integration */
       connection_id?: string;
@@ -5387,15 +8229,75 @@ export type Components = {
       | Components['schemas']['ToolsWebSearchActionServiceSchema']
       | Components['schemas']['FilesDownloadFileActionServiceSchema']
       | Components['schemas']['FilesUploadFileActionServiceSchema']
+      | Components['schemas']['FilesDeleteFileActionServiceSchema']
       | Components['schemas']['FilesExtractPagesActionServiceSchema']
       | Components['schemas']['FilesExtractContentsActionServiceSchema']
       | Components['schemas']['FilesExtractImagesActionServiceSchema']
+      | Components['schemas']['FilesMarkdownToPdfActionServiceSchema']
+      | Components['schemas']['FilesHtmlToPdfActionServiceSchema']
+      | Components['schemas']['CollectionsRecordsSearchActionServiceSchema']
+      | Components['schemas']['CollectionsRecordsGetActionServiceSchema']
+      | Components['schemas']['CollectionsRecordsCreateActionServiceSchema']
+      | Components['schemas']['CollectionsRecordsUpdateActionServiceSchema']
+      | Components['schemas']['CollectionsRecordsDeleteActionServiceSchema']
+      | Components['schemas']['CollectionsRecordsAnalyzeActionServiceSchema']
+      | Components['schemas']['CollectionsRecordsCancelActionServiceSchema']
+      | Components['schemas']['CollectionsRulesUpdateActionServiceSchema']
+      | Components['schemas']['CollectionsRulesUpdateAllActionServiceSchema']
+      | Components['schemas']['GoogleSheetsOnSpreadsheetsNewRowActionServiceSchema']
       | Components['schemas']['GoogleSheetsSpreadsheetsListActionServiceSchema']
       | Components['schemas']['GoogleSheetsSpreadsheetsAppendRowActionServiceSchema']
       | Components['schemas']['GoogleSheetsWorksheetsListActionServiceSchema']
-      | Components['schemas']['GmailSendEmailActionServiceSchema']
+      | Components['schemas']['GoogleDriveOnNewFileActionServiceSchema']
+      | Components['schemas']['GoogleDriveFilesSearchActionServiceSchema']
+      | Components['schemas']['GoogleDriveFilesGetActionServiceSchema']
+      | Components['schemas']['GoogleDriveFilesUploadActionServiceSchema']
+      | Components['schemas']['GoogleDriveFilesDownloadActionServiceSchema']
+      | Components['schemas']['GoogleDriveFilesMoveActionServiceSchema']
+      | Components['schemas']['GoogleDriveFilesCopyActionServiceSchema']
+      | Components['schemas']['GoogleDriveFilesUpdateActionServiceSchema']
+      | Components['schemas']['GoogleDriveFilesTrashActionServiceSchema']
+      | Components['schemas']['GoogleDriveFoldersSearchActionServiceSchema']
+      | Components['schemas']['GoogleDriveFoldersCreateActionServiceSchema']
+      | Components['schemas']['GoogleDriveFoldersTrashActionServiceSchema']
+      | Components['schemas']['GoogleCalendarOnCalendarNewEventActionServiceSchema']
+      | Components['schemas']['GoogleCalendarCalendarsListActionServiceSchema']
+      | Components['schemas']['GoogleCalendarCalendarsGetActionServiceSchema']
+      | Components['schemas']['GoogleCalendarCalendarsCreateActionServiceSchema']
+      | Components['schemas']['GoogleCalendarCalendarsUpdateActionServiceSchema']
+      | Components['schemas']['GoogleCalendarCalendarsDeleteActionServiceSchema']
+      | Components['schemas']['GoogleCalendarCalendarsClearActionServiceSchema']
+      | Components['schemas']['GoogleCalendarEventsSearchActionServiceSchema']
+      | Components['schemas']['GoogleCalendarEventsGetActionServiceSchema']
+      | Components['schemas']['GoogleCalendarEventsCreateActionServiceSchema']
+      | Components['schemas']['GoogleCalendarEventsUpdateActionServiceSchema']
+      | Components['schemas']['GoogleCalendarEventsDeleteActionServiceSchema']
+      | Components['schemas']['GoogleCalendarEventsQuickAddActionServiceSchema']
+      | Components['schemas']['GmailOnReceivedEmailActionServiceSchema']
+      | Components['schemas']['GmailOnSentEmailActionServiceSchema']
+      | Components['schemas']['GmailEmailsSearchActionServiceSchema']
+      | Components['schemas']['GmailEmailsSendActionServiceSchema']
+      | Components['schemas']['GmailEmailsReplyActionServiceSchema']
+      | Components['schemas']['GmailEmailsGetActionServiceSchema']
+      | Components['schemas']['GmailEmailsUpdateActionServiceSchema']
+      | Components['schemas']['GmailEmailsAttachmentsDownloadActionServiceSchema']
+      | Components['schemas']['GmailDraftsSearchActionServiceSchema']
+      | Components['schemas']['GmailDraftsSendActionServiceSchema']
+      | Components['schemas']['GmailDraftsCreateActionServiceSchema']
+      | Components['schemas']['GmailLabelsListActionServiceSchema']
+      | Components['schemas']['GmailLabelsCreateActionServiceSchema']
+      | Components['schemas']['SlackOnChannelNewMessageActionServiceSchema']
+      | Components['schemas']['SlackSearchActionServiceSchema']
       | Components['schemas']['SlackChannelsSendMessageActionServiceSchema']
+      | Components['schemas']['SlackChannelsReplyMessageActionServiceSchema']
+      | Components['schemas']['NotionSearchActionServiceSchema']
       | Components['schemas']['NotionPagesCreateActionServiceSchema']
+      | Components['schemas']['NotionPagesGetContentActionServiceSchema']
+      | Components['schemas']['NotionPagesAddContentActionServiceSchema']
+      | Components['schemas']['NotionPagesAddCommentActionServiceSchema']
+      | Components['schemas']['NotionDatabasesSearchActionServiceSchema']
+      | Components['schemas']['NotionDatabasesAddRowActionServiceSchema']
+      | Components['schemas']['NotionDatabasesUpdateRowActionServiceSchema']
       | Components['schemas']['EncompassCasesGetActionServiceSchema']
       | Components['schemas']['EncompassCasesUpdateActionServiceSchema']
       | Components['schemas']['EncompassDocumentsListActionServiceSchema']
@@ -5415,6 +8317,7 @@ export type Components = {
        */
       type: 'service';
       key: Components['schemas']['StepKeySchema'];
+      display?: Components['schemas']['StepDisplaySchema'];
       /** @description A condition to determine if the step should run */
       conditional?: string;
       /** @description A loop condition for the step to repeat running until the condition is met */
@@ -5514,6 +8417,22 @@ export type Components = {
       /** @description Number of expectations passing in workflow tests */
       expectations_passing_count: number;
     } | null;
+    /**
+     * @description Data retention policy for the run
+     * @example {
+     *       "max_age_in_seconds": 3600,
+     *       "preserve_on_failure": true
+     *     }
+     */
+    WorkflowRunDataRetentionConfigSchema: {
+      /** @description Maximum time in seconds to retain run data after completion, -1 means no limit (keep indefinitely) */
+      max_age_in_seconds: number;
+      /**
+       * @description Whether to preserve run data beyond the standard retention period if it fails
+       * @example true
+       */
+      preserve_on_failure?: boolean;
+    } | null;
     /** @description Detailed information about a workflow */
     WorkflowSchema: {
       /** @description Unique identifier for the workflow */
@@ -5563,6 +8482,7 @@ export type Components = {
        * @example 0
        */
       runs_count: number;
+      retention: Components['schemas']['WorkflowRunDataRetentionConfigSchema'];
       /**
        * @description Indicates if the workflow is enabled
        * @example true
@@ -5621,21 +8541,6 @@ export type Components = {
       /** @description Steps of the workflow at the time this version was deployed */
       steps: Components['schemas']['StepSchema'][];
     };
-    /**
-     * @description Step type
-     * @enum {string}
-     */
-    StepTypeSchema:
-      | 'note'
-      | 'branch'
-      | 'code'
-      | 'model'
-      | 'http_request'
-      | 'browser'
-      | 'workflow'
-      | 'service'
-      | 'input';
-    RuntimeLogs: unknown[];
     RunStepOutputCallSchema: {
       /** @description Unique identifier for the call */
       id?: string;
@@ -5858,6 +8763,22 @@ export type Components = {
       | 'COMPLETED'
       | 'SKIPPED'
       | 'FAILED';
+    /**
+     * @description Configuration for how long run data is preserved in the system
+     * @example {
+     *       "max_age_in_seconds": 3600,
+     *       "preserve_on_failure": true
+     *     }
+     */
+    RunDataRetentionConfigSchema: {
+      /** @description Maximum time in seconds to retain run data after completion, -1 means no limit (keep indefinitely) */
+      max_age_in_seconds: number;
+      /**
+       * @description Whether to preserve run data beyond the standard retention period if it fails
+       * @example true
+       */
+      preserve_on_failure?: boolean;
+    } | null;
     RunSchema: {
       /** @description Unique identifier for the run */
       id: string;
@@ -5870,7 +8791,13 @@ export type Components = {
        * @example WORKFLOW
        * @enum {string}
        */
-      origin: 'WORKFLOW' | 'TRIGGER' | 'RECORD' | 'TEST' | 'ENDPOINT';
+      origin:
+        | 'WORKFLOW'
+        | 'TRIGGER'
+        | 'RECORD'
+        | 'TEST'
+        | 'ENDPOINT'
+        | 'WEBHOOK';
       /** @description Error message if the run failed */
       error?: string;
       /**
@@ -5936,6 +8863,12 @@ export type Components = {
       /** @description Version number of the workflow */
       version?: number;
       usage?: Components['schemas']['CreditsRunUsageSchema'] & unknown;
+      retention?: Components['schemas']['RunDataRetentionConfigSchema'];
+      /**
+       * Format: date
+       * @description Timestamp of when the run data retention policy will be applied
+       */
+      retention_due_at?: string | null;
       /**
        * Format: date
        * @description Timestamp of when the run was created
@@ -5947,6 +8880,19 @@ export type Components = {
        */
       updated_at: string | null;
     };
+    /** @description Data retention policy for the run */
+    RunDataRetentionConfigInputSchema:
+      | number
+      | {
+          /** @description Maximum time in seconds to retain run data after completion, -1 means no limit (keep indefinitely) */
+          max_age_in_seconds: number;
+          /**
+           * @description Whether to preserve run data beyond the standard retention period if it fails
+           * @example true
+           */
+          preserve_on_failure?: boolean;
+        }
+      | unknown;
     /** @description Data to create a new run */
     CreateDiscoveryRunSchema: {
       input?: Components['schemas']['InputValuesSchema'] & unknown;
@@ -5957,6 +8903,21 @@ export type Components = {
       /** @description Step key to start the run from */
       from_step_key?: string | null;
       workflow_version_id?: Components['schemas']['WorkflowVersionIdSchema'];
+      retention?: Components['schemas']['RunDataRetentionConfigInputSchema'];
+    };
+    /** @description Data to create a new run */
+    CreateRunSchema: {
+      input?: Components['schemas']['InputValuesSchema'] & unknown;
+      /** @description Indicates if the run should stream output to the client as it becomes available via SSE (Server-Sent Events) */
+      stream?: boolean;
+      /** @description Indicates if the run should be executed in the background and return the run information immediately */
+      background?: boolean;
+      retention?: Components['schemas']['RunDataRetentionConfigInputSchema'];
+      workflow_version_id?: Components['schemas']['WorkflowVersionIdSchema'];
+      /** @description Step key to start the run from */
+      from_step_key?: string | null;
+      /** @description Temporary WebSocket identifier used to track run status before creation completes */
+      identifier?: string;
     };
     /** @description Data to replay a workflow step */
     ReplayRunSchema: {
@@ -5968,19 +8929,11 @@ export type Components = {
       background?: boolean;
       /** @description Temporary WebSocket identifier used to track replay status before creation completes */
       identifier?: string;
+      retention?: Components['schemas']['RunDataRetentionConfigInputSchema'];
     };
-    /** @description Data to create a new run */
-    CreateRunSchema: {
-      input?: Components['schemas']['InputValuesSchema'] & unknown;
-      /** @description Indicates if the run should stream output to the client as it becomes available via SSE (Server-Sent Events) */
-      stream?: boolean;
-      /** @description Indicates if the run should be executed in the background and return the run information immediately */
-      background?: boolean;
-      workflow_version_id?: Components['schemas']['WorkflowVersionIdSchema'];
-      /** @description Step key to start the run from */
-      from_step_key?: string | null;
-      /** @description Temporary WebSocket identifier used to track run status before creation completes */
-      identifier?: string;
+    /** @description Schema for updating run data retention configuration */
+    UpdateRunDataRetentionConfigSchema: {
+      retention?: Components['schemas']['RunDataRetentionConfigInputSchema'];
     };
     /** @description Detailed information about an expectation within a workflow */
     WorkflowExpectationSchema: {
@@ -6337,6 +9290,8 @@ export type Components = {
        * @description Timestamp when the collection was last updated
        */
       updated_at: string | null;
+      /** @description Link to the collection in the UI */
+      link: string;
     };
     /** @description Detailed information about a rule with workflow details */
     ExtendedRuleSchema: Components['schemas']['RuleSchema'] & {
@@ -6370,6 +9325,8 @@ export type Components = {
        * @description Timestamp when the collection was last updated
        */
       updated_at: string | null;
+      /** @description Link to the collection in the UI */
+      link: string;
       config: {
         /** @description Unique identifier for the collection configuration */
         id: string;
@@ -6488,7 +9445,13 @@ export type Components = {
          * @example WORKFLOW
          * @enum {string}
          */
-        origin: 'WORKFLOW' | 'TRIGGER' | 'RECORD' | 'TEST' | 'ENDPOINT';
+        origin:
+          | 'WORKFLOW'
+          | 'TRIGGER'
+          | 'RECORD'
+          | 'TEST'
+          | 'ENDPOINT'
+          | 'WEBHOOK';
         /** @description Error message if the run failed */
         error?: string;
         /**
@@ -6554,6 +9517,12 @@ export type Components = {
         /** @description Version number of the workflow */
         version?: number;
         usage?: Components['schemas']['CreditsRunUsageSchema'] & unknown;
+        retention?: Components['schemas']['RunDataRetentionConfigSchema'];
+        /**
+         * Format: date
+         * @description Timestamp of when the run data retention policy will be applied
+         */
+        retention_due_at?: string | null;
         /**
          * Format: date
          * @description Timestamp of when the run was created
@@ -6636,7 +9605,7 @@ export type Components = {
        * @example API
        * @enum {string}
        */
-      source: 'APP' | 'API' | 'TRIGGER';
+      source: 'APP' | 'API' | 'TRIGGER' | 'WORKFLOW';
       usage?: Components['schemas']['CreditsRecordUsageSchema'];
       /** @description Total number of rules of this record */
       rules_count: number;
@@ -6672,6 +9641,8 @@ export type Components = {
        * @description Timestamp when the record was last updated
        */
       updated_at: string | null;
+      /** @description Link to the record in the UI */
+      link: string;
     };
     ExtendedCollectionConfigSchema: {
       /** @description Unique identifier for the collection configuration */
@@ -6753,7 +9724,7 @@ export type Components = {
        * @example API
        * @enum {string}
        */
-      source: 'APP' | 'API' | 'TRIGGER';
+      source: 'APP' | 'API' | 'TRIGGER' | 'WORKFLOW';
       usage?: Components['schemas']['CreditsRecordUsageSchema'];
       /** @description Total number of rules of this record */
       rules_count: number;
@@ -6787,6 +9758,8 @@ export type Components = {
        * @description Timestamp when the record was last updated
        */
       updated_at: string | null;
+      /** @description Link to the record in the UI */
+      link: string;
       config: Components['schemas']['ExtendedCollectionConfigSchema'];
       entity: Components['schemas']['TriggerEntitySchema'];
     };
@@ -6985,20 +9958,40 @@ export type DocumentContentSchema =
   Components['schemas']['DocumentContentSchema'];
 export type DocumentImageSchema = Components['schemas']['DocumentImageSchema'];
 export type DocumentSchema = Components['schemas']['DocumentSchema'];
+export type AppFileStorageSchema =
+  Components['schemas']['AppFileStorageSchema'];
 export type AppFileSchema = Components['schemas']['AppFileSchema'];
 export type FileDataSchema = Components['schemas']['FileDataSchema'];
+export type UploadAppFileSchema = Components['schemas']['UploadAppFileSchema'];
+export type AppFileNullableSchema =
+  Components['schemas']['AppFileNullableSchema'];
+export type AppFileUploadMetadata =
+  Components['schemas']['AppFileUploadMetadata'];
+export type FileAllowedTypesSchema =
+  Components['schemas']['FileAllowedTypesSchema'];
+export type AppFileVisibilitySchema =
+  Components['schemas']['AppFileVisibilitySchema'];
+export type AppFileUploadSchema = Components['schemas']['AppFileUploadSchema'];
+export type CreateAppFileUploadSchema =
+  Components['schemas']['CreateAppFileUploadSchema'];
+export type UpdateAppFileUploadSchema =
+  Components['schemas']['UpdateAppFileUploadSchema'];
+export type FileVisibilitySchema =
+  Components['schemas']['FileVisibilitySchema'];
 export type CreateAppFileSchema = Components['schemas']['CreateAppFileSchema'];
 export type AppVariableSchema = Components['schemas']['AppVariableSchema'];
 export type CreateAppVariableSchema =
   Components['schemas']['CreateAppVariableSchema'];
 export type UpdateAppVariableSchema =
   Components['schemas']['UpdateAppVariableSchema'];
+export type StepTypeSchema = Components['schemas']['StepTypeSchema'];
 export type CreditsCallUsageSchema =
   Components['schemas']['CreditsCallUsageSchema'];
 export type CreditsUsageSchema = Components['schemas']['CreditsUsageSchema'];
 export type CreditsRunUsageSchema =
   Components['schemas']['CreditsRunUsageSchema'];
 export type RunResultSchema = Components['schemas']['RunResultSchema'];
+export type RunRequestSchema = Components['schemas']['RunRequestSchema'];
 export type StepWorkflowOutputSchema =
   Components['schemas']['StepWorkflowOutputSchema'];
 export type StepWorkflowRecordOutputSchema =
@@ -7019,8 +10012,10 @@ export type StepBrowserOutputSchema =
 export type StepServiceOutputSchema =
   Components['schemas']['StepServiceOutputSchema'];
 export type StepOutputSchema = Components['schemas']['StepOutputSchema'];
+export type RuntimeLogs = Components['schemas']['RuntimeLogs'];
 export type RunStepSchema = Components['schemas']['RunStepSchema'];
 export type StepKeySchema = Components['schemas']['StepKeySchema'];
+export type StepDisplaySchema = Components['schemas']['StepDisplaySchema'];
 export type StepAutoConfigSchema =
   Components['schemas']['StepAutoConfigSchema'];
 export type StepNoteSchema = Components['schemas']['StepNoteSchema'];
@@ -7038,14 +10033,16 @@ export type FieldNumberSchema = Components['schemas']['FieldNumberSchema'];
 export type FieldStringDisplaySchema =
   Components['schemas']['FieldStringDisplaySchema'];
 export type FieldStringSchema = Components['schemas']['FieldStringSchema'];
+export type FieldSelectorModeSchema =
+  Components['schemas']['FieldSelectorModeSchema'];
 export type FieldBooleanSchema = Components['schemas']['FieldBooleanSchema'];
 export type FieldDateSchema = Components['schemas']['FieldDateSchema'];
+export type FieldDateTimeSchema = Components['schemas']['FieldDateTimeSchema'];
+export type FieldTimeSchema = Components['schemas']['FieldTimeSchema'];
 export type FieldSelectDisplaySchema =
   Components['schemas']['FieldSelectDisplaySchema'];
 export type FieldSelectOptionSchema =
   Components['schemas']['FieldSelectOptionSchema'];
-export type FieldSelectorModeSchema =
-  Components['schemas']['FieldSelectorModeSchema'];
 export type FieldSelectSchema = Components['schemas']['FieldSelectSchema'];
 export type FieldContentSchema = Components['schemas']['FieldContentSchema'];
 export type FieldConnectionTypesSchema =
@@ -7056,6 +10053,8 @@ export type FieldObjectSchema = Components['schemas']['FieldObjectSchema'];
 export type InputSchema = Components['schemas']['InputSchema'];
 export type InputDefinitionSchema =
   Components['schemas']['InputDefinitionSchema'];
+export type StepWebhookConfigSchema =
+  Components['schemas']['StepWebhookConfigSchema'];
 export type StepInputSchema = Components['schemas']['StepInputSchema'];
 export type StepBranchConditionSchema =
   Components['schemas']['StepBranchConditionSchema'];
@@ -7114,6 +10113,10 @@ export type FilesUploadFileActionServiceInputSchema =
   Components['schemas']['FilesUploadFileActionServiceInputSchema'];
 export type FilesUploadFileActionServiceSchema =
   Components['schemas']['FilesUploadFileActionServiceSchema'];
+export type FilesDeleteFileActionServiceInputSchema =
+  Components['schemas']['FilesDeleteFileActionServiceInputSchema'];
+export type FilesDeleteFileActionServiceSchema =
+  Components['schemas']['FilesDeleteFileActionServiceSchema'];
 export type FilesExtractPagesActionServiceInputSchema =
   Components['schemas']['FilesExtractPagesActionServiceInputSchema'];
 export type FilesExtractPagesActionServiceSchema =
@@ -7126,6 +10129,54 @@ export type FilesExtractImagesActionServiceInputSchema =
   Components['schemas']['FilesExtractImagesActionServiceInputSchema'];
 export type FilesExtractImagesActionServiceSchema =
   Components['schemas']['FilesExtractImagesActionServiceSchema'];
+export type FilesMarkdownToPdfActionServiceInputSchema =
+  Components['schemas']['FilesMarkdownToPdfActionServiceInputSchema'];
+export type FilesMarkdownToPdfActionServiceSchema =
+  Components['schemas']['FilesMarkdownToPdfActionServiceSchema'];
+export type FilesHtmlToPdfActionServiceInputSchema =
+  Components['schemas']['FilesHtmlToPdfActionServiceInputSchema'];
+export type FilesHtmlToPdfActionServiceSchema =
+  Components['schemas']['FilesHtmlToPdfActionServiceSchema'];
+export type CollectionsRecordsSearchActionServiceInputSchema =
+  Components['schemas']['CollectionsRecordsSearchActionServiceInputSchema'];
+export type CollectionsRecordsSearchActionServiceSchema =
+  Components['schemas']['CollectionsRecordsSearchActionServiceSchema'];
+export type CollectionsRecordsGetActionServiceInputSchema =
+  Components['schemas']['CollectionsRecordsGetActionServiceInputSchema'];
+export type CollectionsRecordsGetActionServiceSchema =
+  Components['schemas']['CollectionsRecordsGetActionServiceSchema'];
+export type CollectionsRecordsCreateActionServiceInputSchema =
+  Components['schemas']['CollectionsRecordsCreateActionServiceInputSchema'];
+export type CollectionsRecordsCreateActionServiceSchema =
+  Components['schemas']['CollectionsRecordsCreateActionServiceSchema'];
+export type CollectionsRecordsUpdateActionServiceInputSchema =
+  Components['schemas']['CollectionsRecordsUpdateActionServiceInputSchema'];
+export type CollectionsRecordsUpdateActionServiceSchema =
+  Components['schemas']['CollectionsRecordsUpdateActionServiceSchema'];
+export type CollectionsRecordsDeleteActionServiceInputSchema =
+  Components['schemas']['CollectionsRecordsDeleteActionServiceInputSchema'];
+export type CollectionsRecordsDeleteActionServiceSchema =
+  Components['schemas']['CollectionsRecordsDeleteActionServiceSchema'];
+export type CollectionsRecordsAnalyzeActionServiceInputSchema =
+  Components['schemas']['CollectionsRecordsAnalyzeActionServiceInputSchema'];
+export type CollectionsRecordsAnalyzeActionServiceSchema =
+  Components['schemas']['CollectionsRecordsAnalyzeActionServiceSchema'];
+export type CollectionsRecordsCancelActionServiceInputSchema =
+  Components['schemas']['CollectionsRecordsCancelActionServiceInputSchema'];
+export type CollectionsRecordsCancelActionServiceSchema =
+  Components['schemas']['CollectionsRecordsCancelActionServiceSchema'];
+export type CollectionsRulesUpdateActionServiceInputSchema =
+  Components['schemas']['CollectionsRulesUpdateActionServiceInputSchema'];
+export type CollectionsRulesUpdateActionServiceSchema =
+  Components['schemas']['CollectionsRulesUpdateActionServiceSchema'];
+export type CollectionsRulesUpdateAllActionServiceInputSchema =
+  Components['schemas']['CollectionsRulesUpdateAllActionServiceInputSchema'];
+export type CollectionsRulesUpdateAllActionServiceSchema =
+  Components['schemas']['CollectionsRulesUpdateAllActionServiceSchema'];
+export type GoogleSheetsOnSpreadsheetsNewRowActionServiceInputSchema =
+  Components['schemas']['GoogleSheetsOnSpreadsheetsNewRowActionServiceInputSchema'];
+export type GoogleSheetsOnSpreadsheetsNewRowActionServiceSchema =
+  Components['schemas']['GoogleSheetsOnSpreadsheetsNewRowActionServiceSchema'];
 export type GoogleSheetsSpreadsheetsListActionServiceInputSchema =
   Components['schemas']['GoogleSheetsSpreadsheetsListActionServiceInputSchema'];
 export type GoogleSheetsSpreadsheetsListActionServiceSchema =
@@ -7138,18 +10189,206 @@ export type GoogleSheetsWorksheetsListActionServiceInputSchema =
   Components['schemas']['GoogleSheetsWorksheetsListActionServiceInputSchema'];
 export type GoogleSheetsWorksheetsListActionServiceSchema =
   Components['schemas']['GoogleSheetsWorksheetsListActionServiceSchema'];
-export type GmailSendEmailActionServiceInputSchema =
-  Components['schemas']['GmailSendEmailActionServiceInputSchema'];
-export type GmailSendEmailActionServiceSchema =
-  Components['schemas']['GmailSendEmailActionServiceSchema'];
+export type GoogleDriveOnNewFileActionServiceInputSchema =
+  Components['schemas']['GoogleDriveOnNewFileActionServiceInputSchema'];
+export type GoogleDriveOnNewFileActionServiceSchema =
+  Components['schemas']['GoogleDriveOnNewFileActionServiceSchema'];
+export type GoogleDriveFilesSearchActionServiceInputSchema =
+  Components['schemas']['GoogleDriveFilesSearchActionServiceInputSchema'];
+export type GoogleDriveFilesSearchActionServiceSchema =
+  Components['schemas']['GoogleDriveFilesSearchActionServiceSchema'];
+export type GoogleDriveFilesGetActionServiceInputSchema =
+  Components['schemas']['GoogleDriveFilesGetActionServiceInputSchema'];
+export type GoogleDriveFilesGetActionServiceSchema =
+  Components['schemas']['GoogleDriveFilesGetActionServiceSchema'];
+export type GoogleDriveFilesUploadActionServiceInputSchema =
+  Components['schemas']['GoogleDriveFilesUploadActionServiceInputSchema'];
+export type GoogleDriveFilesUploadActionServiceSchema =
+  Components['schemas']['GoogleDriveFilesUploadActionServiceSchema'];
+export type GoogleDriveFilesDownloadActionServiceInputSchema =
+  Components['schemas']['GoogleDriveFilesDownloadActionServiceInputSchema'];
+export type GoogleDriveFilesDownloadActionServiceSchema =
+  Components['schemas']['GoogleDriveFilesDownloadActionServiceSchema'];
+export type GoogleDriveFilesMoveActionServiceInputSchema =
+  Components['schemas']['GoogleDriveFilesMoveActionServiceInputSchema'];
+export type GoogleDriveFilesMoveActionServiceSchema =
+  Components['schemas']['GoogleDriveFilesMoveActionServiceSchema'];
+export type GoogleDriveFilesCopyActionServiceInputSchema =
+  Components['schemas']['GoogleDriveFilesCopyActionServiceInputSchema'];
+export type GoogleDriveFilesCopyActionServiceSchema =
+  Components['schemas']['GoogleDriveFilesCopyActionServiceSchema'];
+export type GoogleDriveFilesUpdateActionServiceInputSchema =
+  Components['schemas']['GoogleDriveFilesUpdateActionServiceInputSchema'];
+export type GoogleDriveFilesUpdateActionServiceSchema =
+  Components['schemas']['GoogleDriveFilesUpdateActionServiceSchema'];
+export type GoogleDriveFilesTrashActionServiceInputSchema =
+  Components['schemas']['GoogleDriveFilesTrashActionServiceInputSchema'];
+export type GoogleDriveFilesTrashActionServiceSchema =
+  Components['schemas']['GoogleDriveFilesTrashActionServiceSchema'];
+export type GoogleDriveFoldersSearchActionServiceInputSchema =
+  Components['schemas']['GoogleDriveFoldersSearchActionServiceInputSchema'];
+export type GoogleDriveFoldersSearchActionServiceSchema =
+  Components['schemas']['GoogleDriveFoldersSearchActionServiceSchema'];
+export type GoogleDriveFoldersCreateActionServiceInputSchema =
+  Components['schemas']['GoogleDriveFoldersCreateActionServiceInputSchema'];
+export type GoogleDriveFoldersCreateActionServiceSchema =
+  Components['schemas']['GoogleDriveFoldersCreateActionServiceSchema'];
+export type GoogleDriveFoldersTrashActionServiceInputSchema =
+  Components['schemas']['GoogleDriveFoldersTrashActionServiceInputSchema'];
+export type GoogleDriveFoldersTrashActionServiceSchema =
+  Components['schemas']['GoogleDriveFoldersTrashActionServiceSchema'];
+export type GoogleCalendarOnCalendarNewEventActionServiceInputSchema =
+  Components['schemas']['GoogleCalendarOnCalendarNewEventActionServiceInputSchema'];
+export type GoogleCalendarOnCalendarNewEventActionServiceSchema =
+  Components['schemas']['GoogleCalendarOnCalendarNewEventActionServiceSchema'];
+export type GoogleCalendarCalendarsListActionServiceInputSchema =
+  Components['schemas']['GoogleCalendarCalendarsListActionServiceInputSchema'];
+export type GoogleCalendarCalendarsListActionServiceSchema =
+  Components['schemas']['GoogleCalendarCalendarsListActionServiceSchema'];
+export type GoogleCalendarCalendarsGetActionServiceInputSchema =
+  Components['schemas']['GoogleCalendarCalendarsGetActionServiceInputSchema'];
+export type GoogleCalendarCalendarsGetActionServiceSchema =
+  Components['schemas']['GoogleCalendarCalendarsGetActionServiceSchema'];
+export type GoogleCalendarCalendarsCreateActionServiceInputSchema =
+  Components['schemas']['GoogleCalendarCalendarsCreateActionServiceInputSchema'];
+export type GoogleCalendarCalendarsCreateActionServiceSchema =
+  Components['schemas']['GoogleCalendarCalendarsCreateActionServiceSchema'];
+export type GoogleCalendarCalendarsUpdateActionServiceInputSchema =
+  Components['schemas']['GoogleCalendarCalendarsUpdateActionServiceInputSchema'];
+export type GoogleCalendarCalendarsUpdateActionServiceSchema =
+  Components['schemas']['GoogleCalendarCalendarsUpdateActionServiceSchema'];
+export type GoogleCalendarCalendarsDeleteActionServiceInputSchema =
+  Components['schemas']['GoogleCalendarCalendarsDeleteActionServiceInputSchema'];
+export type GoogleCalendarCalendarsDeleteActionServiceSchema =
+  Components['schemas']['GoogleCalendarCalendarsDeleteActionServiceSchema'];
+export type GoogleCalendarCalendarsClearActionServiceInputSchema =
+  Components['schemas']['GoogleCalendarCalendarsClearActionServiceInputSchema'];
+export type GoogleCalendarCalendarsClearActionServiceSchema =
+  Components['schemas']['GoogleCalendarCalendarsClearActionServiceSchema'];
+export type GoogleCalendarEventsSearchActionServiceInputSchema =
+  Components['schemas']['GoogleCalendarEventsSearchActionServiceInputSchema'];
+export type GoogleCalendarEventsSearchActionServiceSchema =
+  Components['schemas']['GoogleCalendarEventsSearchActionServiceSchema'];
+export type GoogleCalendarEventsGetActionServiceInputSchema =
+  Components['schemas']['GoogleCalendarEventsGetActionServiceInputSchema'];
+export type GoogleCalendarEventsGetActionServiceSchema =
+  Components['schemas']['GoogleCalendarEventsGetActionServiceSchema'];
+export type GoogleCalendarEventsCreateActionServiceInputSchema =
+  Components['schemas']['GoogleCalendarEventsCreateActionServiceInputSchema'];
+export type GoogleCalendarEventsCreateActionServiceSchema =
+  Components['schemas']['GoogleCalendarEventsCreateActionServiceSchema'];
+export type GoogleCalendarEventsUpdateActionServiceInputSchema =
+  Components['schemas']['GoogleCalendarEventsUpdateActionServiceInputSchema'];
+export type GoogleCalendarEventsUpdateActionServiceSchema =
+  Components['schemas']['GoogleCalendarEventsUpdateActionServiceSchema'];
+export type GoogleCalendarEventsDeleteActionServiceInputSchema =
+  Components['schemas']['GoogleCalendarEventsDeleteActionServiceInputSchema'];
+export type GoogleCalendarEventsDeleteActionServiceSchema =
+  Components['schemas']['GoogleCalendarEventsDeleteActionServiceSchema'];
+export type GoogleCalendarEventsQuickAddActionServiceInputSchema =
+  Components['schemas']['GoogleCalendarEventsQuickAddActionServiceInputSchema'];
+export type GoogleCalendarEventsQuickAddActionServiceSchema =
+  Components['schemas']['GoogleCalendarEventsQuickAddActionServiceSchema'];
+export type GmailOnReceivedEmailActionServiceInputSchema =
+  Components['schemas']['GmailOnReceivedEmailActionServiceInputSchema'];
+export type GmailOnReceivedEmailActionServiceSchema =
+  Components['schemas']['GmailOnReceivedEmailActionServiceSchema'];
+export type GmailOnSentEmailActionServiceInputSchema =
+  Components['schemas']['GmailOnSentEmailActionServiceInputSchema'];
+export type GmailOnSentEmailActionServiceSchema =
+  Components['schemas']['GmailOnSentEmailActionServiceSchema'];
+export type GmailEmailsSearchActionServiceInputSchema =
+  Components['schemas']['GmailEmailsSearchActionServiceInputSchema'];
+export type GmailEmailsSearchActionServiceSchema =
+  Components['schemas']['GmailEmailsSearchActionServiceSchema'];
+export type GmailEmailsSendActionServiceInputSchema =
+  Components['schemas']['GmailEmailsSendActionServiceInputSchema'];
+export type GmailEmailsSendActionServiceSchema =
+  Components['schemas']['GmailEmailsSendActionServiceSchema'];
+export type GmailEmailsReplyActionServiceInputSchema =
+  Components['schemas']['GmailEmailsReplyActionServiceInputSchema'];
+export type GmailEmailsReplyActionServiceSchema =
+  Components['schemas']['GmailEmailsReplyActionServiceSchema'];
+export type GmailEmailsGetActionServiceInputSchema =
+  Components['schemas']['GmailEmailsGetActionServiceInputSchema'];
+export type GmailEmailsGetActionServiceSchema =
+  Components['schemas']['GmailEmailsGetActionServiceSchema'];
+export type GmailEmailsUpdateActionServiceInputSchema =
+  Components['schemas']['GmailEmailsUpdateActionServiceInputSchema'];
+export type GmailEmailsUpdateActionServiceSchema =
+  Components['schemas']['GmailEmailsUpdateActionServiceSchema'];
+export type GmailEmailsAttachmentsDownloadActionServiceInputSchema =
+  Components['schemas']['GmailEmailsAttachmentsDownloadActionServiceInputSchema'];
+export type GmailEmailsAttachmentsDownloadActionServiceSchema =
+  Components['schemas']['GmailEmailsAttachmentsDownloadActionServiceSchema'];
+export type GmailDraftsSearchActionServiceInputSchema =
+  Components['schemas']['GmailDraftsSearchActionServiceInputSchema'];
+export type GmailDraftsSearchActionServiceSchema =
+  Components['schemas']['GmailDraftsSearchActionServiceSchema'];
+export type GmailDraftsSendActionServiceInputSchema =
+  Components['schemas']['GmailDraftsSendActionServiceInputSchema'];
+export type GmailDraftsSendActionServiceSchema =
+  Components['schemas']['GmailDraftsSendActionServiceSchema'];
+export type GmailDraftsCreateActionServiceInputSchema =
+  Components['schemas']['GmailDraftsCreateActionServiceInputSchema'];
+export type GmailDraftsCreateActionServiceSchema =
+  Components['schemas']['GmailDraftsCreateActionServiceSchema'];
+export type GmailLabelsListActionServiceInputSchema =
+  Components['schemas']['GmailLabelsListActionServiceInputSchema'];
+export type GmailLabelsListActionServiceSchema =
+  Components['schemas']['GmailLabelsListActionServiceSchema'];
+export type GmailLabelsCreateActionServiceInputSchema =
+  Components['schemas']['GmailLabelsCreateActionServiceInputSchema'];
+export type GmailLabelsCreateActionServiceSchema =
+  Components['schemas']['GmailLabelsCreateActionServiceSchema'];
+export type SlackOnChannelNewMessageActionServiceInputSchema =
+  Components['schemas']['SlackOnChannelNewMessageActionServiceInputSchema'];
+export type SlackOnChannelNewMessageActionServiceSchema =
+  Components['schemas']['SlackOnChannelNewMessageActionServiceSchema'];
+export type SlackSearchActionServiceInputSchema =
+  Components['schemas']['SlackSearchActionServiceInputSchema'];
+export type SlackSearchActionServiceSchema =
+  Components['schemas']['SlackSearchActionServiceSchema'];
 export type SlackChannelsSendMessageActionServiceInputSchema =
   Components['schemas']['SlackChannelsSendMessageActionServiceInputSchema'];
 export type SlackChannelsSendMessageActionServiceSchema =
   Components['schemas']['SlackChannelsSendMessageActionServiceSchema'];
+export type SlackChannelsReplyMessageActionServiceInputSchema =
+  Components['schemas']['SlackChannelsReplyMessageActionServiceInputSchema'];
+export type SlackChannelsReplyMessageActionServiceSchema =
+  Components['schemas']['SlackChannelsReplyMessageActionServiceSchema'];
+export type NotionSearchActionServiceInputSchema =
+  Components['schemas']['NotionSearchActionServiceInputSchema'];
+export type NotionSearchActionServiceSchema =
+  Components['schemas']['NotionSearchActionServiceSchema'];
 export type NotionPagesCreateActionServiceInputSchema =
   Components['schemas']['NotionPagesCreateActionServiceInputSchema'];
 export type NotionPagesCreateActionServiceSchema =
   Components['schemas']['NotionPagesCreateActionServiceSchema'];
+export type NotionPagesGetContentActionServiceInputSchema =
+  Components['schemas']['NotionPagesGetContentActionServiceInputSchema'];
+export type NotionPagesGetContentActionServiceSchema =
+  Components['schemas']['NotionPagesGetContentActionServiceSchema'];
+export type NotionPagesAddContentActionServiceInputSchema =
+  Components['schemas']['NotionPagesAddContentActionServiceInputSchema'];
+export type NotionPagesAddContentActionServiceSchema =
+  Components['schemas']['NotionPagesAddContentActionServiceSchema'];
+export type NotionPagesAddCommentActionServiceInputSchema =
+  Components['schemas']['NotionPagesAddCommentActionServiceInputSchema'];
+export type NotionPagesAddCommentActionServiceSchema =
+  Components['schemas']['NotionPagesAddCommentActionServiceSchema'];
+export type NotionDatabasesSearchActionServiceInputSchema =
+  Components['schemas']['NotionDatabasesSearchActionServiceInputSchema'];
+export type NotionDatabasesSearchActionServiceSchema =
+  Components['schemas']['NotionDatabasesSearchActionServiceSchema'];
+export type NotionDatabasesAddRowActionServiceInputSchema =
+  Components['schemas']['NotionDatabasesAddRowActionServiceInputSchema'];
+export type NotionDatabasesAddRowActionServiceSchema =
+  Components['schemas']['NotionDatabasesAddRowActionServiceSchema'];
+export type NotionDatabasesUpdateRowActionServiceInputSchema =
+  Components['schemas']['NotionDatabasesUpdateRowActionServiceInputSchema'];
+export type NotionDatabasesUpdateRowActionServiceSchema =
+  Components['schemas']['NotionDatabasesUpdateRowActionServiceSchema'];
 export type EncompassCasesGetActionServiceInputSchema =
   Components['schemas']['EncompassCasesGetActionServiceInputSchema'];
 export type EncompassCasesGetActionServiceSchema =
@@ -7207,11 +10446,11 @@ export type InputOptionsSchema = Components['schemas']['InputOptionsSchema'];
 export type TagSchema = Components['schemas']['TagSchema'];
 export type WorkflowTestStatsSchema =
   Components['schemas']['WorkflowTestStatsSchema'];
+export type WorkflowRunDataRetentionConfigSchema =
+  Components['schemas']['WorkflowRunDataRetentionConfigSchema'];
 export type WorkflowSchema = Components['schemas']['WorkflowSchema'];
 export type WorkflowVersionSchema =
   Components['schemas']['WorkflowVersionSchema'];
-export type StepTypeSchema = Components['schemas']['StepTypeSchema'];
-export type RuntimeLogs = Components['schemas']['RuntimeLogs'];
 export type RunStepOutputCallSchema =
   Components['schemas']['RunStepOutputCallSchema'];
 export type RunStepOutputCallsSchema =
@@ -7229,11 +10468,17 @@ export type RunStepFailedOutputSchema =
 export type RunStepOutputSchema = Components['schemas']['RunStepOutputSchema'];
 export type RunOutputSchema = Components['schemas']['RunOutputSchema'];
 export type RunStatusSchema = Components['schemas']['RunStatusSchema'];
+export type RunDataRetentionConfigSchema =
+  Components['schemas']['RunDataRetentionConfigSchema'];
 export type RunSchema = Components['schemas']['RunSchema'];
+export type RunDataRetentionConfigInputSchema =
+  Components['schemas']['RunDataRetentionConfigInputSchema'];
 export type CreateDiscoveryRunSchema =
   Components['schemas']['CreateDiscoveryRunSchema'];
-export type ReplayRunSchema = Components['schemas']['ReplayRunSchema'];
 export type CreateRunSchema = Components['schemas']['CreateRunSchema'];
+export type ReplayRunSchema = Components['schemas']['ReplayRunSchema'];
+export type UpdateRunDataRetentionConfigSchema =
+  Components['schemas']['UpdateRunDataRetentionConfigSchema'];
 export type WorkflowExpectationSchema =
   Components['schemas']['WorkflowExpectationSchema'];
 export type CreateWorkflowExpectationSchema =

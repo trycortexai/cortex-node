@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es2021",
+    "target": "es2023",
     "module": "esnext",
     "strict": true,
     "esModuleInterop": true,
@@ -14,5 +14,5 @@
     "resolveJsonModule": true
   },
   "include": ["src", "examples", "bunup.config.ts", "bump.config.ts"],
-  "exclude": ["node_modules", "build"]
+  "exclude": ["node_modules", "dist"]
 }

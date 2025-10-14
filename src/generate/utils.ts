@@ -1,12 +1,12 @@
 import openapiTS, {
   astToString,
-  OpenAPI3,
-  OperationObject,
-  ParameterObject,
-  ReferenceObject,
-  RequestBodyObject,
-  ResponsesObject,
-  SchemaObject,
+  type OpenAPI3,
+  type OperationObject,
+  type ParameterObject,
+  type ReferenceObject,
+  type RequestBodyObject,
+  type ResponsesObject,
+  type SchemaObject,
 } from 'openapi-typescript';
 import ts from 'typescript';
 
