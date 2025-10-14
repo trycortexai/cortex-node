@@ -284,32 +284,38 @@ const isBodySchemaRequired = (
   if ('required' in requestBody && requestBody.required === false) {
     return false;
   }
-  
+
   if (isReferenceObject(requestBody)) {
     const schemaObj = getSchemaObjectFromRef(schema, requestBody.$ref);
     if (!schemaObj) return true;
-    
-    if (schemaObj && 'properties' in schemaObj && 
-        (!schemaObj.required || schemaObj.required.length === 0)) {
+
+    if (
+      schemaObj &&
+      'properties' in schemaObj &&
+      (!schemaObj.required || schemaObj.required.length === 0)
+    ) {
       return false;
     }
     return true;
   }
-  
+
   const content = requestBody.content?.['application/json'];
   if (!content) return false;
-  
+
   if ('schema' in content && isReferenceObject(content.schema)) {
     const schemaObj = getSchemaObjectFromRef(schema, content.schema.$ref);
     if (!schemaObj) return true;
-    
-    if (schemaObj && 'properties' in schemaObj && 
-        (!schemaObj.required || schemaObj.required.length === 0)) {
+
+    if (
+      schemaObj &&
+      'properties' in schemaObj &&
+      (!schemaObj.required || schemaObj.required.length === 0)
+    ) {
       return false;
     }
     return true;
   }
-  
+
   return true;
 };
 
