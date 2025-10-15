@@ -20,7 +20,7 @@
   "license": "MIT",
   "packageManager": "pnpm@9.15.9",
   "scripts": {
-    "build": "bunup --dts.resolve --exports --target browser",
+    "build": "tsup",
     "dev": "pnpm build --watch",
     "dev:hono": "pnpm -C examples/hono dev",
     "test": "vitest",
@@ -40,7 +40,6 @@
     "@types/debug": "^4.1.12",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "bumpp": "^10.1.0",
-    "bunup": "^0.14.20",
     "chalk": "^5.4.1",
     "debug": "^4.4.0",
     "eslint": "^8.57.1",
@@ -51,6 +50,7 @@
     "ora": "^8.2.0",
     "path": "^0.12.7",
     "prettier": "^3.5.3",
+    "tsup": "^8.5.0",
     "typescript": "^5.8.2"
   },
   "keywords": [

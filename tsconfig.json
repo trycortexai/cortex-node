@@ -13,6 +13,6 @@
     "outDir": "dist",
     "resolveJsonModule": true
   },
-  "include": ["src", "examples", "bunup.config.ts", "bump.config.ts"],
+  "include": ["src", "examples", "tsup.config.ts", "bump.config.ts"],
   "exclude": ["node_modules", "dist"]
 }
