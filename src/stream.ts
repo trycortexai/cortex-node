@@ -4,8 +4,8 @@ import {STREAM_PARSERS_TYPES} from './constants';
 import {CortexStreamError} from './errors';
 import {readSSE} from './fetch';
 import {logger} from './logger';
-import {RunStepOutputSchema, StepModelOutputSchema} from './openapi';
-import {CastRunStepOutputSchema} from './types';
+import type {RunStepOutputSchema, StepModelOutputSchema} from './openapi';
+import type {CastRunStepOutputSchema} from './types';
 
 const debug = Debug('cortex:stream');
 
