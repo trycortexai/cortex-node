@@ -1,7 +1,7 @@
 {
   "name": "@cortex-ai/sdk",
   "description": "Cortex SDK for Node.js",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "type": "module",
   "files": [
     "dist"
